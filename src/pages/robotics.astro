@@ -1,0 +1,169 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { PROJECTS } from '../data/projects';
+
+const robosub = PROJECTS.find((p) => p.slug === 'robosub')!;
+
+const sections = [
+  {
+    key: 'architecture',
+    title: 'System Architecture',
+    body: 'ROS services containerized with Docker and orchestrated via Kubernetes across a Raspberry Pi + NVIDIA Jetson Xavier compute stack. Perception, navigation, and mission control run as independent nodes.',
+    media: 'diagram',
+  },
+  {
+    key: 'perception',
+    title: 'Perception',
+    body: 'A real-time YOLO / RT-DETR detection pipeline tuned for underwater conditions — color attenuation, low light, and distortion. Datasets built from recorded ROS bags. Detection mAP improved from 0.70 to 0.90.',
+    media: 'video',
+  },
+  {
+    key: 'navigation',
+    title: 'Navigation',
+    body: 'Detections feed the SLAM / navigation stack so the sub can localize and plan around objects it sees, fusing vision with sonar for robustness when optics fail.',
+    media: 'diagram',
+  },
+  {
+    key: 'mission',
+    title: 'Mission Control',
+    body: 'Mission logic sequences tasks — search, approach, align, act — with fallbacks when a detection is low-confidence or a sensor drops out.',
+    media: 'video',
+  },
+];
+---
+
+<BaseLayout
+  title="Robotics — Arsalan Ghogari"
+  description="USC RoboSub: an autonomous underwater vehicle. Perception, navigation, and mission control."
+>
+  <section class="page-head">
+    <div class="wrap">
+      <span class="eyebrow">Robotics · USC RoboSub</span>
+      <h1 class="display page-title">An autonomous submarine that can see.</h1>
+      <p class="prose lede">{robosub.problem}</p>
+      <div class="links">
+        <a class="btn primary" href="https://uscfrl.com" target="_blank" rel="noopener">Team site ↗</a>
+        <a class="btn" href="/engineering#robosub">Full case study →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- CURRENT VEHICLE -->
+  <section class="bordered-top">
+    <div class="wrap">
+      <span class="eyebrow">Current vehicle</span>
+      <div class="vehicle detect">
+        <span class="tag">auv · uscfrl.com</span>
+        <img src="/images/robosub-site.jpg" alt="USC RoboSub autonomous underwater vehicle" loading="lazy" />
+      </div>
+      <div class="metrics-inline">
+        <div><b>0.70 → 0.90</b><span>Detection mAP</span></div>
+        <div><b>2</b><span>Detection models (YOLO, RT-DETR)</span></div>
+        <div><b>5+</b><span>ROS packages</span></div>
+        <div><b>Jetson + Pi</b><span>On-board compute</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SYSTEM SECTIONS -->
+  {sections.map((s) => (
+    <section class="bordered-top">
+      <div class="wrap">
+        <div class="sysrow io-reveal">
+          <div class="systext">
+            <h2 class="sys-h">{s.title}</h2>
+            <p>{s.body}</p>
+          </div>
+          <div class={`media-slot ${s.media}`}>
+            <span class="media-tag">{s.media === 'video' ? '▶ video' : '▢ diagram'} — add asset</span>
+          </div>
+        </div>
+      </div>
+    </section>
+  ))}
+
+  <!-- RESEARCH NOTES -->
+  <section class="bordered-top">
+    <div class="wrap">
+      <div class="row">
+        <h2 class="section-h">Research notes</h2>
+        <div class="prose">
+          <p>
+            Deeper write-ups on training underwater detectors, deploying ROS with Kubernetes, and
+            why RT-DETR beat YOLO on this dataset live in
+            <a href="/writing" class="ilink">Writing →</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .page-head { padding: clamp(56px, 9vh, 110px) 0 clamp(30px, 5vh, 56px); }
+  .page-title { font-size: clamp(2.2rem, 5.5vw, 4rem); max-width: 16ch; margin: 18px 0 0; }
+  .lede { margin: 24px 0 0; font-size: clamp(1.1rem, 1vw + 1rem, 1.4rem); color: var(--ink-soft); }
+  .links { margin-top: 28px; display: flex; flex-wrap: wrap; gap: 10px; }
+
+  .vehicle {
+    margin: 22px 0 30px;
+    border: 1px solid var(--line);
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    background: #fff;
+  }
+  .vehicle img { width: 100%; height: 100%; object-fit: cover; object-position: center top; display: block; }
+  .metrics-inline {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 1px;
+    background: var(--line);
+    border: 1px solid var(--line);
+  }
+  .metrics-inline > div { background: var(--paper); padding: 20px; }
+  .metrics-inline b {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 1.5rem;
+    color: var(--accent);
+    display: block;
+    letter-spacing: -0.01em;
+  }
+  .metrics-inline span {
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    margin-top: 6px;
+    display: block;
+  }
+
+  .sysrow { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; }
+  @media (max-width: 760px) { .sysrow { grid-template-columns: 1fr; gap: 20px; } }
+  .sys-h {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: clamp(1.6rem, 3.5vw, 2.2rem);
+    letter-spacing: -0.02em;
+    margin: 0 0 12px;
+  }
+  .systext p { margin: 0; color: var(--ink-soft); }
+  .media-slot {
+    aspect-ratio: 16 / 10;
+    border: 1px dashed var(--line);
+    background: var(--panel);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+  .media-tag {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+  .ilink { color: var(--accent); text-decoration: none; border-bottom: 1px solid color-mix(in srgb, var(--accent) 35%, transparent); }
+</style>

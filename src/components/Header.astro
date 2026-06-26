@@ -1,0 +1,115 @@
+---
+import { NAV } from '../consts';
+
+// Normalize current path for active-link matching.
+const path = Astro.url.pathname.replace(/\/$/, '') || '/';
+const isActive = (href: string) =>
+  href === '/' ? path === '/' : path === href || path.startsWith(href + '/');
+---
+
+<header>
+  <div class="bar">
+    <a class="mark" href="/"><b>AG</b>./arsalanghogari.com</a>
+    <button class="menu-btn" aria-label="Toggle menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+    <nav>
+      {NAV.map((item) =>
+        item.external ? (
+          <a href={item.href} target="_blank" rel="noopener">{item.label}</a>
+        ) : (
+          <a href={item.href} class={isActive(item.href) ? 'active' : ''} aria-current={isActive(item.href) ? 'page' : undefined}>{item.label}</a>
+        )
+      )}
+    </nav>
+  </div>
+</header>
+
+<style>
+  header {
+    position: sticky;
+    top: 0;
+    z-index: 30;
+    background: color-mix(in srgb, var(--paper) 86%, transparent);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--line);
+  }
+  .bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 24px;
+    max-width: var(--maxw);
+    margin: 0 auto;
+  }
+  .mark {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    letter-spacing: 0.04em;
+    text-decoration: none;
+    color: var(--ink);
+  }
+  .mark b { color: var(--accent); }
+  nav { display: flex; align-items: baseline; }
+  nav a {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    text-decoration: none;
+    margin-left: 20px;
+    color: var(--ink-soft);
+    transition: color 0.18s ease;
+    white-space: nowrap;
+  }
+  nav a:hover { color: var(--accent); }
+  nav a.active { color: var(--ink); border-bottom: 2px solid var(--accent); padding-bottom: 2px; }
+
+  .menu-btn {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 6px;
+  }
+  .menu-btn span {
+    width: 22px;
+    height: 2px;
+    background: var(--ink);
+    transition: transform 0.2s ease, opacity 0.2s ease;
+  }
+
+  @media (max-width: 720px) {
+    .menu-btn { display: flex; }
+    nav {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 4px;
+      background: var(--paper);
+      border-bottom: 1px solid var(--line);
+      padding: 12px 24px 20px;
+      transform: translateY(-8px);
+      opacity: 0;
+      pointer-events: none;
+      transition: transform 0.2s ease, opacity 0.2s ease;
+    }
+    nav.open { transform: none; opacity: 1; pointer-events: auto; }
+    nav a { margin-left: 0; font-size: 0.95rem; padding: 6px 0; }
+    .menu-btn[aria-expanded="true"] span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .menu-btn[aria-expanded="true"] span:nth-child(2) { opacity: 0; }
+    .menu-btn[aria-expanded="true"] span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+  }
+</style>
+
+<script>
+  const btn = document.querySelector('.menu-btn');
+  const nav = document.querySelector('header nav');
+  btn?.addEventListener('click', () => {
+    const open = nav?.classList.toggle('open');
+    btn.setAttribute('aria-expanded', String(!!open));
+  });
+</script>

@@ -1,0 +1,109 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+// Diary entries — add your own. Drop photos in /public/images/abroad/ and
+// reference them here. Entries with no photo render a tasteful placeholder.
+const entries: { date: string; place: string; title: string; body: string; photo?: string }[] = [
+  {
+    date: 'Spring 2026',
+    place: 'Bristol, UK',
+    title: 'Exchange at the University of Bristol',
+    body: 'Spending the semester on exchange — new city, new department, and a different way of doing engineering. Notes and photos to come.',
+  },
+];
+---
+
+<BaseLayout
+  title="Study Abroad — Arsalan Ghogari"
+  description="Study-abroad diaries: a semester on exchange at the University of Bristol, Spring 2026."
+>
+  <section class="page-head">
+    <div class="wrap">
+      <span class="eyebrow">Study Abroad · Bristol, UK</span>
+      <h1 class="display page-title">Study-abroad diaries.</h1>
+      <p class="prose lede">
+        A semester on exchange at the University of Bristol for Spring 2026 — the city, the people,
+        and what a different engineering culture taught me.
+      </p>
+    </div>
+  </section>
+
+  <section class="bordered-top">
+    <div class="wrap">
+      <div class="diary">
+        {entries.map((e) => (
+          <article class="entry io-reveal">
+            <div class="entry-media">
+              {e.photo ? (
+                <img src={e.photo} alt={e.title} loading="lazy" />
+              ) : (
+                <div class="media-slot"><span class="media-tag">▢ photo — add asset</span></div>
+              )}
+            </div>
+            <div class="entry-text">
+              <div class="entry-meta">
+                <span>{e.date}</span> · <span>{e.place}</span>
+              </div>
+              <h2 class="entry-title">{e.title}</h2>
+              <p>{e.body}</p>
+            </div>
+          </article>
+        ))}
+      </div>
+
+      <p class="note">
+        More entries and a photo gallery coming as the semester goes. Want a public
+        <a href="/writing" class="ilink"> writing</a>-style feed for these? It's wired and ready.
+      </p>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .page-head { padding: clamp(56px, 9vh, 110px) 0 clamp(30px, 5vh, 56px); }
+  .page-title { font-size: clamp(2.2rem, 5.5vw, 4rem); margin: 18px 0 0; }
+  .lede { margin: 24px 0 0; font-size: clamp(1.1rem, 1vw + 1rem, 1.4rem); color: var(--ink-soft); }
+
+  .diary { display: flex; flex-direction: column; gap: 36px; }
+  .entry { display: grid; grid-template-columns: 0.9fr 1.1fr; gap: 30px; align-items: center; }
+  @media (max-width: 720px) { .entry { grid-template-columns: 1fr; gap: 16px; } }
+  .entry-media img,
+  .media-slot {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    border: 1px solid var(--line);
+    display: block;
+  }
+  .media-slot {
+    border-style: dashed;
+    background: var(--panel);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .media-tag {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+  .entry-meta {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+  }
+  .entry-title {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(1.5rem, 3.5vw, 2rem);
+    letter-spacing: -0.02em;
+    margin: 10px 0 12px;
+  }
+  .entry-text p { margin: 0; color: var(--ink-soft); }
+  .note { margin-top: 40px; font-family: var(--font-mono); font-size: 0.8rem; color: var(--ink-soft); }
+  .ilink { color: var(--accent); text-decoration: none; }
+</style>

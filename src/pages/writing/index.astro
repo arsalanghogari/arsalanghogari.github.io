@@ -1,0 +1,90 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+const posts = (await getCollection('writing', ({ data }) => !data.draft)).sort(
+  (a, b) => b.data.date.valueOf() - a.data.date.valueOf()
+);
+
+const fmt = (d: Date) =>
+  d.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+---
+
+<BaseLayout
+  title="Writing — Arsalan Ghogari"
+  description="Notes on machine learning, computer vision, robotics, and building things that ship."
+>
+  <section class="page-head">
+    <div class="wrap">
+      <span class="eyebrow">Writing</span>
+      <h1 class="display page-title">Notes on building.</h1>
+      <p class="prose lede">
+        Short field notes on perception, robotics, and shipping software — what worked, what broke,
+        and what I'd do differently.
+      </p>
+    </div>
+  </section>
+
+  <section class="bordered-top">
+    <div class="wrap">
+      {posts.length === 0 ? (
+        <p class="empty">First posts coming soon.</p>
+      ) : (
+        <ul class="post-list">
+          {posts.map((post) => (
+            <li class="io-reveal">
+              <a href={`/writing/${post.id}`}>
+                <span class="pl-date">{fmt(post.data.date)}</span>
+                <span class="pl-main">
+                  <span class="pl-title">{post.data.title}</span>
+                  <span class="pl-desc">{post.data.description}</span>
+                </span>
+                <span class="pl-arrow" aria-hidden="true">→</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .page-head { padding: clamp(56px, 9vh, 110px) 0 clamp(30px, 5vh, 56px); }
+  .page-title { font-size: clamp(2.2rem, 5.5vw, 4rem); margin: 18px 0 0; }
+  .lede { margin: 24px 0 0; font-size: clamp(1.1rem, 1vw + 1rem, 1.4rem); color: var(--ink-soft); }
+  .empty { font-family: var(--font-mono); color: var(--ink-soft); }
+
+  .post-list { list-style: none; margin: 0; padding: 0; }
+  .post-list li { border-bottom: 1px solid var(--line); }
+  .post-list a {
+    display: grid;
+    grid-template-columns: 130px 1fr 24px;
+    gap: 20px;
+    align-items: baseline;
+    padding: 26px 0;
+    text-decoration: none;
+    transition: padding-left 0.2s var(--ease);
+  }
+  .post-list a:hover { padding-left: 8px; }
+  .pl-date {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--ink-soft);
+    letter-spacing: 0.04em;
+  }
+  .pl-title {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.4rem;
+    letter-spacing: -0.01em;
+    display: block;
+  }
+  .post-list a:hover .pl-title { color: var(--accent); }
+  .pl-desc { display: block; margin-top: 6px; color: var(--ink-soft); font-size: 1rem; }
+  .pl-arrow { color: var(--accent); font-family: var(--font-mono); }
+  @media (max-width: 620px) {
+    .post-list a { grid-template-columns: 1fr; gap: 6px; }
+    .pl-arrow { display: none; }
+  }
+</style>

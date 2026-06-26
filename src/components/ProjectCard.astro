@@ -1,0 +1,73 @@
+---
+import type { Project } from '../data/projects';
+interface Props { project: Project; }
+const { project } = Astro.props;
+const href = project.links[0]?.href ?? '#';
+---
+
+<a class="card" href={href} target="_blank" rel="noopener">
+  <span class="ptop">
+    <span class="ptitle">{project.title}</span>
+    {project.status === 'live' && (
+      <span class="badge"><span class="dot">●</span> Live</span>
+    )}
+  </span>
+  <span class="psub">{project.subtitle}</span>
+  <span class="pblurb">{project.problem}</span>
+  <span class="ptech">{project.tech.join(' · ')}</span>
+</a>
+
+<style>
+  .card {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    padding: 24px 22px;
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    transition: transform 0.2s var(--ease), box-shadow 0.2s var(--ease), border-color 0.2s var(--ease);
+  }
+  .card:hover {
+    transform: translateY(-3px);
+    border-color: var(--accent);
+    box-shadow: 0 10px 0 -4px rgba(27, 42, 232, 0.12);
+  }
+  .ptop { display: flex; align-items: center; gap: 10px; }
+  .ptitle {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.3rem;
+    letter-spacing: -0.01em;
+    flex: 1;
+  }
+  .card:hover .ptitle { color: var(--accent); }
+  .psub {
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+  }
+  .pblurb { color: var(--ink-soft); font-size: 0.98rem; flex: 1; margin-top: 2px; }
+  .ptech {
+    font-family: var(--font-mono);
+    font-size: 0.64rem;
+    letter-spacing: 0.05em;
+    color: var(--ink-soft);
+    text-transform: uppercase;
+    border-top: 1px dashed var(--line);
+    padding-top: 10px;
+  }
+  .badge {
+    font-family: var(--font-mono);
+    font-size: 0.56rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--good);
+    border: 1px solid var(--good);
+    padding: 1px 6px;
+    white-space: nowrap;
+  }
+  .badge .dot { color: var(--good-dot); }
+</style>

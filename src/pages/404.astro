@@ -1,0 +1,24 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Not found — Arsalan Ghogari" description="Page not found.">
+  <section class="nf">
+    <div class="wrap">
+      <span class="eyebrow">404</span>
+      <h1 class="display nf-title">No detection.</h1>
+      <p class="prose lede">That page isn't here. Let's get you back on track.</p>
+      <div class="links">
+        <a class="btn primary" href="/">Home</a>
+        <a class="btn" href="/engineering">Engineering</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .nf { padding: clamp(80px, 16vh, 200px) 0; }
+  .nf-title { font-size: clamp(2.6rem, 8vw, 5rem); margin: 16px 0 0; }
+  .lede { margin: 20px 0 0; font-size: 1.3rem; color: var(--ink-soft); }
+  .links { margin-top: 30px; display: flex; gap: 10px; flex-wrap: wrap; }
+</style>

@@ -1,0 +1,49 @@
+---
+import { SITE, SOCIAL } from '../consts';
+const year = new Date().getFullYear();
+---
+
+<footer id="contact">
+  <div class="wrap">
+    <div class="foot">
+      <div>
+        <div class="eyebrow" style="margin-bottom:10px;">Get in touch</div>
+        <div class="big"><a href={`mailto:${SITE.email}`}>{SITE.email}</a></div>
+        <div class="socials">
+          <a href={SOCIAL.github} target="_blank" rel="noopener">GitHub</a> ·
+          <a href={SOCIAL.linkedin} target="_blank" rel="noopener">LinkedIn</a> ·
+          <a href="/resume.pdf" target="_blank" rel="noopener">Résumé</a>
+        </div>
+      </div>
+      <div class="legal">© {year} Arsalan Ghogari · built from scratch in Los Angeles</div>
+    </div>
+  </div>
+</footer>
+
+<style>
+  footer { border-top: 1px solid var(--ink); padding: 50px 0 64px; }
+  .foot {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 22px;
+  }
+  .big {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: clamp(1.5rem, 4.5vw, 2.5rem);
+    letter-spacing: -0.02em;
+    line-height: 1;
+  }
+  .big a { color: var(--accent); text-decoration: none; }
+  .big a:hover { text-decoration: underline; }
+  .socials {
+    margin-top: 12px;
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+  }
+  .socials a { color: var(--accent); text-decoration: none; }
+  .socials a:hover { text-decoration: underline; }
+  .legal { font-family: var(--font-mono); font-size: 0.66rem; color: var(--ink-soft); }
+</style>

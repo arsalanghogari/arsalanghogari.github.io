@@ -1,0 +1,133 @@
+---
+import type { Project } from '../data/projects';
+interface Props { project: Project; }
+const { project } = Astro.props;
+---
+
+<article class="case io-reveal" id={project.slug}>
+  <header class="case-head">
+    <div>
+      <h3 class="case-title">{project.title}</h3>
+      <p class="case-sub">{project.subtitle}</p>
+    </div>
+    <div class="case-meta">
+      <span class="case-year">{project.year}</span>
+      {project.status === 'live' && <span class="badge"><span class="dot">●</span> Live</span>}
+    </div>
+  </header>
+
+  {project.image && (
+    <div class="case-media detect">
+      <span class="tag">{project.slug} · screenshot</span>
+      <img src={project.image} alt={`${project.title} — ${project.subtitle}`} loading="lazy" />
+    </div>
+  )}
+
+  <div class="case-grid">
+    <div class="case-block">
+      <h4>Problem</h4>
+      <p>{project.problem}</p>
+    </div>
+    <div class="case-block">
+      <h4>My role</h4>
+      <ul>{project.role.map((r) => <li>{r}</li>)}</ul>
+    </div>
+    <div class="case-block">
+      <h4>Impact</h4>
+      <ul>{project.impact.map((i) => <li>{i}</li>)}</ul>
+    </div>
+  </div>
+
+  <div class="case-foot">
+    <div class="skills">{project.tech.map((t) => <span class="chip">{t}</span>)}</div>
+    <div class="case-links">
+      {project.links.map((l) => (
+        <a class="btn" href={l.href} target="_blank" rel="noopener">{l.label}</a>
+      ))}
+    </div>
+  </div>
+</article>
+
+<style>
+  .case {
+    border-top: 1px solid var(--line);
+    padding: 40px 0;
+  }
+  .case-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 8px 18px;
+  }
+  .case-title {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: clamp(1.7rem, 4vw, 2.4rem);
+    letter-spacing: -0.02em;
+    margin: 0;
+  }
+  .case-sub {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 6px 0 0;
+  }
+  .case-meta { display: flex; align-items: center; gap: 12px; }
+  .case-year {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+  }
+  .case-media {
+    margin: 26px 0 6px;
+    border: 1px solid var(--line);
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    background: #fff;
+  }
+  .case-media img { width: 100%; height: 100%; object-fit: cover; object-position: center top; display: block; }
+  .case-grid {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr 1fr;
+    gap: 30px;
+    margin-top: 30px;
+  }
+  @media (max-width: 760px) { .case-grid { grid-template-columns: 1fr; gap: 22px; } }
+  .case-block h4 {
+    font-family: var(--font-mono);
+    font-weight: 500;
+    font-size: 0.68rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    margin: 0 0 10px;
+  }
+  .case-block p { margin: 0; color: var(--ink-soft); font-size: 1rem; }
+  .case-block ul { margin: 0; padding-left: 18px; color: var(--ink-soft); font-size: 1rem; }
+  .case-block li { margin-bottom: 6px; }
+  .case-foot {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-top: 28px;
+  }
+  .case-links { display: flex; gap: 10px; flex-wrap: wrap; }
+  .badge {
+    font-family: var(--font-mono);
+    font-size: 0.56rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--good);
+    border: 1px solid var(--good);
+    padding: 1px 6px;
+    white-space: nowrap;
+  }
+  .badge .dot { color: var(--good-dot); }
+</style>

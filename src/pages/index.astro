@@ -1,0 +1,183 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import { SITE, SOCIAL } from '../consts';
+import { featured } from '../data/projects';
+import { METRICS, EXPERIENCE } from '../data/experience';
+
+const timeline = [
+  { year: '2023', label: 'Started at USC' },
+  { year: '2024', label: 'RoboSub — Perception Lead' },
+  { year: '2025', label: 'USG — Director of Digital Strategy' },
+  { year: '2025', label: 'AI projects: chatbot, Shroom' },
+  { year: '2026', label: 'Exchange @ University of Bristol' },
+  { year: 'Now', label: 'Building AI products & robots' },
+];
+---
+
+<BaseLayout person={true}>
+  <!-- HERO -->
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div class="hero-text">
+        <span class="eyebrow reveal">Computer Science + Business · USC · Los Angeles</span>
+        <h1 class="display hero-title reveal">
+          Building <span class="accent">AI products</span>, autonomous <span class="accent">robots</span>, and software that <span class="accent">scales</span>.
+        </h1>
+        <p class="hero-tags reveal">AI &nbsp;•&nbsp; Robotics &nbsp;•&nbsp; Product &nbsp;•&nbsp; Leadership</p>
+        <div class="links reveal">
+          <a class="btn primary" href="/engineering">View Projects</a>
+          <a class="btn" href="/resume.pdf" target="_blank" rel="noopener">Résumé ↗</a>
+        </div>
+        <div class="hero-social reveal">
+          <a href={SOCIAL.github} target="_blank" rel="noopener">GitHub</a> ·
+          <a href={SOCIAL.linkedin} target="_blank" rel="noopener">LinkedIn</a> ·
+          <a href={`mailto:${SITE.email}`}>Email</a>
+        </div>
+      </div>
+      <div class="hero-photo detect reveal">
+        <span class="tag">human 0.99</span>
+        <img src="/images/headshot.jpg" alt="Arsalan Ghogari" width="300" height="300" />
+      </div>
+    </div>
+  </section>
+
+  <!-- METRICS -->
+  <section class="bordered-top">
+    <div class="wrap">
+      <div class="metrics io-reveal">
+        {METRICS.map((m) => (
+          <div class="metric">
+            <div class="num">{m.num}</div>
+            <div class="label">{m.label}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURED WORK -->
+  <section class="bordered-top">
+    <div class="wrap">
+      <div class="row">
+        <h2 class="section-h">Featured work</h2>
+        <div>
+          <div class="grid">
+            {featured.map((p) => <ProjectCard project={p} />)}
+          </div>
+          <p class="more"><a href="/engineering">All engineering &amp; case studies →</a></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TIMELINE -->
+  <section class="bordered-top">
+    <div class="wrap">
+      <div class="row">
+        <h2 class="section-h">Timeline</h2>
+        <ol class="timeline">
+          {timeline.map((t) => (
+            <li class="io-reveal">
+              <span class="t-year">{t.year}</span>
+              <span class="t-dot" aria-hidden="true"></span>
+              <span class="t-label">{t.label}</span>
+            </li>
+          ))}
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT TEASER -->
+  <section class="bordered-top">
+    <div class="wrap">
+      <div class="row">
+        <h2 class="section-h">About</h2>
+        <div class="prose about">
+          <p>
+            I'm studying Computer Science / Business Administration at USC's Viterbi and Marshall
+            schools, specializing in AI Applications, and currently finishing an exchange at the
+            University of Bristol for Spring 2026.
+          </p>
+          <p>
+            A few markers along the way: a 3.9 GPA, Presidential Scholar, Viterbi Scholar, and
+            Dean's List. Mostly though, I like the part where a research-y idea turns into something
+            people actually use — whether that's a robot that can see or a chatbot that answers a
+            student's question at 2am.
+          </p>
+          <p>
+            Open to internships and collaborations. The fastest way to reach me is
+            <a href={`mailto:${SITE.email}`}> email</a>.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .hero { padding: clamp(64px, 11vh, 130px) 0 clamp(46px, 8vh, 80px); }
+  .hero-grid { display: grid; grid-template-columns: 1fr 300px; gap: 56px; align-items: center; }
+  @media (max-width: 820px) {
+    .hero-grid { grid-template-columns: 1fr; gap: 36px; }
+    .hero-photo { order: -1; }
+  }
+  .eyebrow { display: block; margin-bottom: 22px; }
+  .hero-title {
+    font-size: clamp(2.4rem, 6.2vw, 4.6rem);
+    max-width: 16ch;
+  }
+  .hero-tags {
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    letter-spacing: 0.04em;
+    color: var(--ink-soft);
+    margin: 26px 0 0;
+    text-transform: uppercase;
+  }
+  .links { margin-top: 30px; display: flex; flex-wrap: wrap; gap: 10px; }
+  .hero-social {
+    margin-top: 20px;
+    font-family: var(--font-mono);
+    font-size: 0.76rem;
+    color: var(--ink-soft);
+  }
+  .hero-social a { color: var(--accent); text-decoration: none; }
+  .hero-social a:hover { text-decoration: underline; }
+  .hero-photo { position: relative; width: 300px; max-width: 78vw; }
+  .hero-photo img { width: 100%; height: auto; display: block; border: 1px solid var(--line); }
+
+  .grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+  @media (max-width: 900px) { .grid { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 560px) { .grid { grid-template-columns: 1fr; } }
+  .more { margin: 22px 0 0; font-family: var(--font-mono); font-size: 0.8rem; }
+  .more a { color: var(--accent); text-decoration: none; }
+  .more a:hover { text-decoration: underline; }
+
+  .timeline { list-style: none; margin: 0; padding: 0; }
+  .timeline li {
+    display: grid;
+    grid-template-columns: 84px 16px 1fr;
+    align-items: center;
+    gap: 14px;
+    padding: 12px 0;
+    border-bottom: 1px dashed var(--line);
+  }
+  .t-year {
+    font-family: var(--font-mono);
+    font-size: 0.74rem;
+    color: var(--ink-soft);
+    letter-spacing: 0.04em;
+  }
+  .t-dot {
+    width: 11px; height: 11px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 0 4px var(--accent-wash);
+  }
+  .t-label { font-size: 1.02rem; }
+
+  .about p { margin: 0 0 16px; }
+  .about a { color: var(--accent); }
+</style>
