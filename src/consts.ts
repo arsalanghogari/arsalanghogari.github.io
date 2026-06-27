@@ -14,7 +14,6 @@ export const SITE = {
 export const SOCIAL = {
   github: 'https://github.com/arsalanghogari',
   linkedin: 'https://linkedin.com/in/arsalan-ghogari',
-  // NOTE: placeholder — replace with your real Instagram handle.
   instagram: 'https://instagram.com/arsalanghogari',
   resume: '/resume.pdf',
 };
