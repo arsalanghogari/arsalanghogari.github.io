@@ -14,9 +14,10 @@ const data = {
   resume: SOCIAL.resume,
   skills: TECH_SKILLS,
   education: `${EDUCATION.degree} — ${EDUCATION.school}. ${EDUCATION.honors.join(' · ')}.`,
-  experience: [...CURRENT_ROLES, ...PAST_ROLES, ...VOLUNTEERING].map((r) => ({
+  experience: [...CURRENT_ROLES, ...PAST_ROLES].map((r) => ({
     role: r.role, org: r.org, date: r.date,
   })),
+  volunteering: VOLUNTEERING.map((r) => ({ role: r.role, org: r.org, date: r.date })),
   projects: TECHNICAL_PROJECTS.map((p) => ({
     id: p.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''),
     name: p.name, blurb: p.blurb,
@@ -96,6 +97,14 @@ const data = {
     margin: 4px 0;
   }
   .term-body :global(.t-cols) :global(span) { min-width: 0; }
+  .term-body :global(.t-list) {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+    white-space: normal;
+    margin: 4px 0;
+  }
+  .term-body :global(.t-item) { display: flex; flex-direction: column; line-height: 1.45; }
   .term-line { display: flex; align-items: center; gap: 8px; }
   .term-ps { color: #4caa5a; white-space: nowrap; }
   .term-ps b { color: #8a877c; font-weight: 400; }
@@ -136,6 +145,7 @@ const data = {
         const rows: [string, string][] = [
           ['about', 'who I am'],
           ['experience', 'roles, current + past'],
+          ['volunteering', 'suicide prevention + outreach'],
           ['ls', 'list projects'],
           ['cat &lt;id&gt;', 'read a project (e.g. cat robosub-perception)'],
           ['skills', 'tech stack'],
@@ -155,9 +165,18 @@ const data = {
       about: () => print(data.about),
       whoami: () => print(data.name),
       experience: () => print(
+        '<div class="t-list">' +
         data.experience
-          .map((e: any) => `<span class="t-accent">${esc(e.role)}</span> · ${esc(e.org)} <span class="t-dim">(${esc(e.date)})</span>`)
-          .join('\n')
+          .map((e: any) => `<div class="t-item"><span class="t-accent">${esc(e.role)}</span><span class="t-dim">${esc(e.org)} · ${esc(e.date)}</span></div>`)
+          .join('') +
+        '</div>'
+      ),
+      volunteering: () => print(
+        '<div class="t-list">' +
+        data.volunteering
+          .map((e: any) => `<div class="t-item"><span class="t-accent">${esc(e.role)}</span><span class="t-dim">${esc(e.org)} · ${esc(e.date)}</span></div>`)
+          .join('') +
+        '</div>'
       ),
       ls: () => print(
         '<div class="t-cols">' +
