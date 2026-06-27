@@ -95,6 +95,15 @@ export const TECHNICAL_PROJECTS: Project[] = [
     href: 'https://drive.google.com/file/d/1geMPfQZohkX4E7bFGYwr2OUo8J_A4Rq-/view?usp=sharing',
   },
   {
+    name: 'Study Abroad Diaries',
+    subtitle: 'Interactive 3D Photo Carousel',
+    status: 'live',
+    blurb:
+      'A drag-to-spin 3D photo carousel documenting my exchange semester — built as an incoming Bristol ambassador for the USC study-abroad team, with pointer/touch dragging and arrow-key navigation in vanilla JS.',
+    tech: ['HTML', 'CSS', 'JavaScript'],
+    href: 'https://arsalanghogari.com/study-abroad-diaries/',
+  },
+  {
     name: 'AnchorNotes',
     subtitle: 'Collaborative Note-Taking App',
     blurb:
