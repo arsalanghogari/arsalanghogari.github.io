@@ -211,14 +211,16 @@ section { padding: clamp(52px, 8vh, 92px) 0; }
 .reveal:nth-child(5) { animation-delay: 0.37s; }
 @keyframes rise { to { opacity: 1; transform: none; } }
 
-/* scroll-reveal (JS-driven, progressive enhancement) */
-.io-reveal {
+/* scroll-reveal (JS-driven, progressive enhancement).
+   Only hidden once <html> has the .js class — so with JS off/slow,
+   content is always visible. */
+html.js .io-reveal {
   opacity: 0;
   transform: translateY(20px);
   transition: opacity 0.6s var(--ease), transform 0.6s var(--ease);
   will-change: opacity, transform;
 }
-.io-reveal.in {
+html.js .io-reveal.in {
   opacity: 1;
   transform: none;
 }
@@ -233,4 +235,128 @@ section { padding: clamp(52px, 8vh, 92px) 0; }
 .sr-only {
   position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
   overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
+}
+
+/* ============================================================
+   Tech-y section scaffolding
+   ============================================================ */
+.sec { padding: clamp(52px, 8vh, 96px) 0; border-top: 1px solid var(--line); position: relative; }
+.sec:first-of-type { border-top: none; }
+
+.sec-head {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  margin-bottom: 30px;
+}
+.sec-idx {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  color: var(--accent);
+  padding-top: 2px;
+}
+.sec-title {
+  font-family: var(--font-mono);
+  font-weight: 500;
+  font-size: 0.78rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  margin: 0;
+}
+.sec-head::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: repeating-linear-gradient(90deg, var(--line) 0 4px, transparent 4px 8px);
+  align-self: center;
+}
+
+.subhead {
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin: 0 0 14px;
+}
+
+/* faint blueprint grid, used behind the hero */
+.grid-bg {
+  background-image:
+    linear-gradient(var(--line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--line) 1px, transparent 1px);
+  background-size: 40px 40px;
+  background-position: center;
+  -webkit-mask-image: radial-gradient(ellipse 80% 70% at 50% 40%, #000 30%, transparent 75%);
+  mask-image: radial-gradient(ellipse 80% 70% at 50% 40%, #000 30%, transparent 75%);
+  opacity: 0.5;
+}
+
+/* ============================================================
+   Detection mode — YOLO-style bounding-box overlay
+   ============================================================ */
+.det-layer {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 45;
+}
+.det-box {
+  position: absolute;
+  border: 1.5px solid var(--accent);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent) 25%, transparent);
+  transition: opacity 0.18s var(--ease);
+}
+.det-box::before,
+.det-box::after {
+  content: "";
+  position: absolute;
+  width: 9px; height: 9px;
+  border: 2px solid var(--accent);
+}
+.det-box::before { top: -2px; left: -2px; border-right: none; border-bottom: none; }
+.det-box::after { bottom: -2px; right: -2px; border-left: none; border-top: none; }
+.det-label {
+  position: absolute;
+  top: 0; left: 0;
+  transform: translateY(-100%);
+  background: var(--accent);
+  color: #fff;
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.04em;
+  padding: 2px 6px;
+  white-space: nowrap;
+}
+body.detecting { --scan: 1; }
+body.detecting::after {
+  content: "DETECTION MODE · esc to exit";
+  position: fixed;
+  bottom: 16px; left: 50%;
+  transform: translateX(-50%);
+  z-index: 46;
+  background: var(--ink);
+  color: var(--paper);
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.08em;
+  padding: 6px 12px;
+  pointer-events: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .det-box { transition: none; }
+}
+
+/* small key hint pill */
+.kbd {
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  border: 1px solid var(--line);
+  border-bottom-width: 2px;
+  border-radius: 4px;
+  padding: 1px 5px;
+  background: var(--panel);
+  color: var(--ink-soft);
 }

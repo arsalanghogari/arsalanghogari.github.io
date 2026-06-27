@@ -2,6 +2,10 @@
 import BaseHead from '../components/BaseHead.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import CommandPalette from '../components/CommandPalette.astro';
+import Terminal from '../components/Terminal.astro';
+import Detection from '../components/Detection.astro';
+import DevConsole from '../components/DevConsole.astro';
 
 interface Props {
   title?: string;
@@ -9,9 +13,10 @@ interface Props {
   image?: string;
   type?: 'website' | 'article';
   person?: boolean;
+  footer?: boolean;
 }
 
-const { title, description, image, type, person } = Astro.props;
+const { title, description, image, type, person, footer = true } = Astro.props;
 ---
 
 <!doctype html>
@@ -20,23 +25,27 @@ const { title, description, image, type, person } = Astro.props;
     <BaseHead title={title} description={description} image={image} type={type} person={person} />
   </head>
   <body>
+    <a id="top"></a>
     <Header />
     <main>
       <slot />
     </main>
-    <Footer />
+    {footer && <Footer />}
+
+    <!-- niche features -->
+    <CommandPalette />
+    <Terminal />
+    <Detection />
+    <DevConsole />
 
     <script>
-      // Progressive scroll-reveal for elements tagged .io-reveal
+      // Progressive scroll-reveal
       const els = document.querySelectorAll('.io-reveal');
       if (els.length) {
         const io = new IntersectionObserver(
           (entries) => {
             for (const e of entries) {
-              if (e.isIntersecting) {
-                e.target.classList.add('in');
-                io.unobserve(e.target);
-              }
+              if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
             }
           },
           { rootMargin: '0px 0px -10% 0px', threshold: 0.05 }

@@ -1,0 +1,82 @@
+---
+// Detection mode: overlays YOLO-style bounding boxes + confidence labels on
+// every [data-detect] element. Toggled via the "toggle-detection" event,
+// the header button, the ⌘K palette, the terminal `detect` command, or Esc.
+// Markup-free — just wires up global behavior.
+---
+
+<script>
+  (() => {
+    let on = false;
+    let layer: HTMLDivElement | null = null;
+    let tracked: { el: Element; box: HTMLDivElement }[] = [];
+    let raf = 0;
+
+    const targets = () => Array.from(document.querySelectorAll('[data-detect]'));
+
+    function build() {
+      layer = document.createElement('div');
+      layer.className = 'det-layer';
+      tracked = targets().map((el) => {
+        const box = document.createElement('div');
+        box.className = 'det-box';
+        const label = document.createElement('span');
+        label.className = 'det-label';
+        const name = el.getAttribute('data-detect') || 'object';
+        const conf = el.getAttribute('data-conf') || '0.95';
+        label.textContent = `${name} ${conf}`;
+        box.appendChild(label);
+        layer!.appendChild(box);
+        return { el, box };
+      });
+      document.body.appendChild(layer);
+      position();
+    }
+
+    function position() {
+      for (const { el, box } of tracked) {
+        const r = el.getBoundingClientRect();
+        const pad = 6;
+        box.style.left = `${r.left - pad}px`;
+        box.style.top = `${r.top - pad}px`;
+        box.style.width = `${r.width + pad * 2}px`;
+        box.style.height = `${r.height + pad * 2}px`;
+        // fade boxes that are mostly off-screen
+        const vis = r.bottom > 40 && r.top < window.innerHeight - 20;
+        box.style.opacity = vis ? '1' : '0';
+      }
+    }
+
+    const onScroll = () => {
+      if (raf) return;
+      raf = requestAnimationFrame(() => { position(); raf = 0; });
+    };
+
+    function enable() {
+      if (on) return;
+      on = true;
+      document.body.classList.add('detecting');
+      build();
+      window.addEventListener('scroll', onScroll, { passive: true });
+      window.addEventListener('resize', onScroll);
+    }
+
+    function disable() {
+      if (!on) return;
+      on = false;
+      document.body.classList.remove('detecting');
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onScroll);
+      layer?.remove();
+      layer = null;
+      tracked = [];
+    }
+
+    function toggle() { on ? disable() : enable(); }
+
+    window.addEventListener('toggle-detection', toggle as EventListener);
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && on) disable();
+    });
+  })();
+</script>

@@ -1,3 +1,11 @@
+# ┌─[ detection: human 0.99 ]
+# │   ___    ______
+# │  / _ |  / ___/    Arsalan Ghogari
+# │ / __ | / (_ /     arsalanghogari.com
+# │/_/ |_| \___/      AI · Robotics · Product
+# └─ you read robots.txt. we'd get along. → arsalan.m.ghogari@gmail.com
+#    (psst: /humans.txt — and the site has a ⌘K palette + a ` terminal)
+
 User-agent: *
 Allow: /
 

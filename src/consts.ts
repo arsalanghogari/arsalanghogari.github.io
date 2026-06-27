@@ -14,13 +14,16 @@ export const SITE = {
 export const SOCIAL = {
   github: 'https://github.com/arsalanghogari',
   linkedin: 'https://linkedin.com/in/arsalan-ghogari',
+  // NOTE: placeholder — replace with your real Instagram handle.
+  instagram: 'https://instagram.com/arsalanghogari',
+  resume: '/resume.pdf',
 };
 
+// In-page section anchors used by the header nav + command palette.
 export const NAV = [
-  { href: '/', label: 'home' },
-  { href: '/engineering', label: 'engineering' },
-  { href: '/robotics', label: 'robotics' },
-  { href: '/writing', label: 'writing' },
-  { href: '/study-abroad', label: 'study abroad' },
-  { href: '/resume.pdf', label: 'résumé', external: true },
+  { href: '#about', label: 'about' },
+  { href: '#experience', label: 'experience' },
+  { href: '#built', label: 'built' },
+  { href: '#education', label: 'education' },
+  { href: '#contact', label: 'contact' },
 ];

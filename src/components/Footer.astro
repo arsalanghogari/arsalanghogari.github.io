@@ -3,47 +3,92 @@ import { SITE, SOCIAL } from '../consts';
 const year = new Date().getFullYear();
 ---
 
-<footer id="contact">
+<footer id="contact" data-detect="contact" data-conf="0.93">
   <div class="wrap">
+    <div class="sec-head">
+      <span class="sec-idx">07</span>
+      <h2 class="sec-title">Contact Me</h2>
+    </div>
     <div class="foot">
       <div>
-        <div class="eyebrow" style="margin-bottom:10px;">Get in touch</div>
         <div class="big"><a href={`mailto:${SITE.email}`}>{SITE.email}</a></div>
         <div class="socials">
-          <a href={SOCIAL.github} target="_blank" rel="noopener">GitHub</a> ·
-          <a href={SOCIAL.linkedin} target="_blank" rel="noopener">LinkedIn</a> ·
-          <a href="/resume.pdf" target="_blank" rel="noopener">Résumé</a>
+          <a href={SOCIAL.github} target="_blank" rel="noopener">GitHub</a>
+          <a href={SOCIAL.instagram} target="_blank" rel="noopener">Instagram</a>
+          <a href={SOCIAL.linkedin} target="_blank" rel="noopener">LinkedIn</a>
+          <a href={SOCIAL.resume} target="_blank" rel="noopener">Résumé</a>
         </div>
       </div>
-      <div class="legal">© {year} Arsalan Ghogari · built from scratch in Los Angeles</div>
+      <div class="meta">
+        <div class="legal">© {year} Arsalan Ghogari · Los Angeles</div>
+        <div class="built">
+          <span class="t-status"></span> built with Astro ·
+          <button class="link-btn" data-evt="open-palette">⌘K</button>
+        </div>
+      </div>
     </div>
   </div>
 </footer>
 
 <style>
-  footer { border-top: 1px solid var(--ink); padding: 50px 0 64px; }
+  footer { border-top: 1px solid var(--ink); padding: 56px 0 64px; }
+  .sec-head { margin-bottom: 28px; }
   .foot {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
     align-items: flex-end;
-    gap: 22px;
+    gap: 28px;
   }
   .big {
     font-family: var(--font-display);
     font-weight: 800;
-    font-size: clamp(1.5rem, 4.5vw, 2.5rem);
+    font-size: clamp(1.5rem, 4.5vw, 2.6rem);
     letter-spacing: -0.02em;
     line-height: 1;
   }
   .big a { color: var(--accent); text-decoration: none; }
   .big a:hover { text-decoration: underline; }
   .socials {
-    margin-top: 12px;
+    margin-top: 16px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 18px;
     font-family: var(--font-mono);
-    font-size: 0.78rem;
+    font-size: 0.8rem;
   }
-  .socials a { color: var(--accent); text-decoration: none; }
-  .socials a:hover { text-decoration: underline; }
+  .socials a { color: var(--ink-soft); text-decoration: none; transition: color 0.15s ease; }
+  .socials a:hover { color: var(--accent); }
+  .meta { text-align: right; }
   .legal { font-family: var(--font-mono); font-size: 0.66rem; color: var(--ink-soft); }
+  .built {
+    margin-top: 8px;
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    color: var(--ink-faint);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    justify-content: flex-end;
+  }
+  .t-status {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: var(--good-dot);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--good-dot) 22%, transparent);
+    display: inline-block;
+  }
+  .link-btn {
+    background: none; border: none; padding: 0;
+    font-family: var(--font-mono); font-size: 0.66rem;
+    color: var(--accent); cursor: pointer;
+  }
+  @media (max-width: 560px) { .meta { text-align: left; } .built { justify-content: flex-start; } }
 </style>
+
+<script>
+  document.querySelectorAll('footer .link-btn[data-evt]').forEach((b) =>
+    b.addEventListener('click', () =>
+      window.dispatchEvent(new CustomEvent((b as HTMLElement).dataset.evt!))
+    )
+  );
+</script>

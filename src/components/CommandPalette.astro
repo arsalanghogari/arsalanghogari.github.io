@@ -1,0 +1,185 @@
+---
+import { SOCIAL, SITE } from '../consts';
+
+const items = [
+  { id: 'about', label: 'Go to About', kind: 'nav', value: '#about' },
+  { id: 'experience', label: 'Go to Experience', kind: 'nav', value: '#experience' },
+  { id: 'built', label: 'Go to What I’ve Built', kind: 'nav', value: '#built' },
+  { id: 'education', label: 'Go to Education', kind: 'nav', value: '#education' },
+  { id: 'contact', label: 'Go to Contact', kind: 'nav', value: '#contact' },
+  { id: 'detect', label: 'Toggle detection mode', kind: 'event', value: 'toggle-detection' },
+  { id: 'terminal', label: 'Open terminal', kind: 'event', value: 'open-terminal' },
+  { id: 'resume', label: 'Open résumé', kind: 'url', value: SOCIAL.resume },
+  { id: 'github', label: 'Open GitHub', kind: 'url', value: SOCIAL.github },
+  { id: 'linkedin', label: 'Open LinkedIn', kind: 'url', value: SOCIAL.linkedin },
+  { id: 'instagram', label: 'Open Instagram', kind: 'url', value: SOCIAL.instagram },
+  { id: 'email', label: 'Copy email address', kind: 'copy', value: SITE.email },
+];
+---
+
+<div class="cmdk" id="cmdk" role="dialog" aria-modal="true" aria-label="Command palette" hidden>
+  <div class="cmdk-backdrop" data-close></div>
+  <div class="cmdk-panel">
+    <div class="cmdk-input-row">
+      <span class="cmdk-prompt">&gt;</span>
+      <input id="cmdk-input" type="text" placeholder="Type a command or search…" autocomplete="off" spellcheck="false" />
+      <span class="kbd">esc</span>
+    </div>
+    <ul class="cmdk-list" id="cmdk-list">
+      {items.map((it, i) => (
+        <li
+          class="cmdk-item"
+          data-kind={it.kind}
+          data-value={it.value}
+          data-label={it.label.toLowerCase()}
+          data-i={i}
+        >
+          <span class="cmdk-item-label">{it.label}</span>
+          <span class="cmdk-item-kind">{it.kind}</span>
+        </li>
+      ))}
+    </ul>
+  </div>
+</div>
+
+<style>
+  .cmdk {
+    position: fixed;
+    inset: 0;
+    z-index: 80;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding-top: 14vh;
+  }
+  .cmdk[hidden] { display: none; }
+  .cmdk-backdrop {
+    position: absolute;
+    inset: 0;
+    background: color-mix(in srgb, var(--ink) 38%, transparent);
+    backdrop-filter: blur(3px);
+  }
+  .cmdk-panel {
+    position: relative;
+    width: min(560px, 92vw);
+    background: var(--paper);
+    border: 1px solid var(--ink);
+    box-shadow: 0 18px 50px -12px rgba(20, 20, 16, 0.4);
+  }
+  .cmdk-input-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--line);
+  }
+  .cmdk-prompt { font-family: var(--font-mono); color: var(--accent); }
+  #cmdk-input {
+    flex: 1;
+    border: none;
+    background: transparent;
+    font-family: var(--font-mono);
+    font-size: 0.92rem;
+    color: var(--ink);
+    outline: none;
+  }
+  .cmdk-list { list-style: none; margin: 0; padding: 6px; max-height: 46vh; overflow-y: auto; }
+  .cmdk-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 9px 12px;
+    cursor: pointer;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+  }
+  .cmdk-item[hidden] { display: none; }
+  .cmdk-item.active { background: var(--accent); color: #fff; }
+  .cmdk-item-kind {
+    font-size: 0.62rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+  .cmdk-item.active .cmdk-item-kind { color: rgba(255, 255, 255, 0.75); }
+</style>
+
+<script>
+  (() => {
+    const root = document.getElementById('cmdk')!;
+    const input = document.getElementById('cmdk-input') as HTMLInputElement;
+    const list = document.getElementById('cmdk-list')!;
+    const items = () =>
+      Array.from(list.querySelectorAll('.cmdk-item')) as HTMLLIElement[];
+    let active = 0;
+
+    function visible() { return items().filter((el) => !el.hidden); }
+
+    function setActive(i: number) {
+      const vis = visible();
+      if (!vis.length) return;
+      active = (i + vis.length) % vis.length;
+      items().forEach((el) => el.classList.remove('active'));
+      vis[active].classList.add('active');
+      vis[active].scrollIntoView({ block: 'nearest' });
+    }
+
+    function open() {
+      root.hidden = false;
+      input.value = '';
+      filter('');
+      requestAnimationFrame(() => input.focus());
+    }
+    function close() { root.hidden = true; }
+    function toggle() { root.hidden ? open() : close(); }
+
+    function filter(q: string) {
+      const query = q.trim().toLowerCase();
+      items().forEach((el) => {
+        const label = el.dataset.label || '';
+        el.hidden = query !== '' && !label.includes(query);
+      });
+      active = 0;
+      setActive(0);
+    }
+
+    function run(el: HTMLLIElement) {
+      const { kind, value } = el.dataset;
+      close();
+      if (kind === 'nav') {
+        document.querySelector(value!)?.scrollIntoView({ behavior: 'smooth' });
+      } else if (kind === 'url') {
+        window.open(value!, '_blank', 'noopener');
+      } else if (kind === 'event') {
+        window.dispatchEvent(new CustomEvent(value!));
+      } else if (kind === 'copy') {
+        navigator.clipboard?.writeText(value!);
+      }
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        toggle();
+        return;
+      }
+      if (root.hidden) return;
+      if (e.key === 'Escape') { close(); }
+      else if (e.key === 'ArrowDown') { e.preventDefault(); setActive(active + 1); }
+      else if (e.key === 'ArrowUp') { e.preventDefault(); setActive(active - 1); }
+      else if (e.key === 'Enter') {
+        e.preventDefault();
+        const vis = visible();
+        if (vis[active]) run(vis[active]);
+      }
+    });
+
+    input.addEventListener('input', () => filter(input.value));
+    list.addEventListener('click', (e) => {
+      const el = (e.target as HTMLElement).closest('.cmdk-item') as HTMLLIElement;
+      if (el) run(el);
+    });
+    root.querySelector('[data-close]')?.addEventListener('click', close);
+    window.addEventListener('open-palette', open);
+  })();
+</script>

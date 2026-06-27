@@ -1,0 +1,19 @@
+/* TEAM */
+  Engineer: Arsalan Ghogari
+  Contact: arsalan.m.ghogari [at] gmail.com
+  GitHub: @arsalanghogari
+  LinkedIn: in/arsalan-ghogari
+  Location: Los Angeles, CA, USA
+
+/* WHAT */
+  AI products, autonomous robots, software that scales.
+  CS + Business @ USC — Viterbi & Marshall. AI Applications.
+
+/* SITE */
+  Last update: 2026/06
+  Standards: HTML5, CSS3, semantic markup, prefers-reduced-motion
+  Built with: Astro, vanilla JS — no framework runtime shipped
+  Type: Bricolage Grotesque, Newsreader, JetBrains Mono
+  Easter eggs: try ⌘K, the ` terminal, or "detection mode"
+
+           you found humans.txt — say hi.

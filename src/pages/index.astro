@@ -1,115 +1,155 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import ProjectCard from '../components/ProjectCard.astro';
 import { SITE, SOCIAL } from '../consts';
-import { featured } from '../data/projects';
-import { METRICS, EXPERIENCE } from '../data/experience';
-
-const timeline = [
-  { year: '2023', label: 'Started at USC' },
-  { year: '2024', label: 'RoboSub — Perception Lead' },
-  { year: '2025', label: 'USG — Director of Digital Strategy' },
-  { year: '2025', label: 'AI projects: chatbot, Shroom' },
-  { year: '2026', label: 'Exchange @ University of Bristol' },
-  { year: 'Now', label: 'Building AI products & robots' },
-];
+import {
+  CURRENT_ROLES, PAST_ROLES, TECHNICAL_PROJECTS, NON_TECHNICAL,
+  TECH_SKILLS, EDUCATION,
+} from '../data/content';
 ---
 
 <BaseLayout person={true}>
-  <!-- HERO -->
+  <!-- 01 · TITLE -->
   <section class="hero">
-    <div class="wrap hero-grid">
-      <div class="hero-text">
-        <span class="eyebrow reveal">Computer Science + Business · USC · Los Angeles</span>
-        <h1 class="display hero-title reveal">
-          Building <span class="accent">AI products</span>, autonomous <span class="accent">robots</span>, and software that <span class="accent">scales</span>.
-        </h1>
-        <p class="hero-tags reveal">AI &nbsp;•&nbsp; Robotics &nbsp;•&nbsp; Product &nbsp;•&nbsp; Leadership</p>
-        <div class="links reveal">
-          <a class="btn primary" href="/engineering">View Projects</a>
-          <a class="btn" href="/resume.pdf" target="_blank" rel="noopener">Résumé ↗</a>
-        </div>
-        <div class="hero-social reveal">
-          <a href={SOCIAL.github} target="_blank" rel="noopener">GitHub</a> ·
-          <a href={SOCIAL.linkedin} target="_blank" rel="noopener">LinkedIn</a> ·
-          <a href={`mailto:${SITE.email}`}>Email</a>
-        </div>
+    <div class="grid-bg" aria-hidden="true"></div>
+    <div class="wrap">
+      <div class="status reveal">
+        <span class="dot"></span> available for internships
+        <span class="sep">·</span> Los Angeles
+        <span class="sep">·</span> <span class="mono-dim">press <span class="kbd">⌘K</span> or <span class="kbd">`</span></span>
       </div>
-      <div class="hero-photo detect reveal">
-        <span class="tag">human 0.99</span>
-        <img src="/images/headshot.jpg" alt="Arsalan Ghogari" width="300" height="300" />
+      <div class="hero-grid">
+        <div class="hero-text">
+          <span class="eyebrow reveal">Computer Science + Business · USC</span>
+          <h1 class="display hero-title reveal">
+            Building <span class="accent">AI products</span>, autonomous <span class="accent">robots</span>, and software that <span class="accent">scales</span>.
+          </h1>
+          <p class="hero-tags reveal">AI &nbsp;•&nbsp; Robotics &nbsp;•&nbsp; Product &nbsp;•&nbsp; Leadership</p>
+          <div class="links reveal">
+            <a class="btn primary" href="#built">View Work</a>
+            <a class="btn" href={SOCIAL.resume} target="_blank" rel="noopener">Résumé ↗</a>
+          </div>
+        </div>
+        <div class="hero-photo detect reveal" data-detect="human" data-conf="0.99">
+          <span class="tag">human 0.99</span>
+          <img src="/images/headshot.jpg" alt="Arsalan Ghogari" width="300" height="300" />
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- METRICS -->
-  <section class="bordered-top">
+  <!-- 02 · ABOUT -->
+  <section id="about" class="sec" data-detect="about" data-conf="0.96">
     <div class="wrap">
-      <div class="metrics io-reveal">
-        {METRICS.map((m) => (
-          <div class="metric">
-            <div class="num">{m.num}</div>
-            <div class="label">{m.label}</div>
+      <div class="sec-head"><span class="sec-idx">02</span><h2 class="sec-title">About</h2></div>
+      <div class="prose about io-reveal">
+        <p>
+          I'm studying Computer Science / Business Administration at USC's Viterbi and Marshall
+          schools, specializing in AI Applications. I build perception systems for robots, AI tools
+          that actually ship, and web platforms used by thousands of students.
+        </p>
+        <p>
+          Mostly I like the part where a research-y idea turns into something people actually use —
+          whether that's a robot that can see or a chatbot that answers a student's question at 2am.
+          Right now I'm finishing an exchange at the University of Bristol for Spring 2026.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 03 · CURRENT EXPERIENCES -->
+  <section id="experience" class="sec" data-detect="experience.current" data-conf="0.97">
+    <div class="wrap">
+      <div class="sec-head"><span class="sec-idx">03</span><h2 class="sec-title">Current Experiences</h2></div>
+      <div class="roles">
+        {CURRENT_ROLES.map((r) => (
+          <article class="role io-reveal">
+            <div class="role-head">
+              <h3 class="role-title">
+                {r.role} · {r.orgHref
+                  ? <a class="role-org" href={r.orgHref} target="_blank" rel="noopener">{r.org}</a>
+                  : <span class="role-org">{r.org}</span>}
+              </h3>
+              <span class="role-date">{r.date}</span>
+            </div>
+            <p class="role-blurb">{r.blurb}</p>
+            <div class="skills">{r.tags.map((t) => <span class="chip">{t}</span>)}</div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- 04 · PAST EXPERIENCES -->
+  <section class="sec" data-detect="experience.past" data-conf="0.94">
+    <div class="wrap">
+      <div class="sec-head"><span class="sec-idx">04</span><h2 class="sec-title">Past Experiences</h2></div>
+      <div class="roles">
+        {PAST_ROLES.map((r) => (
+          <article class="role io-reveal">
+            <div class="role-head">
+              <h3 class="role-title">
+                {r.role} · {r.orgHref
+                  ? <a class="role-org" href={r.orgHref} target="_blank" rel="noopener">{r.org}</a>
+                  : <span class="role-org">{r.org}</span>}
+              </h3>
+              <span class="role-date">{r.date}</span>
+            </div>
+            <p class="role-blurb">{r.blurb}</p>
+            <div class="skills">{r.tags.map((t) => <span class="chip">{t}</span>)}</div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- 05 · WHAT I'VE BUILT -->
+  <section id="built" class="sec" data-detect="projects" data-conf="0.95">
+    <div class="wrap">
+      <div class="sec-head"><span class="sec-idx">05</span><h2 class="sec-title">What I’ve Built</h2></div>
+
+      <p class="subhead">Technical Projects &amp; Skills</p>
+      <div class="grid">
+        {TECHNICAL_PROJECTS.map((p) => (
+          <a class="card io-reveal" href={p.href} target="_blank" rel="noopener">
+            <span class="ptop">
+              <span class="ptitle">{p.name}</span>
+              {p.status === 'live' && <span class="badge"><span class="dot">●</span> Live</span>}
+            </span>
+            <span class="psub">{p.subtitle}</span>
+            <span class="pblurb">{p.blurb}</span>
+            <span class="ptech">{p.tech.join(' · ')}</span>
+          </a>
+        ))}
+      </div>
+      <div class="skills skills-block io-reveal">
+        {TECH_SKILLS.map((s) => <span class="chip">{s}</span>)}
+      </div>
+
+      <p class="subhead nt-head">Non-Technical Projects &amp; Skills</p>
+      <div class="nt-grid">
+        {NON_TECHNICAL.map((n) => (
+          <div class="nt-card io-reveal">
+            <div class="nt-name">{n.name}</div>
+            <p class="nt-blurb">{n.blurb}</p>
           </div>
         ))}
       </div>
     </div>
   </section>
 
-  <!-- FEATURED WORK -->
-  <section class="bordered-top">
+  <!-- 06 · EDUCATION -->
+  <section id="education" class="sec" data-detect="education" data-conf="0.94">
     <div class="wrap">
-      <div class="row">
-        <h2 class="section-h">Featured work</h2>
-        <div>
-          <div class="grid">
-            {featured.map((p) => <ProjectCard project={p} />)}
-          </div>
-          <p class="more"><a href="/engineering">All engineering &amp; case studies →</a></p>
+      <div class="sec-head"><span class="sec-idx">06</span><h2 class="sec-title">Education</h2></div>
+      <div class="edu io-reveal">
+        <div class="edu-main">
+          <h3 class="edu-school">{EDUCATION.school}</h3>
+          <p class="edu-degree">{EDUCATION.degree}</p>
+          <p class="edu-detail">{EDUCATION.detail}</p>
+          <p class="edu-exchange">{EDUCATION.exchange}</p>
         </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- TIMELINE -->
-  <section class="bordered-top">
-    <div class="wrap">
-      <div class="row">
-        <h2 class="section-h">Timeline</h2>
-        <ol class="timeline">
-          {timeline.map((t) => (
-            <li class="io-reveal">
-              <span class="t-year">{t.year}</span>
-              <span class="t-dot" aria-hidden="true"></span>
-              <span class="t-label">{t.label}</span>
-            </li>
-          ))}
-        </ol>
-      </div>
-    </div>
-  </section>
-
-  <!-- ABOUT TEASER -->
-  <section class="bordered-top">
-    <div class="wrap">
-      <div class="row">
-        <h2 class="section-h">About</h2>
-        <div class="prose about">
-          <p>
-            I'm studying Computer Science / Business Administration at USC's Viterbi and Marshall
-            schools, specializing in AI Applications, and currently finishing an exchange at the
-            University of Bristol for Spring 2026.
-          </p>
-          <p>
-            A few markers along the way: a 3.9 GPA, Presidential Scholar, Viterbi Scholar, and
-            Dean's List. Mostly though, I like the part where a research-y idea turns into something
-            people actually use — whether that's a robot that can see or a chatbot that answers a
-            student's question at 2am.
-          </p>
-          <p>
-            Open to internships and collaborations. The fastest way to reach me is
-            <a href={`mailto:${SITE.email}`}> email</a>.
-          </p>
+        <div class="edu-honors">
+          {EDUCATION.honors.map((h) => <span class="chip">{h}</span>)}
         </div>
       </div>
     </div>
@@ -117,67 +157,75 @@ const timeline = [
 </BaseLayout>
 
 <style>
-  .hero { padding: clamp(64px, 11vh, 130px) 0 clamp(46px, 8vh, 80px); }
+  /* hero */
+  .hero { position: relative; padding: clamp(56px, 10vh, 120px) 0 clamp(46px, 8vh, 80px); border-bottom: 1px solid var(--line); overflow: hidden; }
+  .grid-bg { position: absolute; inset: 0; z-index: 0; }
+  .hero .wrap { position: relative; z-index: 1; }
+  .status {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--ink-soft);
+    border: 1px solid var(--line);
+    background: color-mix(in srgb, var(--paper) 70%, transparent);
+    padding: 6px 12px;
+    margin-bottom: 30px;
+  }
+  .status .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--good-dot); box-shadow: 0 0 0 3px color-mix(in srgb, var(--good-dot) 22%, transparent); }
+  .status .sep { color: var(--line); }
+  .mono-dim { color: var(--ink-faint); }
   .hero-grid { display: grid; grid-template-columns: 1fr 300px; gap: 56px; align-items: center; }
-  @media (max-width: 820px) {
-    .hero-grid { grid-template-columns: 1fr; gap: 36px; }
-    .hero-photo { order: -1; }
-  }
-  .eyebrow { display: block; margin-bottom: 22px; }
-  .hero-title {
-    font-size: clamp(2.4rem, 6.2vw, 4.6rem);
-    max-width: 16ch;
-  }
-  .hero-tags {
-    font-family: var(--font-mono);
-    font-size: 0.82rem;
-    letter-spacing: 0.04em;
-    color: var(--ink-soft);
-    margin: 26px 0 0;
-    text-transform: uppercase;
-  }
+  @media (max-width: 820px) { .hero-grid { grid-template-columns: 1fr; gap: 36px; } .hero-photo { order: -1; } }
+  .eyebrow { display: block; margin-bottom: 20px; }
+  .hero-title { font-size: clamp(2.3rem, 6vw, 4.4rem); max-width: 16ch; }
+  .hero-tags { font-family: var(--font-mono); font-size: 0.82rem; letter-spacing: 0.04em; color: var(--ink-soft); margin: 24px 0 0; text-transform: uppercase; }
   .links { margin-top: 30px; display: flex; flex-wrap: wrap; gap: 10px; }
-  .hero-social {
-    margin-top: 20px;
-    font-family: var(--font-mono);
-    font-size: 0.76rem;
-    color: var(--ink-soft);
-  }
-  .hero-social a { color: var(--accent); text-decoration: none; }
-  .hero-social a:hover { text-decoration: underline; }
   .hero-photo { position: relative; width: 300px; max-width: 78vw; }
   .hero-photo img { width: 100%; height: auto; display: block; border: 1px solid var(--line); }
 
-  .grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
-  @media (max-width: 900px) { .grid { grid-template-columns: 1fr 1fr; } }
-  @media (max-width: 560px) { .grid { grid-template-columns: 1fr; } }
-  .more { margin: 22px 0 0; font-family: var(--font-mono); font-size: 0.8rem; }
-  .more a { color: var(--accent); text-decoration: none; }
-  .more a:hover { text-decoration: underline; }
+  /* roles */
+  .roles { display: flex; flex-direction: column; }
+  .role { padding: 24px 0; border-bottom: 1px solid var(--line); }
+  .role:first-child { border-top: 1px solid var(--line); }
+  .role-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 6px 18px; }
+  .role-title { font-family: var(--font-display); font-weight: 600; font-size: 1.3rem; letter-spacing: -0.01em; margin: 0; }
+  .role-org { color: var(--accent); }
+  a.role-org { text-decoration: none; border-bottom: 1px solid color-mix(in srgb, var(--accent) 30%, transparent); }
+  a.role-org:hover { border-bottom-color: var(--accent); }
+  .role-date { font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 0.06em; color: var(--ink-soft); text-transform: uppercase; white-space: nowrap; }
+  .role-blurb { margin: 10px 0 12px; color: var(--ink-soft); font-size: 1.02rem; max-width: 70ch; }
 
-  .timeline { list-style: none; margin: 0; padding: 0; }
-  .timeline li {
-    display: grid;
-    grid-template-columns: 84px 16px 1fr;
-    align-items: center;
-    gap: 14px;
-    padding: 12px 0;
-    border-bottom: 1px dashed var(--line);
-  }
-  .t-year {
-    font-family: var(--font-mono);
-    font-size: 0.74rem;
-    color: var(--ink-soft);
-    letter-spacing: 0.04em;
-  }
-  .t-dot {
-    width: 11px; height: 11px;
-    border-radius: 50%;
-    background: var(--accent);
-    box-shadow: 0 0 0 4px var(--accent-wash);
-  }
-  .t-label { font-size: 1.02rem; }
+  /* technical project cards */
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media (max-width: 720px) { .grid { grid-template-columns: 1fr; } }
+  .card { background: var(--panel); border: 1px solid var(--line); padding: 22px; text-decoration: none; display: flex; flex-direction: column; gap: 8px; transition: transform 0.2s var(--ease), box-shadow 0.2s var(--ease), border-color 0.2s var(--ease); }
+  .card:hover { transform: translateY(-3px); border-color: var(--accent); box-shadow: 0 10px 0 -4px rgba(27, 42, 232, 0.12); }
+  .ptop { display: flex; align-items: center; gap: 10px; }
+  .ptitle { font-family: var(--font-display); font-weight: 600; font-size: 1.25rem; letter-spacing: -0.01em; flex: 1; }
+  .card:hover .ptitle { color: var(--accent); }
+  .psub { font-family: var(--font-mono); font-size: 0.64rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-soft); }
+  .pblurb { color: var(--ink-soft); font-size: 0.96rem; flex: 1; }
+  .ptech { font-family: var(--font-mono); font-size: 0.62rem; letter-spacing: 0.05em; color: var(--ink-soft); text-transform: uppercase; border-top: 1px dashed var(--line); padding-top: 10px; }
+  .badge { font-family: var(--font-mono); font-size: 0.56rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--good); border: 1px solid var(--good); padding: 1px 6px; white-space: nowrap; }
+  .badge .dot { color: var(--good-dot); }
+  .skills-block { margin-top: 18px; }
+
+  /* non-technical */
+  .nt-head { margin-top: 44px; }
+  .nt-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); }
+  .nt-card { background: var(--paper); padding: 22px; }
+  .nt-name { font-family: var(--font-display); font-weight: 600; font-size: 1.1rem; letter-spacing: -0.01em; }
+  .nt-blurb { margin: 8px 0 0; color: var(--ink-soft); font-size: 0.95rem; }
+
+  /* education */
+  .edu { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-start; gap: 24px; }
+  .edu-school { font-family: var(--font-display); font-weight: 800; font-size: clamp(1.5rem, 4vw, 2.2rem); letter-spacing: -0.02em; margin: 0; }
+  .edu-degree { margin: 10px 0 0; font-size: 1.1rem; }
+  .edu-detail { margin: 4px 0 0; color: var(--ink-soft); }
+  .edu-exchange { margin: 10px 0 0; font-family: var(--font-mono); font-size: 0.76rem; color: var(--accent); }
+  .edu-honors { display: flex; flex-wrap: wrap; gap: 8px; max-width: 320px; justify-content: flex-end; }
 
   .about p { margin: 0 0 16px; }
-  .about a { color: var(--accent); }
 </style>

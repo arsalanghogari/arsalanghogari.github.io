@@ -1,0 +1,27 @@
+---
+import { SITE, SOCIAL } from '../consts';
+---
+
+<script is:inline define:vars={{ email: SITE.email, gh: SOCIAL.github }}>
+  // A wink for anyone who opens the console.
+  const art = [
+    '',
+    '    ╔═╗ ╔═╗   //  detection: human 0.99',
+    '    ╠═╣ ║ ╦   //  status: building',
+    '    ╩ ╩ ╚═╝   //  arsalanghogari.com',
+    '',
+  ].join('\n');
+  const big = 'font-family:monospace;color:#1b2ae8;font-size:12px;line-height:1.3';
+  const lead = 'font-family:monospace;color:#141410;font-size:13px;font-weight:bold';
+  const dim = 'font-family:monospace;color:#56544c;font-size:12px';
+
+  console.log('%c' + art, big);
+  console.log('%cYou opened the console. I respect that.', lead);
+  console.log('%cIf you got here, we should probably talk.', dim);
+  console.log('%c  → ' + email, dim);
+  console.log('%c  → ' + gh, dim);
+  console.log('%ctip: press ⌘K, or hit ` for a terminal, or type detection() ', dim);
+
+  // little hidden helper
+  window.detection = () => window.dispatchEvent(new CustomEvent('toggle-detection'));
+</script>
