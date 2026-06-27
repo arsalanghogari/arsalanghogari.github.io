@@ -7,6 +7,7 @@ export interface Role {
   date: string;
   blurb: string;
   tags: string[];
+  media?: { src: string; kind: 'shot' | 'photo' | 'logo'; alt: string };
 }
 
 export const CURRENT_ROLES: Role[] = [
@@ -18,6 +19,7 @@ export const CURRENT_ROLES: Role[] = [
     blurb:
       'Run the official USG website serving 20,000+ students — front-end features in HTML/CSS/JS, a dynamic announcements system, interactive election interfaces, and Legislative / Senate Bill / Funding trackers. Kicked off an AI campus-resource chatbot with OpenAI embeddings + RAG. Asked back for a second year.',
     tags: ['React', 'JavaScript', 'RAG', 'Leadership'],
+    media: { src: '/images/usg-site.jpg', kind: 'shot', alt: 'USG website (usg.usc.edu) homepage' },
   },
   {
     role: 'Software / Perception Lead',
@@ -27,6 +29,7 @@ export const CURRENT_ROLES: Role[] = [
     blurb:
       "Lead the autonomous sub's perception stack — computer vision and sonar-based object detection for underwater navigation. Trained a real-time YOLO pipeline (mAP 0.70 → 0.90), led the Kubernetes deployment of ROS services across Raspberry Pi + NVIDIA Jetson Xavier, and built the team site in React + TypeScript.",
     tags: ['Python', 'ROS', 'YOLO', 'Kubernetes'],
+    media: { src: '/images/robosub-site.jpg', kind: 'shot', alt: 'USC AUV / RoboSub site (uscfrl.com) homepage' },
   },
   {
     role: 'Community Engagement Ambassador',
@@ -36,6 +39,7 @@ export const CURRENT_ROLES: Role[] = [
     blurb:
       'On the Outreach Team, connecting people with mental health resources at community events like the Sacred Music & Healing Festival and WeHo Pride — reducing stigma by making it easier, and more normal, to ask for help.',
     tags: ['Outreach', 'Communication'],
+    media: { src: '/images/didihirsch-outreach.jpg', kind: 'photo', alt: 'Didi Hirsch outreach team at a community Pride event' },
   },
 ];
 
@@ -47,6 +51,7 @@ export const PAST_ROLES: Role[] = [
     blurb:
       'Helped launch a mentoring program for first-generation and transfer students, coordinating with 30+ professors and staff and running mentor matching, scheduling, and outreach.',
     tags: ['Mentorship', 'Coordination'],
+    media: { src: '/images/centric-logo.png', kind: 'logo', alt: 'C.E.N.T.R.I.C. program logo' },
   },
   {
     role: 'Crisis Counselor',
@@ -56,6 +61,7 @@ export const PAST_ROLES: Role[] = [
     blurb:
       'Completed 988 Suicide & Crisis Lifeline counselor training and supported people in emotional distress on the national crisis line — active listening, de-escalation, and crisis intervention in high-stakes conversations.',
     tags: ['Crisis Intervention', 'Active Listening'],
+    media: { src: '/images/didihirsch-logo.svg', kind: 'logo', alt: 'Didi Hirsch Mental Health Services logo' },
   },
 ];
 

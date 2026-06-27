@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import RoleCard from '../components/RoleCard.astro';
 import { SITE, SOCIAL } from '../consts';
 import {
   CURRENT_ROLES, PAST_ROLES, TECHNICAL_PROJECTS, NON_TECHNICAL,
@@ -62,20 +63,7 @@ import {
     <div class="wrap">
       <div class="sec-head"><span class="sec-idx">03</span><h2 class="sec-title">Current Experiences</h2></div>
       <div class="roles">
-        {CURRENT_ROLES.map((r) => (
-          <article class="role io-reveal">
-            <div class="role-head">
-              <h3 class="role-title">
-                {r.role} · {r.orgHref
-                  ? <a class="role-org" href={r.orgHref} target="_blank" rel="noopener">{r.org}</a>
-                  : <span class="role-org">{r.org}</span>}
-              </h3>
-              <span class="role-date">{r.date}</span>
-            </div>
-            <p class="role-blurb">{r.blurb}</p>
-            <div class="skills">{r.tags.map((t) => <span class="chip">{t}</span>)}</div>
-          </article>
-        ))}
+        {CURRENT_ROLES.map((r) => <RoleCard role={r} />)}
       </div>
     </div>
   </section>
@@ -85,20 +73,7 @@ import {
     <div class="wrap">
       <div class="sec-head"><span class="sec-idx">04</span><h2 class="sec-title">Past Experiences</h2></div>
       <div class="roles">
-        {PAST_ROLES.map((r) => (
-          <article class="role io-reveal">
-            <div class="role-head">
-              <h3 class="role-title">
-                {r.role} · {r.orgHref
-                  ? <a class="role-org" href={r.orgHref} target="_blank" rel="noopener">{r.org}</a>
-                  : <span class="role-org">{r.org}</span>}
-              </h3>
-              <span class="role-date">{r.date}</span>
-            </div>
-            <p class="role-blurb">{r.blurb}</p>
-            <div class="skills">{r.tags.map((t) => <span class="chip">{t}</span>)}</div>
-          </article>
-        ))}
+        {PAST_ROLES.map((r) => <RoleCard role={r} />)}
       </div>
     </div>
   </section>
@@ -186,17 +161,8 @@ import {
   .hero-photo { position: relative; width: 300px; max-width: 78vw; }
   .hero-photo img { width: 100%; height: auto; display: block; border: 1px solid var(--line); }
 
-  /* roles */
-  .roles { display: flex; flex-direction: column; }
-  .role { padding: 24px 0; border-bottom: 1px solid var(--line); }
-  .role:first-child { border-top: 1px solid var(--line); }
-  .role-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 6px 18px; }
-  .role-title { font-family: var(--font-display); font-weight: 600; font-size: 1.3rem; letter-spacing: -0.01em; margin: 0; }
-  .role-org { color: var(--accent); }
-  a.role-org { text-decoration: none; border-bottom: 1px solid color-mix(in srgb, var(--accent) 30%, transparent); }
-  a.role-org:hover { border-bottom-color: var(--accent); }
-  .role-date { font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 0.06em; color: var(--ink-soft); text-transform: uppercase; white-space: nowrap; }
-  .role-blurb { margin: 10px 0 12px; color: var(--ink-soft); font-size: 1.02rem; max-width: 70ch; }
+  /* roles (cards rendered by RoleCard.astro) */
+  .roles { display: flex; flex-direction: column; border-top: 1px solid var(--line); }
 
   /* technical project cards */
   .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
