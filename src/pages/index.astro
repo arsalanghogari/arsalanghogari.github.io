@@ -50,7 +50,7 @@ import {
         <p>
           Mostly I like the part where a research-y idea turns into something people actually use —
           whether that's a robot that can see or a chatbot that answers a student's question at 2am.
-          I'm back in LA after completing a study abroad semester at the University of Bristol, and
+          I'm back in LA after completing a <a href="https://arsalanghogari.com/study-abroad-diaries/" target="_blank" rel="noopener">study abroad semester</a> at the University of Bristol, and
           on the hunt for my next big project.
         </p>
       </div>
@@ -229,4 +229,11 @@ import {
   .edu-honors { display: flex; flex-wrap: wrap; gap: 8px; max-width: 320px; justify-content: flex-end; }
 
   .about p { margin: 0 0 16px; }
+  .about a {
+    color: var(--accent);
+    text-decoration: none;
+    border-bottom: 1px solid color-mix(in srgb, var(--accent) 35%, transparent);
+    transition: border-color 0.15s ease;
+  }
+  .about a:hover { border-bottom-color: var(--accent); }
 </style>
