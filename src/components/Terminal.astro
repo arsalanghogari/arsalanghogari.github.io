@@ -1,7 +1,7 @@
 ---
 import { SITE, SOCIAL } from '../consts';
 import {
-  CURRENT_ROLES, PAST_ROLES, TECHNICAL_PROJECTS, TECH_SKILLS, EDUCATION,
+  CURRENT_ROLES, PAST_ROLES, VOLUNTEERING, TECHNICAL_PROJECTS, TECH_SKILLS, EDUCATION,
 } from '../data/content';
 
 // Compact dataset handed to the client terminal as JSON.
@@ -14,7 +14,7 @@ const data = {
   resume: SOCIAL.resume,
   skills: TECH_SKILLS,
   education: `${EDUCATION.degree} — ${EDUCATION.school}. ${EDUCATION.honors.join(' · ')}.`,
-  experience: [...CURRENT_ROLES, ...PAST_ROLES].map((r) => ({
+  experience: [...CURRENT_ROLES, ...PAST_ROLES, ...VOLUNTEERING].map((r) => ({
     role: r.role, org: r.org, date: r.date,
   })),
   projects: TECHNICAL_PROJECTS.map((p) => ({

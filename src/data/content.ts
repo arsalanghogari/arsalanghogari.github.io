@@ -31,16 +31,6 @@ export const CURRENT_ROLES: Role[] = [
     tags: ['Python', 'ROS', 'YOLO', 'Kubernetes'],
     media: { src: '/images/robosub-site.jpg', kind: 'shot', alt: 'USC AUV / RoboSub site (uscfrl.com) homepage' },
   },
-  {
-    role: 'Community Engagement Ambassador',
-    org: 'Didi Hirsch Mental Health Services',
-    orgHref: 'https://didihirsch.org',
-    date: 'May 2026 — Present',
-    blurb:
-      'On the Outreach Team, connecting people with mental health resources at community events like the Sacred Music & Healing Festival and WeHo Pride — reducing stigma by making it easier, and more normal, to ask for help.',
-    tags: ['Outreach', 'Communication'],
-    media: { src: '/images/didihirsch-outreach.jpg', kind: 'photo', alt: 'Didi Hirsch outreach team at a community Pride event' },
-  },
 ];
 
 export const PAST_ROLES: Role[] = [
@@ -52,6 +42,19 @@ export const PAST_ROLES: Role[] = [
       'Helped launch a mentoring program for first-generation and transfer students, coordinating with 30+ professors and staff and running mentor matching, scheduling, and outreach.',
     tags: ['Mentorship', 'Coordination'],
     media: { src: '/images/centric-logo.png', kind: 'logo', alt: 'C.E.N.T.R.I.C. program logo' },
+  },
+];
+
+export const VOLUNTEERING: Role[] = [
+  {
+    role: 'Community Engagement Ambassador',
+    org: 'Didi Hirsch Mental Health Services',
+    orgHref: 'https://didihirsch.org',
+    date: 'May 2026 — Present',
+    blurb:
+      'On the Outreach Team, connecting people with mental health resources at community events like the Sacred Music & Healing Festival and WeHo Pride — reducing stigma by making it easier, and more normal, to ask for help.',
+    tags: ['Outreach', 'Communication'],
+    media: { src: '/images/didihirsch-outreach.jpg', kind: 'photo', alt: 'Didi Hirsch outreach team at a community Pride event' },
   },
   {
     role: 'Crisis Counselor',

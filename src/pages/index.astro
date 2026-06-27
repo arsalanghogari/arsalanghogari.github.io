@@ -3,7 +3,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import RoleCard from '../components/RoleCard.astro';
 import { SITE, SOCIAL } from '../consts';
 import {
-  CURRENT_ROLES, PAST_ROLES, TECHNICAL_PROJECTS, NON_TECHNICAL,
+  CURRENT_ROLES, PAST_ROLES, VOLUNTEERING, TECHNICAL_PROJECTS, NON_TECHNICAL,
   TECH_SKILLS, EDUCATION,
 } from '../data/content';
 ---
@@ -78,10 +78,20 @@ import {
     </div>
   </section>
 
-  <!-- 05 · WHAT I'VE BUILT -->
+  <!-- 05 · VOLUNTEERING -->
+  <section id="volunteering" class="sec" data-detect="volunteering" data-conf="0.96">
+    <div class="wrap">
+      <div class="sec-head"><span class="sec-idx">05</span><h2 class="sec-title">Volunteering</h2></div>
+      <div class="roles">
+        {VOLUNTEERING.map((r) => <RoleCard role={r} />)}
+      </div>
+    </div>
+  </section>
+
+  <!-- 06 · WHAT I'VE BUILT -->
   <section id="built" class="sec" data-detect="projects" data-conf="0.95">
     <div class="wrap">
-      <div class="sec-head"><span class="sec-idx">05</span><h2 class="sec-title">What I’ve Built</h2></div>
+      <div class="sec-head"><span class="sec-idx">06</span><h2 class="sec-title">What I’ve Built</h2></div>
 
       <p class="subhead">Technical Projects &amp; Skills</p>
       <div class="grid">
@@ -113,10 +123,10 @@ import {
     </div>
   </section>
 
-  <!-- 06 · EDUCATION -->
+  <!-- 07 · EDUCATION -->
   <section id="education" class="sec" data-detect="education" data-conf="0.94">
     <div class="wrap">
-      <div class="sec-head"><span class="sec-idx">06</span><h2 class="sec-title">Education</h2></div>
+      <div class="sec-head"><span class="sec-idx">07</span><h2 class="sec-title">Education</h2></div>
       <div class="edu io-reveal">
         <div class="edu-main">
           <h3 class="edu-school">{EDUCATION.school}</h3>

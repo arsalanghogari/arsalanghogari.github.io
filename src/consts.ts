@@ -22,6 +22,7 @@ export const SOCIAL = {
 export const NAV = [
   { href: '#about', label: 'about' },
   { href: '#experience', label: 'experience' },
+  { href: '#volunteering', label: 'volunteering' },
   { href: '#built', label: 'built' },
   { href: '#education', label: 'education' },
   { href: '#contact', label: 'contact' },
