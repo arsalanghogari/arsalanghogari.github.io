@@ -127,6 +127,14 @@ const data = {
   }
   .term-body :global(.t-item) { display: flex; flex-direction: column; line-height: 1.5; }
   .term-body :global(.t-date) { font-size: 0.92em; opacity: 0.8; }
+  .term-body :global(.t-block) {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    white-space: normal;
+    margin: 2px 0;
+  }
+  .term-body :global(.t-block) :global(a) { word-break: break-word; }
   .term-line { display: flex; align-items: center; gap: 8px; }
   .term-ps { color: #4caa5a; white-space: nowrap; }
   .term-ps b { color: #8a877c; font-weight: 400; }
@@ -209,24 +217,26 @@ const data = {
         const id = (args[0] || '').toLowerCase();
         const p = data.projects.find((x: any) => x.id === id);
         if (!p) { print(`<span class="t-dim">cat: ${esc(id || '?')}: no such project. try </span><span class="t-accent">ls</span>`); return; }
-        print(`<span class="t-accent">${esc(p.name)}</span>\n${esc(p.blurb)}`);
+        print(`<div class="t-block"><span class="t-accent">${esc(p.name)}</span><span>${esc(p.blurb)}</span></div>`);
       },
       skills: () => print(data.skills.join(' · ')),
       education: () => print(data.education),
       contact: () => print(`email: <a href="mailto:${data.email}">${data.email}</a>`),
       social: () => print(
+        '<div class="t-block">' +
         [
-          `github:    <a href="${data.social.github}" target="_blank" rel="noopener">${data.social.github}</a>`,
-          `linkedin:  <a href="${data.social.linkedin}" target="_blank" rel="noopener">${data.social.linkedin}</a>`,
-          `instagram: <a href="${data.social.instagram}" target="_blank" rel="noopener">${data.social.instagram}</a>`,
-        ].join('\n')
+          `<span><span class="t-dim">github</span> · <a href="${data.social.github}" target="_blank" rel="noopener">${data.social.github}</a></span>`,
+          `<span><span class="t-dim">linkedin</span> · <a href="${data.social.linkedin}" target="_blank" rel="noopener">${data.social.linkedin}</a></span>`,
+          `<span><span class="t-dim">instagram</span> · <a href="${data.social.instagram}" target="_blank" rel="noopener">${data.social.instagram}</a></span>`,
+        ].join('') +
+        '</div>'
       ),
       resume: () => { print('<span class="t-dim">opening résumé…</span>'); window.open(data.resume, '_blank', 'noopener'); },
       detect: () => { print('<span class="t-ok">detection mode toggled.</span>'); window.dispatchEvent(new CustomEvent('toggle-detection')); },
       clear: () => { out.innerHTML = ''; },
       sudo: (args) => {
         if (args.join(' ') === 'hire-me') {
-          print('<span class="t-ok">[sudo] access granted.</span>\nLet’s talk → <a href="mailto:' + data.email + '">' + data.email + '</a>');
+          print('<div class="t-block"><span class="t-ok">[sudo] access granted.</span><span>Let’s talk → <a href="mailto:' + data.email + '">' + data.email + '</a></span></div>');
         } else {
           print('<span class="t-dim">usage: sudo hire-me</span>');
         }
