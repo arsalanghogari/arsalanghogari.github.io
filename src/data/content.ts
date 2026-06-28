@@ -22,7 +22,7 @@ export const CURRENT_ROLES: Role[] = [
     media: { src: '/images/usg-site.jpg', kind: 'shot', alt: 'USG website (usg.usc.edu) homepage' },
   },
   {
-    role: 'Software / Perception Lead',
+    role: 'Perception Lead / Software Engineer',
     org: 'USC RoboSub',
     orgHref: 'https://uscfrl.com',
     date: 'Jan 2024 — Present',
