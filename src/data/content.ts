@@ -29,7 +29,7 @@ export const CURRENT_ROLES: Role[] = [
     blurb:
       "Lead the autonomous sub's perception stack — computer vision and sonar-based object detection for underwater navigation. Trained a real-time YOLO pipeline (mAP 0.70 → 0.90), led the Kubernetes deployment of ROS services across Raspberry Pi + NVIDIA Jetson Xavier, and built the team site in React + TypeScript.",
     tags: ['Python', 'ROS', 'YOLO', 'Kubernetes'],
-    media: { src: '/images/robosub-site.jpg', kind: 'shot', alt: 'USC AUV / RoboSub site (uscfrl.com) homepage' },
+    media: { src: '/images/robosub-vehicle.jpg', kind: 'photo', alt: 'USC RoboSub autonomous underwater vehicle (CAD render)' },
   },
 ];
 
