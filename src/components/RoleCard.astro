@@ -56,7 +56,8 @@ const { role: r } = Astro.props;
     border: 1px solid var(--line);
     display: block;
   }
-  .media-img.shot { object-position: center top; }
+  /* screenshots: show the whole page (natural aspect, no crop) */
+  .media-img.shot { aspect-ratio: auto; height: auto; object-fit: contain; }
   .media-img.photo { object-position: center 36%; }
   .logo-tile {
     width: 100%;
