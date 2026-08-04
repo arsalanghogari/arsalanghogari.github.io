@@ -164,7 +164,13 @@ import {
   .status .sep { color: var(--line); }
   .mono-dim { color: var(--ink-faint); }
   .hero-grid { display: grid; grid-template-columns: 1fr 300px; gap: 56px; align-items: center; }
-  @media (max-width: 820px) { .hero-grid { grid-template-columns: 1fr; gap: 36px; } .hero-photo { order: -1; } }
+  @media (max-width: 820px) {
+    .hero-grid { grid-template-columns: 1fr; gap: 36px; }
+    .hero .wrap { text-align: center; }
+    .hero-photo { order: -1; margin: 0 auto; }
+    .hero-title { margin-inline: auto; }
+    .links { justify-content: center; }
+  }
   .eyebrow { display: block; margin-bottom: 20px; }
   .hero-title { font-size: clamp(2.3rem, 6vw, 4.4rem); max-width: 16ch; }
   .hero-tags { font-family: var(--font-mono); font-size: 0.82rem; letter-spacing: 0.04em; color: var(--ink-soft); margin: 24px 0 0; text-transform: uppercase; }
