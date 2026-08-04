@@ -13,38 +13,38 @@ export interface Role {
 
 export const CURRENT_ROLES: Role[] = [
   {
-    role: 'Director of Digital Strategy',
-    summary: 'web platform for 20,000+ students',
-    org: 'USC Undergraduate Student Government',
-    orgHref: 'https://usg.usc.edu',
-    date: 'May 2025 — Present',
-    blurb:
-      'Run the official USG website serving 20,000+ students — front-end features in HTML/CSS/JS, a dynamic announcements system, interactive election interfaces, and Legislative / Senate Bill / Funding trackers. Kicked off an AI campus-resource chatbot with OpenAI embeddings + RAG. Asked back for a second year.',
-    tags: ['React', 'JavaScript', 'RAG', 'Leadership'],
-    media: { src: '/images/usg-site.jpg', kind: 'shot', alt: 'USG website (usg.usc.edu) homepage' },
-  },
-  {
-    role: 'Perception Lead / Software Engineer',
-    summary: 'underwater CV, mAP 0.70 → 0.90',
+    role: 'Software Lead',
     org: 'USC RoboSub',
     orgHref: 'https://uscfrl.com',
     date: 'Jan 2025 — Present',
     blurb:
-      "Lead the autonomous sub's perception stack — computer vision and sonar-based object detection for underwater navigation. Trained a real-time YOLO pipeline (mAP 0.70 → 0.90), led the Kubernetes deployment of ROS services across Raspberry Pi + NVIDIA Jetson Xavier, and built the team site in React + TypeScript.",
-    tags: ['Python', 'ROS', 'YOLO', 'Kubernetes'],
+      "Promoted 3× in 18 months (Software Engineer → Perception Lead → Software Lead); now direct a 5–10 engineer team owning the AUV's full autonomy stack — vision, SLAM, planning, controls, and mission control. More than doubled underwater detection accuracy (mAP 0.40 → 0.90) by building the annotated dataset and training YOLO + RT-DETR with TensorRT on-vehicle inference, migrated a 10,000+ line ROS 1 codebase to ROS 2, delivered GTSAM-based SLAM validated to under 0.3 m error, and turned 75 GB of in-water test data into root-cause fixes worth 40% of top speed.",
+    tags: ['Python', 'C++', 'ROS 2', 'PyTorch', 'TensorRT', 'Kubernetes'],
+    summary: 'mAP 0.40 → 0.90 · leading 5–10 engineers',
     media: { src: '/images/robosub-site.jpg', kind: 'shot', alt: 'USC AUV / RoboSub team site (uscfrl.com) homepage' },
+  },
+  {
+    role: 'Director of Digital Strategy',
+    org: 'USC Undergraduate Student Government',
+    orgHref: 'https://usg.usc.edu',
+    date: 'May 2025 — Present',
+    blurb:
+      "Own the digital platform serving 20,000+ undergraduates and lead a 2–3 person digital team — re-appointed for a second year. Made $352K in student-government spending publicly searchable with automated Funding, Senate Bill, and Legislative trackers (cutting manual reporting ~95% across 40+ organizations), grew USG's Instagram 25% with an analytics-driven content strategy, and built Ask USG, the organization's AI assistant, slated for campus-wide launch in Fall 2026.",
+    tags: ['JavaScript', 'WordPress', 'RAG', 'Leadership'],
+    summary: '20,000+ students · $352K made searchable',
+    media: { src: '/images/usg-site.jpg', kind: 'shot', alt: 'USG website (usg.usc.edu) homepage' },
   },
 ];
 
 export const PAST_ROLES: Role[] = [
   {
     role: 'Math Peer Mentor',
-    summary: 'mentoring first-gen & transfer students',
     org: 'C.E.N.T.R.I.C. (Viterbi & Dornsife)',
     date: 'Aug — Dec 2025',
     blurb:
-      'Helped launch a mentoring program for first-generation and transfer students, coordinating with 30+ professors and staff and running mentor matching, scheduling, and outreach.',
+      "Mentored 5 first-generation and transfer students in the program's inaugural cohort, coordinating with 30+ professors, advisors, and residential staff and building the program's application-tracking, mentor-matching, and scheduling workflows.",
     tags: ['Mentorship', 'Coordination'],
+    summary: 'inaugural cohort · 30+ faculty & staff',
     media: { src: '/images/centric-logo.png', kind: 'logo', alt: 'C.E.N.T.R.I.C. program logo' },
   },
 ];
@@ -52,24 +52,24 @@ export const PAST_ROLES: Role[] = [
 export const VOLUNTEERING: Role[] = [
   {
     role: 'Community Engagement Ambassador',
-    summary: 'mental-health outreach at LA events',
     org: 'Didi Hirsch Mental Health Services',
     orgHref: 'https://didihirsch.org',
     date: 'May 2026 — Present',
     blurb:
-      'On the Outreach Team, connecting people with mental health resources at community events like the Sacred Music & Healing Festival and WeHo Pride — reducing stigma by making it easier, and more normal, to ask for help.',
+      'Rejoined after a semester abroad, now on the Outreach Team — connecting people with mental health resources at community events like the Sacred Music & Healing Festival and WeHo Pride, expanding community awareness of crisis resources and making it easier, and more normal, to ask for help.',
     tags: ['Outreach', 'Communication'],
+    summary: 'mental-health outreach at LA events',
     media: { src: '/images/didihirsch-outreach.jpg', kind: 'photo', alt: 'Didi Hirsch outreach team at a community Pride event' },
   },
   {
     role: 'Crisis Counselor',
-    summary: '988 crisis-line support',
     org: 'Didi Hirsch Mental Health Services',
     orgHref: 'https://didihirsch.org',
     date: 'May 2025 — Jan 2026',
     blurb:
-      'Completed 988 Suicide & Crisis Lifeline counselor training and supported people in emotional distress on the national crisis line — active listening, de-escalation, and crisis intervention in high-stakes conversations.',
+      'Completed 50+ hours of intensive crisis-intervention training and served a weekly suicide-prevention shift on the national 988 Lifeline — volunteering near-daily over winter break and answering 100+ crisis calls with active listening and de-escalation.',
     tags: ['Crisis Intervention', 'Active Listening'],
+    summary: '100+ crisis calls · 50+ hours of training',
     media: { src: '/images/didihirsch-logo.svg', kind: 'logo', alt: 'Didi Hirsch Mental Health Services logo' },
   },
 ];
@@ -85,21 +85,29 @@ export interface Project {
 
 export const TECHNICAL_PROJECTS: Project[] = [
   {
-    name: 'RoboSub Perception',
+    name: 'RoboSub Autonomy Stack',
     subtitle: 'Autonomous Underwater Vehicle',
     blurb:
-      'Real-time underwater object detection feeding the SLAM / navigation stack. Built the ROS pipeline and custom datasets from recorded ROS bags; improved detection mAP from 0.70 → 0.90.',
-    tech: ['Python', 'ROS', 'YOLO', 'RT-DETR', 'OpenCV', 'Kubernetes'],
+      'Real-time underwater detection and SLAM for the AUV — custom datasets built from ROS bags, YOLO + RT-DETR compiled ONNX → TensorRT for on-vehicle inference (detection mAP 0.40 → 0.90), and GTSAM factor-graph navigation validated to under 0.3 m absolute error on rosbag replay.',
+    tech: ['Python', 'ROS 2', 'YOLO', 'RT-DETR', 'TensorRT', 'GTSAM'],
     href: 'https://uscfrl.com',
   },
   {
-    name: 'USG AI Chatbot',
-    subtitle: 'Retrieval-Augmented Campus Assistant',
+    name: 'Ask USG',
+    subtitle: 'Production RAG Chatbot',
     status: 'live',
     blurb:
-      'A retrieval-augmented chatbot that helps 20,000+ students find campus resources, using OpenAI embeddings and a structured website-ingestion pipeline for semantic search.',
-    tech: ['Python', 'Embeddings', 'RAG'],
+      'Production RAG chatbot for USC student government — auto-ingests all 97 USG site pages weekly, lifted answer quality 83% → 95% in a 1,100+ question beta, retrieval MRR 0.91 → 0.98, time-to-first-token 6.2 s → 0.5 s, and a LangGraph agent at 100% tool-selection accuracy. Slated for campus-wide launch to 20,000+ students in Fall 2026.',
+    tech: ['Python', 'Node/Express', 'OpenAI', 'pgvector', 'LangGraph', 'Docker'],
     href: 'https://arsalanghogari.github.io/usc-usg-ai-chatbot/',
+  },
+  {
+    name: 'Parley',
+    subtitle: 'AI Voice Negotiation Agent',
+    blurb:
+      'Solo build for the ElevenLabs × Hack-Nation Global AI Hackathon: a voice agent that discovers vendors via live Google Places, phones them, negotiates using competing bids as leverage, and books the winner — producing a genuine $2,400 → $2,250 price drop, with in-code honesty tripwires and 41 CI-gated tests.',
+    tech: ['Next.js', 'TypeScript', 'ElevenLabs', 'GPT-4o', 'Supabase'],
+    href: 'https://github.com/arsalanghogari',
   },
   {
     name: 'Shroom',
@@ -122,17 +130,9 @@ export const TECHNICAL_PROJECTS: Project[] = [
     name: 'AnchorNotes',
     subtitle: 'Collaborative Note-Taking App',
     blurb:
-      'A real-time collaborative Android notes app with persistent storage — picked as a top-2 implementation out of 37 teams and presented to the class.',
+      'Selected as a top-2 implementation out of 37 teams for an original note-map visualization — delivered an app 70% faster than peers via Android Profiler-guided optimization, thread offloading, and database indexing.',
     tech: ['Java', 'XML', 'Android Studio'],
     href: 'https://github.com/arsalanghogari/AnchorNotes',
-  },
-  {
-    name: 'AI Travel Itinerary Generator',
-    subtitle: 'Personalized Trip Planning',
-    blurb:
-      'Generates personalized day-by-day travel plans from your interests, trip length, and destination, powered by the Gemini API.',
-    tech: ['Java Servlets', 'Gemini API'],
-    href: 'https://github.com/arsalanghogari',
   },
 ];
 
@@ -141,7 +141,7 @@ export const NON_TECHNICAL = [
   {
     name: 'Crisis Intervention',
     blurb:
-      '988 Suicide & Crisis Lifeline trained. Active listening, de-escalation, and staying composed in high-stakes conversations.',
+      '988 Suicide & Crisis Lifeline trained (50+ hours). 100+ crisis calls answered with active listening, de-escalation, and composure in high-stakes conversations.',
   },
   {
     name: 'Community Outreach',
@@ -151,25 +151,27 @@ export const NON_TECHNICAL = [
   {
     name: 'Mentorship & Program-Building',
     blurb:
-      'Helped launch a mentoring program for first-gen and transfer students, coordinating across 30+ faculty and staff.',
+      "Mentored first-gen and transfer students in C.E.N.T.R.I.C.'s inaugural cohort, coordinating across 30+ faculty and staff.",
   },
   {
     name: 'Digital Strategy & Leadership',
     blurb:
-      'Owning a platform used by a 20,000-student body — translating organizational needs into shipped features.',
+      'Owning a platform used by 20,000+ students and leading engineer teams of 2–10 — translating organizational needs into shipped features.',
   },
 ];
 
 export const TECH_SKILLS = [
-  'Python', 'C++', 'C', 'Java', 'JavaScript', 'TypeScript', 'React', 'HTML/CSS',
-  'MATLAB', 'ROS', 'Kubernetes', 'Docker', 'OpenAI API', 'YOLO', 'RT-DETR',
-  'OpenCV', 'WordPress', 'Java Servlets', 'Git', 'OnShape', 'AutoCAD',
+  'Python', 'C++', 'CUDA', 'Java', 'JavaScript', 'TypeScript', 'MATLAB',
+  'PyTorch', 'TensorRT', 'ONNX', 'ROS 2', 'GTSAM', 'NVIDIA Isaac Sim', 'OpenCV',
+  'React', 'Next.js', 'Node/Express', 'PostgreSQL', 'pgvector', 'LangGraph',
+  'Supabase', 'WordPress', 'Docker', 'K3s', 'GitHub Actions', 'Git',
+  'OnShape', 'AutoCAD',
 ];
 
 export const EDUCATION = {
   school: 'University of Southern California',
   degree: 'B.S. Computer Science + Business Administration',
-  detail: "Viterbi School of Engineering & Marshall School of Business · specializing in AI Applications",
-  exchange: 'Exchange — University of Bristol, UK (Spring 2026)',
-  honors: ['3.9 GPA', 'Presidential Scholar', 'Viterbi Scholar', "Dean's List"],
+  detail: 'Viterbi School of Engineering & Marshall School of Business · Minor in AI Applications',
+  exchange: 'Study Abroad — University of Bristol, UK (Spring 2026)',
+  honors: ['3.9 GPA', 'SAT 1550', 'Presidential Scholar', 'Viterbi Scholar', "Dean's List", 'W.V.T. Rusch Honors'],
 };
