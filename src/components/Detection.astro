@@ -17,6 +17,7 @@
     function build() {
       layer = document.createElement('div');
       layer.className = 'det-layer';
+      layer.setAttribute('aria-hidden', 'true');
       tracked = targets().map((el) => {
         const box = document.createElement('div');
         box.className = 'det-box';

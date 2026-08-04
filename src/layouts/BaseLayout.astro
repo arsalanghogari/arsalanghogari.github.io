@@ -26,8 +26,9 @@ const { title, description, image, type, person, footer = true } = Astro.props;
   </head>
   <body>
     <a id="top"></a>
+    <a class="skip-link" href="#main">Skip to content</a>
     <Header />
-    <main>
+    <main id="main">
       <slot />
     </main>
     {footer && <Footer />}
