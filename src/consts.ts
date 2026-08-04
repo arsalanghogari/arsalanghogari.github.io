@@ -16,6 +16,7 @@ export const SOCIAL = {
   linkedin: 'https://linkedin.com/in/arsalan-ghogari',
   instagram: 'https://instagram.com/arsalanghogari',
   resume: '/resume.pdf',
+  resumeFull: '/resume-full.pdf',
 };
 
 // In-page section anchors used by the header nav + command palette.

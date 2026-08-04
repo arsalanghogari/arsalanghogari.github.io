@@ -12,6 +12,7 @@ const data = {
     "CS + Business at USC (Viterbi & Marshall), specializing in AI Applications. I build perception systems for robots, AI tools that ship, and web platforms used by thousands.",
   social: SOCIAL,
   resume: SOCIAL.resume,
+  resumeFull: SOCIAL.resumeFull,
   skills: TECH_SKILLS,
   education: `${EDUCATION.degree} — ${EDUCATION.school}. ${EDUCATION.honors.join(' · ')}.`,
   experience: [...CURRENT_ROLES, ...PAST_ROLES].map((r) => ({
@@ -182,7 +183,7 @@ const data = {
           ['education', 'school + honors'],
           ['contact', 'how to reach me'],
           ['social', 'links'],
-          ['resume', 'open résumé'],
+          ['resume [full]', 'open résumé (1-page, or full 2-page)'],
           ['detect', 'toggle detection mode'],
           ['clear', 'clear the screen'],
         ];
@@ -231,7 +232,11 @@ const data = {
         ].join('') +
         '</div>'
       ),
-      resume: () => { print('<span class="t-dim">opening résumé…</span>'); window.open(data.resume, '_blank', 'noopener'); },
+      resume: (args) => {
+        const full = args[0] === 'full';
+        print(`<span class="t-dim">opening ${full ? 'full two-page' : 'one-page'} résumé… ${full ? '' : '(try <span class="t-accent">resume full</span> for the deep dive)'}</span>`);
+        window.open(full ? data.resumeFull : data.resume, '_blank', 'noopener');
+      },
       detect: () => { print('<span class="t-ok">detection mode toggled.</span>'); window.dispatchEvent(new CustomEvent('toggle-detection')); },
       clear: () => { out.innerHTML = ''; },
       sudo: (args) => {

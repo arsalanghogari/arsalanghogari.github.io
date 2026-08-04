@@ -29,6 +29,7 @@ import {
             <a class="btn primary" href="#built">View Work</a>
             <a class="btn" href={SOCIAL.resume} target="_blank" rel="noopener">Résumé ↗</a>
           </div>
+          <p class="resume-deep reveal">want the nuanced version? <a href={SOCIAL.resumeFull} target="_blank" rel="noopener">full two-page résumé →</a></p>
         </div>
         <div class="hero-photo detect reveal" data-detect="software engineer" data-conf="0.99">
           <span class="tag">human 0.99</span>
@@ -168,6 +169,9 @@ import {
   .hero-title { font-size: clamp(2.3rem, 6vw, 4.4rem); max-width: 16ch; }
   .hero-tags { font-family: var(--font-mono); font-size: 0.82rem; letter-spacing: 0.04em; color: var(--ink-soft); margin: 24px 0 0; text-transform: uppercase; }
   .links { margin-top: 30px; display: flex; flex-wrap: wrap; gap: 10px; }
+  .resume-deep { font-family: var(--font-mono); font-size: 0.72rem; color: var(--ink-faint); margin: 14px 0 0; }
+  .resume-deep a { color: var(--accent); text-decoration: none; }
+  .resume-deep a:hover { text-decoration: underline; }
   .hero-photo { position: relative; width: 300px; max-width: 78vw; }
   .hero-photo img { width: 100%; height: auto; display: block; border: 1px solid var(--line); }
 
