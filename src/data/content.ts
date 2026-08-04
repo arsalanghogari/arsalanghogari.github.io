@@ -7,12 +7,14 @@ export interface Role {
   date: string;
   blurb: string;
   tags: string[];
+  summary?: string;
   media?: { src: string; kind: 'shot' | 'photo' | 'logo'; alt: string };
 }
 
 export const CURRENT_ROLES: Role[] = [
   {
     role: 'Director of Digital Strategy',
+    summary: 'web platform for 20,000+ students',
     org: 'USC Undergraduate Student Government',
     orgHref: 'https://usg.usc.edu',
     date: 'May 2025 — Present',
@@ -23,9 +25,10 @@ export const CURRENT_ROLES: Role[] = [
   },
   {
     role: 'Perception Lead / Software Engineer',
+    summary: 'underwater CV, mAP 0.70 → 0.90',
     org: 'USC RoboSub',
     orgHref: 'https://uscfrl.com',
-    date: 'Jan 2024 — Present',
+    date: 'Jan 2025 — Present',
     blurb:
       "Lead the autonomous sub's perception stack — computer vision and sonar-based object detection for underwater navigation. Trained a real-time YOLO pipeline (mAP 0.70 → 0.90), led the Kubernetes deployment of ROS services across Raspberry Pi + NVIDIA Jetson Xavier, and built the team site in React + TypeScript.",
     tags: ['Python', 'ROS', 'YOLO', 'Kubernetes'],
@@ -36,6 +39,7 @@ export const CURRENT_ROLES: Role[] = [
 export const PAST_ROLES: Role[] = [
   {
     role: 'Math Peer Mentor',
+    summary: 'mentoring first-gen & transfer students',
     org: 'C.E.N.T.R.I.C. (Viterbi & Dornsife)',
     date: 'Aug — Dec 2025',
     blurb:
@@ -48,6 +52,7 @@ export const PAST_ROLES: Role[] = [
 export const VOLUNTEERING: Role[] = [
   {
     role: 'Community Engagement Ambassador',
+    summary: 'mental-health outreach at LA events',
     org: 'Didi Hirsch Mental Health Services',
     orgHref: 'https://didihirsch.org',
     date: 'May 2026 — Present',
@@ -58,6 +63,7 @@ export const VOLUNTEERING: Role[] = [
   },
   {
     role: 'Crisis Counselor',
+    summary: '988 crisis-line support',
     org: 'Didi Hirsch Mental Health Services',
     orgHref: 'https://didihirsch.org',
     date: 'May 2025 — Jan 2026',
