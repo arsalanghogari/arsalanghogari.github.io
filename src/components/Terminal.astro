@@ -110,7 +110,7 @@ const data = {
   .term-body :global(.t-dim) { color: #8a877c; }
   .term-body :global(.t-ok) { color: #4caa5a; }
   .term-body :global(a) { color: #6b78ff; }
-  .term-body :global(.row) { white-space: pre-wrap; }
+  .term-body :global(.t-row) { white-space: pre-wrap; }
   .term-body :global(.t-cols) {
     display: grid;
     grid-template-columns: max-content 1fr;
@@ -136,6 +136,10 @@ const data = {
     margin: 2px 0;
   }
   .term-body :global(.t-block) :global(a) { word-break: break-word; }
+  .term-body :global(.t-cols) :global(a) { word-break: break-word; }
+  .term-body :global(.t-echo) { display: flex; gap: 8px; white-space: normal; }
+  .term-body :global(.t-ps) { color: #4caa5a; white-space: nowrap; }
+  .term-body :global(.t-ps b) { color: #8a877c; font-weight: 400; }
   .term-line { display: flex; align-items: center; gap: 8px; }
   .term-ps { color: #4caa5a; white-space: nowrap; }
   .term-ps b { color: #8a877c; font-weight: 400; }
@@ -163,7 +167,7 @@ const data = {
 
     const esc = (s: string) =>
       s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-    const print = (html: string, cls = 'row') => {
+    const print = (html: string, cls = 't-row') => {
       const div = document.createElement('div');
       div.className = cls;
       div.innerHTML = html;
@@ -224,12 +228,10 @@ const data = {
       education: () => print(data.education),
       contact: () => print(`email: <a href="mailto:${data.email}">${data.email}</a>`),
       social: () => print(
-        '<div class="t-block">' +
-        [
-          `<span><span class="t-dim">github</span> · <a href="${data.social.github}" target="_blank" rel="noopener">${data.social.github}</a></span>`,
-          `<span><span class="t-dim">linkedin</span> · <a href="${data.social.linkedin}" target="_blank" rel="noopener">${data.social.linkedin}</a></span>`,
-          `<span><span class="t-dim">instagram</span> · <a href="${data.social.instagram}" target="_blank" rel="noopener">${data.social.instagram}</a></span>`,
-        ].join('') +
+        '<div class="t-cols">' +
+        ['github', 'linkedin', 'instagram']
+          .map((k) => `<span class="t-dim">${k}</span><a href="${data.social[k]}" target="_blank" rel="noopener">${data.social[k]}</a>`)
+          .join('') +
         '</div>'
       ),
       resume: (args) => {
@@ -250,7 +252,7 @@ const data = {
 
     function exec(raw: string) {
       const line = raw.trim();
-      print(`<span class="term-ps" style="color:#4caa5a">arsalan@portfolio<b style="color:#8a877c;font-weight:400">:~$</b></span> ${esc(line)}`);
+      print(`<div class="t-echo"><span class="t-ps">arsalan@portfolio<b>:~$</b></span><span>${esc(line)}</span></div>`);
       if (!line) return;
       history.unshift(line); hi = -1;
       const [cmd, ...args] = line.split(/\s+/);
