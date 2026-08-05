@@ -107,7 +107,7 @@ export const TECHNICAL_PROJECTS: Project[] = [
     blurb:
       'Solo build for the ElevenLabs × Hack-Nation Global AI Hackathon: a voice agent that discovers vendors via live Google Places, phones them, negotiates using competing bids as leverage, and books the winner — producing a genuine $2,400 → $2,250 price drop, with in-code honesty tripwires and 41 CI-gated tests.',
     tech: ['Next.js', 'TypeScript', 'ElevenLabs', 'GPT-4o', 'Supabase'],
-    href: 'https://github.com/arsalanghogari',
+    href: 'https://github.com/arsalanghogari/the-negotiator',
   },
   {
     name: 'Shroom',
