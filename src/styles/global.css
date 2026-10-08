@@ -5,19 +5,18 @@
    ============================================================ */
 
 :root {
-  color-scheme: dark;
-  --paper: #0b0c10;
-  --panel: #12141a;
-  --panel-2: #181b22;
-  --ink: #ebe9e2;
-  --ink-soft: #a9a79f;
-  --ink-faint: #817f77;
-  --line: #262a33;
-  --accent: #ff6a2b;
-  --accent-deep: #ff8a55;
-  --accent-wash: rgba(255, 106, 43, 0.1);
-  --good: #6fe3b8;
-  --good-dot: #3ad59a;
+  --paper: #efeee8;
+  --panel: #f6f5f0;
+  --panel-2: #eceae2;
+  --ink: #141410;
+  --ink-soft: #56544c;
+  --ink-faint: #6e6b60;
+  --line: #d6d3c8;
+  --accent: #1b2ae8;
+  --accent-deep: #0e1aa8;
+  --accent-wash: rgba(27, 42, 232, 0.08);
+  --good: #0a7d33;
+  --good-dot: #13b34a;
   --maxw: 1120px;
   --maxw-prose: 720px;
 
@@ -306,7 +305,7 @@ html.js .io-reveal.in {
   background-position: center;
   -webkit-mask-image: radial-gradient(ellipse 80% 70% at 50% 40%, #000 30%, transparent 75%);
   mask-image: radial-gradient(ellipse 80% 70% at 50% 40%, #000 30%, transparent 75%);
-  opacity: 0.7;
+  opacity: 0.5;
 }
 
 /* ============================================================

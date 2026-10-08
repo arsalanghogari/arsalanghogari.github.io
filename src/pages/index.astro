@@ -1,7 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import RoleCard from '../components/RoleCard.astro';
-import MissionScene from '../components/MissionScene.astro';
 import { SITE, SOCIAL } from '../consts';
 import {
   CURRENT_ROLES, PAST_ROLES, VOLUNTEERING, TECHNICAL_PROJECTS, NON_TECHNICAL,
@@ -31,7 +30,10 @@ import {
             <a class="btn" href={SOCIAL.resume} target="_blank" rel="noopener">Résumé ↗</a>
           </div>
         </div>
-        <div class="hero-scene reveal"><MissionScene /></div>
+        <div class="hero-photo detect reveal" data-detect="software engineer" data-conf="0.99">
+          <span class="tag">human 0.99</span>
+          <img src="/images/headshot.jpg" alt="Arsalan Ghogari" width="300" height="300" />
+        </div>
       </div>
     </div>
   </section>
@@ -40,12 +42,7 @@ import {
   <section id="about" class="sec" data-detect="about" data-conf="0.96">
     <div class="wrap">
       <div class="sec-head"><span class="sec-idx">02</span><h2 class="sec-title">About</h2></div>
-      <div class="about-grid io-reveal">
-      <div class="about-photo detect" data-detect="software engineer" data-conf="0.99">
-        <span class="tag">human 0.99</span>
-        <img src="/images/headshot.jpg" alt="Arsalan Ghogari" width="220" height="220" loading="lazy" />
-      </div>
-      <div class="prose about">
+      <div class="prose about io-reveal">
         <p>
           I'm studying Computer Science / Business Administration at USC's Viterbi and Marshall
           schools, specializing in AI Applications. I build perception systems for robots, AI tools
@@ -57,7 +54,6 @@ import {
           I'm back in LA after completing a <a href="https://arsalanghogari.com/postcards-from-bristol/" target="_blank" rel="noopener">study abroad semester</a> at the University of Bristol, and
           on the hunt for my next big project.
         </p>
-      </div>
       </div>
     </div>
   </section>
@@ -166,24 +162,20 @@ import {
   .status .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--good-dot); box-shadow: 0 0 0 3px color-mix(in srgb, var(--good-dot) 22%, transparent); }
   .status .sep { color: var(--line); }
   .mono-dim { color: var(--ink-faint); }
-  .hero-grid { display: grid; grid-template-columns: 1fr 520px; gap: 48px; align-items: center; }
-  @media (max-width: 1040px) { .hero-grid { grid-template-columns: 1fr 440px; } }
+  .hero-grid { display: grid; grid-template-columns: 1fr 300px; gap: 56px; align-items: center; }
   @media (max-width: 820px) {
     .hero-grid { grid-template-columns: 1fr; gap: 36px; }
     .hero .wrap { text-align: center; }
-    .hero-scene { order: -1; margin: 0 auto; width: 100%; max-width: 520px; }
+    .hero-photo { order: -1; margin: 0 auto; }
     .hero-title { margin-inline: auto; }
     .links { justify-content: center; }
   }
   .eyebrow { display: block; margin-bottom: 20px; }
-  .hero-title { font-size: clamp(2.2rem, 4.6vw, 3.7rem); max-width: 14ch; }
+  .hero-title { font-size: clamp(2.3rem, 6vw, 4.4rem); max-width: 16ch; }
   .hero-tags { font-family: var(--font-mono); font-size: 0.82rem; letter-spacing: 0.04em; color: var(--ink-soft); margin: 24px 0 0; text-transform: uppercase; }
   .links { margin-top: 30px; display: flex; flex-wrap: wrap; gap: 10px; }
-  .hero-scene { position: relative; justify-self: end; width: 100%; }
-  .about-grid { display: grid; grid-template-columns: 220px 1fr; gap: 40px; align-items: start; }
-  @media (max-width: 720px) { .about-grid { grid-template-columns: 1fr; } .about-photo { width: 180px; } }
-  .about-photo { position: relative; width: 220px; }
-  .about-photo img { width: 100%; height: auto; display: block; border: 1px solid var(--line); }
+  .hero-photo { position: relative; width: 300px; max-width: 78vw; }
+  .hero-photo img { width: 100%; height: auto; display: block; border: 1px solid var(--line); }
 
   /* roles (cards rendered by RoleCard.astro) */
   .roles { display: flex; flex-direction: column; border-top: 1px solid var(--line); }
@@ -192,7 +184,7 @@ import {
   .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
   @media (max-width: 720px) { .grid { grid-template-columns: 1fr; } }
   .card { background: var(--panel); border: 1px solid var(--line); padding: 22px; text-decoration: none; display: flex; flex-direction: column; gap: 8px; transition: transform 0.2s var(--ease), box-shadow 0.2s var(--ease), border-color 0.2s var(--ease); }
-  .card:hover { transform: translateY(-3px); border-color: var(--accent); box-shadow: 0 10px 0 -4px var(--accent-wash); }
+  .card:hover { transform: translateY(-3px); border-color: var(--accent); box-shadow: 0 10px 0 -4px rgba(27, 42, 232, 0.12); }
   .ptop { display: flex; align-items: center; gap: 10px; }
   .ptitle { font-family: var(--font-display); font-weight: 600; font-size: 1.25rem; letter-spacing: -0.01em; flex: 1; }
   .card:hover .ptitle { color: var(--accent); }
