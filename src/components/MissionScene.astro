@@ -101,10 +101,9 @@ const MODES = [
     const css = getComputedStyle(document.documentElement);
     const tok = (n: string) => css.getPropertyValue(n).trim();
     const C = { accent: tok('--accent'), good: tok('--good'), line: tok('--line'), ink: tok('--ink'), soft: tok('--ink-soft'), faint: tok('--ink-faint') };
-    const alpha = (hex: string, a: number) => {
-      const n = parseInt(hex.slice(1), 16);
-      return `rgba(${(n >> 16) & 255},${(n >> 8) & 255},${n & 255},${a})`;
-    };
+    const rgb = (hex: string): [number, number, number] => { const n = parseInt(hex.slice(1), 16); return [(n >> 16) & 255, (n >> 8) & 255, n & 255]; };
+    const alpha = (hex: string, a: number) => `rgba(${rgb(hex).join(',')},${a})`;
+    const ACC = rgb(C.accent);
 
     // ---- world → screen (2:1 isometric)
     let W = 0, S = 0, CX = 0, CY = 0;
@@ -222,7 +221,7 @@ const MODES = [
       // hull
       box(x, y, SUBZ + bob, 1.7, 0.62, 0.42, th, HULL, alpha(C.ink, 0.12));
       // accent stripe + electronics tube
-      box(x, y, SUBZ + bob + 0.42, 1.1, 0.3, 0.16, th, [255, 106, 43]);
+      box(x, y, SUBZ + bob + 0.42, 1.1, 0.3, 0.16, th, ACC);
       // camera dome at the nose
       const [nx, ny] = iso([x + 0.85 * c, y + 0.85 * s, SUBZ + bob + 0.22]);
       ctx.beginPath(); ctx.arc(nx, ny, S * 0.11, 0, Math.PI * 2); ctx.fillStyle = C.good; ctx.fill();
@@ -248,7 +247,7 @@ const MODES = [
         ctx.strokeStyle = alpha(C.soft, 0.6); ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(fx, fy); ctx.lineTo(bx, by); ctx.stroke();
         const r = S * 0.3;
         const g = ctx.createRadialGradient(bx - r * 0.3, by - r * 0.3, r * 0.2, bx, by, r);
-        g.addColorStop(0, '#ff9a6a'); g.addColorStop(1, '#b84418');
+        g.addColorStop(0, shade(ACC, 1.35)); g.addColorStop(1, shade(ACC, 0.7));
         ctx.beginPath(); ctx.arc(bx, by, r, 0, Math.PI * 2); ctx.fillStyle = g; ctx.fill();
         pts.push([bx - r, by - r], [bx + r, by + r]);
       }
