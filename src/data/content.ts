@@ -15,7 +15,7 @@ export const CURRENT_ROLES: Role[] = [
   {
     role: 'Software Engineer Intern',
     org: 'Matha Labs',
-    orgHref: 'https://humanhud.ai',
+    orgHref: 'https://www.mathalabs.com',
     date: 'Jun 2026 — Present',
     blurb:
       "Replaced AWS Cognito's hosted UI on humanhud.ai (Next.js/TypeScript, static export on S3 + CloudFront) with a branded in-site sign-in — password and email one-time-code factors, account confirmation and reset, and Google SSO over browser PKCE with callback-state validation. Shipped the signed-in dashboard and its five action commands (receipt and nutrition-label scanning, weight logging) with opt-in on-device OCR, contributed to the SwiftUI iOS app for Meta Ray-Ban Display glasses (HealthKit, Vision OCR, Plaid via Lambda/DynamoDB), and wired Stripe payments, Cognito accounts, and a correctness pass over core trading logic for Prosperity, a copy-trading platform.",
