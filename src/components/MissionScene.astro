@@ -78,7 +78,14 @@ const MODES = [
     color: var(--ink-soft); font-size: 0.55rem; cursor: pointer; display: grid; place-items: center;
   }
   .pause:hover { color: var(--accent); border-color: var(--accent); }
-  @media (max-width: 420px) { .pill span + * { display: none; } .scene-caption { font-size: 0.62rem; } }
+  .scene-ctl { flex-wrap: wrap; }
+  @media (max-width: 640px) {
+    .pill { padding: 5px 8px; }
+    .pill-idx { display: none; }
+    .scene-caption { font-size: 0.62rem; }
+    .scene-foot { position: static; background: none; padding: 10px 12px 12px; }
+    .scene-tag { font-size: 0.5rem; letter-spacing: 0.08em; white-space: nowrap; }
+  }
 </style>
 
 <script>
