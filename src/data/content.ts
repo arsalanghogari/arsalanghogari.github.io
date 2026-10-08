@@ -13,13 +13,32 @@ export interface Role {
 
 export const CURRENT_ROLES: Role[] = [
   {
+    role: 'Software Engineer Intern',
+    org: 'Matha Labs',
+    orgHref: 'https://humanhud.ai',
+    date: 'Jun 2026 — Present',
+    blurb:
+      "Replaced AWS Cognito's hosted UI on humanhud.ai (Next.js/TypeScript, static export on S3 + CloudFront) with a branded in-site sign-in — password and email one-time-code factors, account confirmation and reset, and Google SSO over browser PKCE with callback-state validation. Shipped the signed-in dashboard and its five action commands (receipt and nutrition-label scanning, weight logging) with opt-in on-device OCR, contributed to the SwiftUI iOS app for Meta Ray-Ban Display glasses (HealthKit, Vision OCR, Plaid via Lambda/DynamoDB), and wired Stripe payments, Cognito accounts, and a correctness pass over core trading logic for Prosperity, a copy-trading platform.",
+    tags: ['Next.js', 'TypeScript', 'AWS', 'SwiftUI', 'Stripe'],
+    summary: 'auth, dashboard, iOS HUD · humanhud.ai',
+  },
+  {
+    role: 'AI Engineer',
+    org: 'USC Industry Collaboration Program',
+    date: 'Sep 2026 — Present',
+    blurb:
+      'Only AI engineer on a cross-functional student team building internal software for a Canadian construction company (details under NDA). Own the AI engineering for automating a core internal workflow, from requirements to delivery.',
+    tags: ['AI Engineering', 'LLMs', 'Product'],
+    summary: 'sole AI engineer · NDA client',
+  },
+  {
     role: 'Software Lead',
     org: 'USC RoboSub',
     orgHref: 'https://uscfrl.com',
     date: 'Jan 2025 — Present',
     blurb:
-      "Promoted 3× in 18 months (Software Engineer → Perception Lead → Software Lead); now direct a 5–10 engineer team owning the AUV's full autonomy stack — vision, SLAM, planning, controls, and mission control. More than doubled underwater detection accuracy (mAP 0.40 → 0.90) by building the annotated dataset and training YOLO + RT-DETR with TensorRT on-vehicle inference, migrated a 10,000+ line ROS 1 codebase to ROS 2, delivered GTSAM-based SLAM validated to under 0.3 m error, and turned 75 GB of in-water test data into root-cause fixes worth 40% of top speed.",
-    tags: ['Python', 'C++', 'ROS 2', 'PyTorch', 'TensorRT', 'Kubernetes'],
+      "Promoted 4× in 18 months (Software Engineer → Perception Lead → Perception & Autonomy Lead → Software Lead); now direct 5–10 engineers across the AUV's vision, SLAM, planning, and mission-control stack (ROS 2, NVIDIA Jetson). Migrated the inherited 10,000+ line ROS 1 codebase to ROS 2, more than doubled underwater detection accuracy (mAP 0.40 → 0.90) by building the dataset and training YOLO + RT-DETR compiled to TensorRT (FP16/INT8) for real-time on-vehicle inference, delivered GTSAM-based SLAM fusing stereo, IMU, DVL, and depth (every landmark under 0.3 m error on rosbag replay), and root-caused the AUV's sluggish surge from 75 GB of wet-test data to a thrust clamp set at 12 N instead of 30 N — then retuned the GPU-parallel MPPI controller (CUDA/C++).",
+    tags: ['Python', 'C++', 'CUDA', 'ROS 2', 'PyTorch', 'TensorRT', 'GTSAM'],
     summary: 'mAP 0.40 → 0.90 · leading 5–10 engineers',
     media: { src: '/images/robosub-site.jpg', kind: 'shot', alt: 'USC AUV / RoboSub team site (uscfrl.com) homepage' },
   },
@@ -29,8 +48,8 @@ export const CURRENT_ROLES: Role[] = [
     orgHref: 'https://usg.usc.edu',
     date: 'May 2025 — Present',
     blurb:
-      "Own the digital platform serving 20,000+ undergraduates and lead a 2–3 person digital team — re-appointed for a second year. Made $352K in student-government spending publicly searchable with automated Funding, Senate Bill, and Legislative trackers (cutting manual reporting ~95% across 40+ organizations), grew USG's Instagram 25% with an analytics-driven content strategy, and built Ask USG, the organization's AI assistant, slated for campus-wide launch in Fall 2026.",
-    tags: ['JavaScript', 'WordPress', 'RAG', 'Leadership'],
+      "Own USG's digital infrastructure serving 20,000+ students, shipping front-end features on the official WordPress site (dynamic announcements, interactive election interfaces) — invited back for a second year. Made $352K in student-government spending publicly searchable across 40+ organizations, assemblies, and committees, cutting manual reporting 95% with automated Senate Bill, Legislative Project, and Funding trackers.",
+    tags: ['JavaScript', 'WordPress', 'Leadership'],
     summary: '20,000+ students · $352K made searchable',
     media: { src: '/images/usg-site.jpg', kind: 'shot', alt: 'USG website (usg.usc.edu) homepage' },
   },
@@ -97,9 +116,18 @@ export const TECHNICAL_PROJECTS: Project[] = [
     subtitle: 'Production RAG Chatbot',
     status: 'live',
     blurb:
-      'Production RAG chatbot for USC student government — auto-ingests all 97 USG site pages weekly, lifted answer quality 83% → 95% in a 1,100+ question beta, retrieval MRR 0.91 → 0.98, time-to-first-token 6.2 s → 0.5 s, and a LangGraph agent at 100% tool-selection accuracy. Slated for campus-wide launch to 20,000+ students in Fall 2026.',
+      "Production RAG chatbot for USC's 20,000+ undergraduates — unifies 97 auto-discovered site pages, two multi-tab Google Sheets, and a live Google Calendar on a weekly GitHub Actions schedule. Lifted answer quality 83% → 95% via an eval pipeline built from 1,100 real beta questions, swapped pure vector search for hybrid BM25 + pgvector retrieval, cut time-to-first-token 92% (6.2 s → 0.5 s) with SSE streaming, and extended it into a LangGraph agent with crisis/academic-integrity guardrails and prompt-injection hardening. Campus-wide launch Fall 2026.",
     tech: ['Python', 'Node/Express', 'OpenAI', 'pgvector', 'LangGraph', 'Docker'],
     href: 'https://arsalanghogari.github.io/usc-usg-ai-chatbot/',
+  },
+  {
+    name: 'PTDrone',
+    subtitle: 'Drone Ground Control & Manufacturing Cell (Capstone)',
+    status: 'live',
+    blurb:
+      'Lead a five-person CSCI 401 team building, for an outside stakeholder, a drone ground control station, an AI chatbot that answers parts questions and triggers on-demand manufacturing, and a simulated manufacturing cell. Set up the production pipeline: Next.js static export on Render with preview-branch review gating deploys.',
+    tech: ['Next.js', 'React', 'TypeScript', 'Render'],
+    href: 'https://ptdrone.tech',
   },
   {
     name: 'Parley',
@@ -161,17 +189,16 @@ export const NON_TECHNICAL = [
 ];
 
 export const TECH_SKILLS = [
-  'Python', 'C++', 'CUDA', 'Java', 'JavaScript', 'TypeScript', 'MATLAB',
-  'PyTorch', 'TensorRT', 'ONNX', 'ROS 2', 'GTSAM', 'NVIDIA Isaac Sim', 'OpenCV',
-  'React', 'Next.js', 'Node/Express', 'PostgreSQL', 'pgvector', 'LangGraph',
-  'Supabase', 'WordPress', 'Docker', 'K3s', 'GitHub Actions', 'Git',
-  'OnShape', 'AutoCAD',
+  'Python', 'C++', 'CUDA', 'Java', 'JavaScript', 'TypeScript', 'Swift', 'C', 'MATLAB',
+  'OpenAI API', 'LangGraph', 'Langfuse', 'RAG', 'ROS 2', 'PyTorch', 'TensorRT', 'ONNX', 'GTSAM', 'NVIDIA Isaac Sim',
+  'React', 'Next.js', 'Node/Express', 'SwiftUI', 'PostgreSQL', 'pgvector', 'AWS', 'Stripe', 'WordPress',
+  'Render', 'Docker', 'K3s', 'GitHub Actions', 'Git', 'Linux/Bash',
 ];
 
 export const EDUCATION = {
   school: 'University of Southern California',
-  degree: 'B.S. Computer Science + Business Administration',
+  degree: 'B.S. Computer Science + Business Administration · Expected May 2027',
   detail: 'Viterbi School of Engineering & Marshall School of Business · Minor in AI Applications',
   exchange: 'Study Abroad — University of Bristol, UK (Spring 2026)',
-  honors: ['3.9 GPA', 'SAT 1550', 'Presidential Scholar', 'Viterbi Scholar', "Dean's List", 'W.V.T. Rusch Honors'],
+  honors: ['3.9 GPA', 'SAT 1550', 'Presidential Scholar', 'Viterbi Scholar', "Dean's List", 'W.V.T. Rusch Honors', 'Thematic Option Honors'],
 };
