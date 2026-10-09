@@ -3,7 +3,7 @@
 // One component, one `kind` prop, one script that boots whichever exist.
 interface Props { kind: 'ptdrone' | 'parley' | 'shroom' | 'postcards' | 'anchor' }
 const { kind } = Astro.props;
-const PHOTOS = [1, 2, 3, 4, 5];
+const PHOTOS = [1, 2, 3, 4, 5, 6];
 const DRONE_PATH = 'M40,150 L110,60 L210,40 L290,110 L230,165 L120,170 Z';
 ---
 
@@ -44,7 +44,7 @@ const DRONE_PATH = 'M40,150 L110,60 L210,40 L290,110 L230,165 L120,170 Z';
 )}
 
 {kind === 'postcards' && (
-  <div class="viz ring-wrap" data-viz="postcards" role="img" aria-label="Draggable 3D ring of five photos from my semester abroad">
+  <div class="viz ring-wrap" data-viz="postcards" role="img" aria-label="Draggable 3D ring of six photos from my semester abroad">
     <div class="ring">{PHOTOS.map((n, i) => <img src={`/images/postcards/${n}.jpg`} alt="" loading="lazy" style={`transform: rotateY(${i * (360 / PHOTOS.length)}deg) translateZ(150px)`} />)}</div>
     <span class="hint">drag to spin</span>
   </div>
