@@ -5,9 +5,9 @@
 ---
 
 <figure class="mf" data-mf>
-  <canvas class="mf-canvas" aria-label="Interactive 3D model of the PTDrone Microfactory V6 container; hover to see inside, drag to rotate" role="img"></canvas>
+  <canvas class="mf-canvas" aria-label="Interactive 3D model of the PTDrone Microfactory V6 container; hover to lift the shell and see inside, drag to rotate" role="img"></canvas>
   <span class="mf-tag"><svg class="mf-mark" viewBox="-0.5 -0.5 101 78.5" aria-hidden="true"><path d="M0.0 -0.07 1.78 1.85 13.31 12.8 49.63 12.72 40.98 20.64 11.02 20.71 11.02 46.3 23.82 59.54 23.89 29.88 37.28 29.81 43.2 30.55 46.15 30.55 52.81 25.22 67.53 12.72 60.95 5.84 54.44 -0.07ZM69.38 15.16 46.6 34.1 38.68 40.09 50.22 40.24 50.3 77.44 64.72 65.68 64.72 29.14 82.99 29.07 99.93 15.24Z" /></svg>microfactory v6 · concept model</span>
-  <span class="mf-hint">hover to look inside · drag to rotate</span>
+  <span class="mf-hint">hover to open · drag to rotate</span>
   <span class="mf-load" data-mf-load>loading model…</span>
 </figure>
 
@@ -63,40 +63,33 @@
       const size = box.getSize(new THREE.Vector3()), center = box.getCenter(new THREE.Vector3());
       model.position.sub(center); model.position.y += size.y / 2; // sit on the disc
       pivot.add(model);
-      // a lamp inside so the cutaway reveals lit cells, not a black cavity
+      // a lamp inside so the opened container shows lit cells
       const lamp = new THREE.PointLight(0xffffff, 40, size.x * 1.6, 2); lamp.position.set(0, size.y * 0.55, 0); pivot.add(lamp);
-      // cutaway: a hole through the shell wherever the cursor is, so the
-      // interior shows at that spot. Fragments inside a screen-space circle
-      // around the cursor and shallower than the hit depth + reach are dropped.
-      const u = { uMouse: { value: new THREE.Vector2(-1e4, -1e4) }, uRadius: { value: 0 }, uDepth: { value: 0 } };
-      model.traverse((o: any) => { if (o.isMesh) for (const m of [o.material].flat()) {
-        m.side = THREE.DoubleSide;
-        m.onBeforeCompile = (sh: any) => {
-          Object.assign(sh.uniforms, u);
-          sh.fragmentShader = sh.fragmentShader
-            .replace('#include <common>', '#include <common>\nuniform vec2 uMouse; uniform float uRadius; uniform float uDepth;')
-            .replace('#include <clipping_planes_fragment>', '#include <clipping_planes_fragment>\nif (distance(gl_FragCoord.xy, uMouse) < uRadius && vViewPosition.z < uDepth) discard;');
-        };
-        m.needsUpdate = true;
-      } });
-      const bounds = new THREE.Box3(), ray = new THREE.Raycaster(), ndc = new THREE.Vector2(), hit = new THREE.Vector3();
-      const REACH = 0.5; // world units past the shell: enough to open the wall, not the far side
-      let hover = false, mx = 0, my = 0;
-      root.addEventListener('pointermove', (e) => { const r = root.getBoundingClientRect(); mx = e.clientX - r.left; my = e.clientY - r.top; hover = true; });
+      // shell lift: the container walls + roof rise off the floor on hover so
+      // the cells inside are exposed. Shell = any mesh under a CONTAINER_* node
+      // taller than 1 m (walls, roof, lighting rails); floor plates stay.
+      const shell: { o: any; y0: number }[] = [];
+      const bb = new THREE.Box3();
+      model.traverse((n: any) => {
+        if (!/^CONTAINER_/.test(n.name)) return;
+        n.traverse((o: any) => {
+          if (!o.isMesh) return;
+          bb.setFromObject(o);
+          if (bb.max.y - bb.min.y > 1.0 || bb.min.y > 1.0) shell.push({ o, y0: o.position.y });
+        });
+      });
+      const LIFT = size.y * 0.75;
+      let hover = false, lift = 0;
+      root.addEventListener('pointerenter', () => { hover = true; });
       root.addEventListener('pointerleave', () => { hover = false; });
-      function cutaway() {
-        if (!hover) { u.uRadius.value = 0; return; }
-        const w = root.clientWidth, h = root.clientHeight, dpr = renderer.getPixelRatio();
-        ndc.set((mx / w) * 2 - 1, -(my / h) * 2 + 1);
-        ray.setFromCamera(ndc, camera);
-        bounds.setFromObject(pivot);
-        if (!ray.ray.intersectBox(bounds, hit)) { u.uRadius.value = 0; return; }
-        u.uMouse.value.set(mx * dpr, (h - my) * dpr);
-        u.uRadius.value = Math.min(w, h) * 0.22 * dpr;
-        u.uDepth.value = camera.position.distanceTo(hit) + REACH;
+      function updateLift(dt: number) {
+        const target = hover ? 1 : 0;
+        lift += (target - lift) * Math.min(1, dt * 4);
+        const k = lift < 0.5 ? 2 * lift * lift : 1 - Math.pow(-2 * lift + 2, 2) / 2; // ease in-out
+        for (const { o, y0 } of shell) o.position.y = y0 + k * LIFT;
       }
       const R = Math.max(size.x, size.z) * 1.15;
-      camera.position.set(R * 0.9, R * 0.55, R * 0.9);
+      camera.position.set(R * 0.9, R * 0.7, R * 0.9);
       camera.lookAt(0, size.y * 0.35, 0);
       root.classList.add('ready');
 
@@ -119,7 +112,7 @@
         const dt = Math.min(0.05, (now - last) / 1000 || 0); last = now;
         if (!drag) { yaw += vel * dt; vel += ((reduced || hover ? 0 : 0.25) * Math.sign(vel || 1) - vel) * Math.min(1, dt * 1.5); }
         pivot.rotation.y = yaw;
-        cutaway();
+        updateLift(dt);
         resize(); renderer.render(scene, camera);
         requestAnimationFrame(frame);
       };
