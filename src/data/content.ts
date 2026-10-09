@@ -43,13 +43,10 @@ export const CURRENT_ROLES: Role[] = [
     summary: '20,000+ students · $352K made searchable',
     media: { src: '/images/usg-site.jpg', kind: 'shot', alt: 'USG website (usg.usc.edu) homepage' },
   },
-];
-
-export const PAST_ROLES: Role[] = [
   {
     role: 'Math Peer Mentor',
     org: 'C.E.N.T.R.I.C. (Viterbi & Dornsife)',
-    date: 'Aug — Dec 2025',
+    date: 'Aug 2025 — Present',
     blurb:
       "Mentored 5 first-generation and transfer students in the program's inaugural cohort, coordinating with 30+ professors, advisors, and residential staff and building the program's application-tracking, mentor-matching, and scheduling workflows.",
     tags: ['Mentorship', 'Coordination'],
@@ -57,6 +54,8 @@ export const PAST_ROLES: Role[] = [
     media: { src: '/images/centric-logo.png', kind: 'logo', alt: 'C.E.N.T.R.I.C. program logo' },
   },
 ];
+
+export const PAST_ROLES: Role[] = [];
 
 export const VOLUNTEERING: Role[] = [
   {
