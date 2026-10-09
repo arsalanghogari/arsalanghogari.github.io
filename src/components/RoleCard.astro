@@ -9,7 +9,8 @@ const { role: r } = Astro.props;
   <div class="role-text">
     <div class="role-head">
       <h3 class="role-title">
-        {r.role} · {r.orgHref
+        <span class="role-name">{r.role}</span>
+        {r.orgHref
           ? <a class="role-org" href={r.orgHref} target="_blank" rel="noopener">{r.org}</a>
           : <span class="role-org">{r.org}</span>}
       </h3>
@@ -52,12 +53,14 @@ const { role: r } = Astro.props;
     .role.has-media { grid-template-columns: 1fr; gap: 16px; }
     .role-media { max-width: 380px; }
   }
-  .role-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 6px 18px; }
+  .role-head { display: grid; grid-template-columns: 1fr auto; align-items: start; gap: 6px 18px; }
+  @media (max-width: 520px) { .role-head { grid-template-columns: 1fr; } }
   .role-title { font-family: var(--font-display); font-weight: 600; font-size: 1.3rem; letter-spacing: -0.01em; margin: 0; }
-  .role-org { color: var(--accent); }
+  .role-name { display: block; }
+  .role-org { display: inline-block; margin-top: 4px; color: var(--accent); font-size: 1.05rem; }
   a.role-org { text-decoration: none; border-bottom: 1px solid color-mix(in srgb, var(--accent) 30%, transparent); }
   a.role-org:hover { border-bottom-color: var(--accent); }
-  .role-date { font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 0.06em; color: var(--ink-soft); text-transform: uppercase; white-space: nowrap; }
+  .role-date { font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 0.06em; color: var(--ink-soft); text-transform: uppercase; white-space: nowrap; padding-top: 6px; }
   .role-blurb { margin: 10px 0 12px; color: var(--ink-soft); font-size: 1.02rem; max-width: 70ch; }
 
   .media-img {
