@@ -21,7 +21,7 @@ const { role: r } = Astro.props;
   {r.media && (
     <div class="role-media">
       {r.media.kind === 'logo' ? (
-        <div class="logo-tile" style={r.media.bg ? `background:${r.media.bg}` : undefined}><img src={r.media.src} alt={r.media.alt} loading="lazy" /></div>
+        <div class={`logo-tile${r.media.bg ? " fill" : ""}`} style={r.media.bg ? `background:${r.media.bg}` : undefined}><img src={r.media.src} alt={r.media.alt} loading="lazy" /></div>
       ) : (
         <img class={`media-img ${r.media.kind}`} src={r.media.src} alt={r.media.alt} loading="lazy" />
       )}
@@ -70,4 +70,5 @@ const { role: r } = Astro.props;
     padding: 22px;
   }
   .logo-tile img { width: 100%; max-width: 150px; height: auto; display: block; }
+  .logo-tile.fill img { max-width: 240px; }
 </style>
