@@ -12,7 +12,7 @@ const NAMES = ['divider', 'gate', 'path', 'red_pipe', 'search_rescue', 'survey_r
     <canvas class="ld-canvas" width="640" height="640" aria-hidden="true"></canvas>
     <span class="ld-tag"><span class="ld-dot"></span>real frames · robosub course</span>
     <span class="ld-hud" id="ld-hud">yolo · onnx int8 · onnxruntime-web</span>
-    <button class="ld-run" id="ld-run" type="button">run the detector in your browser <span class="ld-size">· 20 MB</span></button>
+    <button class="ld-run" id="ld-run" type="button">run the detector in your browser</button>
   </div>
   <figcaption class="ld-cap"><span id="ld-status">the AUV's own YOLO weights, running on your CPU</span><span class="ld-frame" id="ld-frame"></span></figcaption>
 </figure>
@@ -33,7 +33,6 @@ const NAMES = ['divider', 'gate', 'path', 'red_pipe', 'search_rescue', 'survey_r
     transition: transform 0.18s var(--ease), background 0.18s;
   }
   .ld-run:hover { transform: translate(-50%, -50%) translateY(-2px); background: var(--accent-deep); }
-  .ld-size { opacity: 0.7; }
   .ld.live .ld-run { display: none; }
   .ld-cap { display: flex; justify-content: space-between; gap: 12px; padding: 8px 10px; font-family: var(--font-mono); font-size: 0.66rem; color: var(--ink-faint); }
   .ld.live .ld-cap { color: var(--ink-soft); }
