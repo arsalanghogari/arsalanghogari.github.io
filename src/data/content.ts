@@ -79,7 +79,7 @@ export const VOLUNTEERING: Role[] = [
       'Completed 50+ hours of intensive crisis-intervention training and served a weekly suicide-prevention shift on the national 988 Lifeline — volunteering near-daily over winter break and answering 100+ crisis calls with active listening and de-escalation.',
     tags: ['Crisis Intervention', 'Active Listening'],
     summary: '100+ crisis calls · 50+ hours of training',
-    media: { src: '/images/didihirsch-logo.svg', kind: 'logo', alt: 'Didi Hirsch Mental Health Services logo' },
+    media: { src: '/images/didihirsch-site.jpg', kind: 'shot', alt: 'Didi Hirsch Mental Health Services website (didihirsch.org) homepage' },
   },
 ];
 
