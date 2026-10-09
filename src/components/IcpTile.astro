@@ -1,9 +1,6 @@
 ---
-// Role tile for the USC Industry Collaboration Program. Five candidate
-// treatments of "AI for a construction company"; `variant` picks one.
-interface Props { variant?: 1 | 2 | 3 | 4 | 5 }
-const { variant = 1 } = Astro.props;
-const GOLD = '#ffcc00', PALE = '#ffe9a6';
+// Role tile for the USC Industry Collaboration Program: the crane carries an
+// AI chip whose traces wire the floors of the building under construction.
 // building frame: bays × floors of rects, origin bottom-left
 const frameRects = (x0: number, y0: number, bw = 34, fh = 30, bays = 3, floors = 4) =>
   Array.from({ length: floors }, (_, f) => Array.from({ length: bays }, (_, b) => ({ x: x0 + b * bw, y: y0 - (f + 1) * fh, w: bw, h: fh }))).flat();
@@ -16,57 +13,12 @@ const craneLines = (x: number, top: number, ground: number, jib = 120) => {
 };
 ---
 
-<svg class={`icp v${variant}`} viewBox="0 0 400 300" role="img" aria-label="USC Industry Collaboration Program: AI for a construction company" xmlns="http://www.w3.org/2000/svg">
+<svg class="icp" viewBox="0 0 400 300" role="img" aria-label="USC Industry Collaboration Program: AI for a construction company" xmlns="http://www.w3.org/2000/svg">
   <rect width="400" height="300" fill="#990000" />
   <image href="/images/usc-logo.png" x="22" y="16" width="110" height="44" />
   <line class="gold draw" x1="24" y1="262" x2="376" y2="262" />
 
-  {variant === 1 && (
-    // 1 · blueprint → digital twin with detections
-    <g>
-      <g class="blue" transform="rotate(-4 110 190)"><g>{frameRects(50, 258, 32, 28, 3, 4).map((r) => <rect class="draw" x={r.x} y={r.y} width={r.w} height={r.h} />)}</g><line class="draw" x1="50" y1="202" x2="146" y2="174" /></g>
-      <text class="cap" x="50" y="282">BLUEPRINT</text>
-      <g class="gold"><line class="draw" x1="166" y1="190" x2="210" y2="190" /><path class="draw" d="M202,184 L212,190 L202,196" /></g>
-      <g class="gold"><g>{frameRects(232, 258, 36, 30, 3, 4).map((r) => <rect class="draw" x={r.x} y={r.y} width={r.w} height={r.h} />)}</g></g>
-      <g class="det">
-        {[[232, 138, 108, 10, 'beam 0.97', 0.2], [268, 148, 10, 110, 'column 0.94', 0.6], [232, 198, 108, 30, 'slab 0.91', 1.0]].map(([x, y, w, h, l, d]) => (
-          <g class="box" style={`animation-delay:${1.6 + Number(d)}s`}><rect x={x} y={y} width={w} height={h} /><text x={x} y={Number(y) - 4}>{l}</text></g>
-        ))}
-      </g>
-      <text class="cap" x="232" y="282">DIGITAL TWIN · DETECTIONS</text>
-    </g>
-  )}
-
-  {variant === 2 && (
-    // 2 · chat over the site
-    <g>
-      <g class="gold"><g>{frameRects(44, 262, 30, 28, 3, 4).map((r) => <rect class="draw" x={r.x} y={r.y} width={r.w} height={r.h} />)}</g><g>{craneLines(170, 96, 262, 90).lines.map(([x1, y1, x2, y2]) => <line class="draw" x1={x1} y1={y1} x2={x2} y2={y2} />)}{(() => { const h = craneLines(170, 96, 262, 90).hook; return <><line class="draw hook" x1={h.x} y1={h.y1} x2={h.x} y2={h.y2} /><rect class="draw hook" x={h.x - 10} y={h.y2} width="20" height="10" /></>; })()}</g></g>
-      <g class="chat">
-        <rect class="bub q" x="196" y="118" width="184" height="30" rx="4" /><text x="206" y="137">which pours are behind schedule?</text>
-        <rect class="bub a" x="196" y="158" width="184" height="52" rx="4" />
-        <clipPath id="type"><rect class="type" x="196" y="158" width="0" height="52" /></clipPath>
-        <g clip-path="url(#type)"><text class="ans" x="206" y="177">Level 3 is 2 days late.</text><text class="ans" x="206" y="197">Rebar reorder suggested.</text></g>
-        <rect class="cursor" x="206" y="202" width="7" height="2" />
-      </g>
-      <text class="cap" x="196" y="282">ASK THE SITE · LLM OVER FIELD DATA</text>
-    </g>
-  )}
-
-  {variant === 3 && (
-    // 3 · scan line classifies each floor
-    <g>
-      <g class="gold"><g>{frameRects(60, 262, 40, 30, 3, 4).map((r) => <rect class="draw" x={r.x} y={r.y} width={r.w} height={r.h} />)}</g><g>{craneLines(240, 96, 262, 110).lines.map(([x1, y1, x2, y2]) => <line class="draw" x1={x1} y1={y1} x2={x2} y2={y2} />)}{(() => { const h = craneLines(240, 96, 262, 110).hook; return <><line class="draw hook" x1={h.x} y1={h.y1} x2={h.x} y2={h.y2} /><rect class="draw hook" x={h.x - 10} y={h.y2} width="20" height="10" /></>; })()}</g></g>
-      <line class="scan" x1="52" y1="142" x2="188" y2="142" />
-      {[['POURED', 0.5], ['POURED', 1.1], ['FRAMED', 1.7], ['PENDING', 2.3]].map(([t, d], i) => (
-        <g class="tag" style={`animation-delay:${d}s`}><rect x="186" y={262 - (4 - i) * 30 + 8} width="52" height="14" /><text x="191" y={262 - (4 - i) * 30 + 18.5}>{t}</text></g>
-      ))}
-      <text class="cap" x="52" y="282">PROGRESS FROM SITE IMAGERY · PER-FLOOR STATE</text>
-    </g>
-  )}
-
-  {variant === 4 && (
-    // 4 · circuit to concrete: the crane carries a chip whose traces wire the floors
-    <g>
+  <g>
       <g class="gold"><g>{frameRects(44, 262, 36, 30, 3, 4).map((r) => <rect class="draw" x={r.x} y={r.y} width={r.w} height={r.h} />)}</g><g>{craneLines(230, 96, 262, 120).lines.map(([x1, y1, x2, y2]) => <line class="draw" x1={x1} y1={y1} x2={x2} y2={y2} />)}{(() => { const h = craneLines(230, 96, 262, 120).hook; return <><line class="draw hook" x1={h.x} y1={h.y1} x2={h.x} y2={h.y2} /><rect class="draw hook" x={h.x - 10} y={h.y2} width="20" height="10" /></>; })()}</g></g>
       <g class="chip"><rect x="284" y="156" width="36" height="28" rx="3" /><text x="302" y="174" text-anchor="middle">AI</text>
         {[0, 1, 2, 3].map((i) => <line x1={288 + i * 9} y1="156" x2={288 + i * 9} y2="150" />)}</g>
@@ -75,81 +27,29 @@ const craneLines = (x: number, top: number, ground: number, jib = 120) => {
         return <g><path class="trace" d={d} /><circle class="pulse" r="3" style={`offset-path: path('${d}'); animation-delay:${i * 0.7}s`} /></g>;
       })}
       <text class="cap" x="44" y="282">MODEL OUTPUT WIRED INTO THE BUILD</text>
-    </g>
-  )}
+  </g>
 
-  {variant === 5 && (
-    // 5 · workflow pipeline over a faint site backdrop
-    <g>
-      <g class="gold faint"><g>{frameRects(44, 262, 36, 30, 3, 4).map((r) => <rect class="draw" x={r.x} y={r.y} width={r.w} height={r.h} />)}</g><g>{craneLines(230, 96, 262, 120).lines.map(([x1, y1, x2, y2]) => <line class="draw" x1={x1} y1={y1} x2={x2} y2={y2} />)}{(() => { const h = craneLines(230, 96, 262, 120).hook; return <><line class="draw hook" x1={h.x} y1={h.y1} x2={h.x} y2={h.y2} /><rect class="draw hook" x={h.x - 10} y={h.y2} width="20" height="10" /></>; })()}</g></g>
-      <g class="pipe">
-        {[['DOCUMENTS', 36], ['MODEL', 156], ['DECISION', 276]].map(([t, x], i) => (
-          <g class="st" style={`animation-delay:${i * 1.1}s`}><rect x={x} y="118" width="88" height="34" rx="3" /><text x={Number(x) + 44} y="140" text-anchor="middle">{t}</text></g>
-        ))}
-        <path class="wire" d="M124,135 L156,135" /><path class="wire" d="M244,135 L276,135" />
-        <circle class="pulse" r="3.5" style="offset-path: path('M124,135 L156,135')" /><circle class="pulse" r="3.5" style="offset-path: path('M244,135 L276,135'); animation-delay:1.1s" />
-      </g>
-      <text class="cap" x="36" y="282">ONE INTERNAL WORKFLOW, END TO END</text>
-    </g>
-  )}
 </svg>
 
 <style>
   .icp { display: block; width: 100%; height: auto; border: 1px solid var(--line); }
   .gold { fill: none; stroke: #ffcc00; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
-  .faint { stroke-opacity: 0.3; }
-  .blue { fill: none; stroke: #ffe9a6; stroke-opacity: 0.6; stroke-width: 1; stroke-dasharray: 3 2; }
   .cap { font-family: var(--font-mono); font-size: 7.5px; letter-spacing: 0.12em; fill: #ffe9a6; fill-opacity: 0.75; }
   text { font-family: var(--font-mono); }
 
   .draw { stroke-dasharray: 420; stroke-dashoffset: 420; }
-  :global(.in) .draw, .icp.now .draw { animation: draw 1.6s cubic-bezier(0.2, 0.65, 0.3, 1) forwards; }
+  :global(.in) .draw { animation: draw 1.6s cubic-bezier(0.2, 0.65, 0.3, 1) forwards; }
   @keyframes draw { to { stroke-dashoffset: 0; } }
 
-  /* 1 */
-  .det .box { opacity: 0; animation: pop 0.4s ease forwards; animation-play-state: paused; }
-  :global(.in) .det .box, .icp.now .det .box { animation-play-state: running; }
-  .det rect { fill: none; stroke: #fff; stroke-width: 1.2; }
-  .det text { font-size: 7.5px; fill: #fff; }
-  @keyframes pop { from { opacity: 0; transform: scale(0.96); } to { opacity: 1; transform: none; } }
-
-  /* 2 */
-  .chat .bub { fill: rgba(0,0,0,0.25); stroke: #ffe9a6; stroke-opacity: 0.5; stroke-width: 1; }
-  .chat .bub.a { stroke: #ffcc00; }
-  .chat text { font-size: 8.5px; fill: #ffe9a6; }
-  .chat .ans { fill: #fff; }
-  .chat .type { animation: type 2.2s steps(34) 1.2s forwards; animation-play-state: paused; }
-  :global(.in) .chat .type, .icp.now .chat .type { animation-play-state: running; }
-  @keyframes type { to { width: 184px; } }
-  .chat .cursor { fill: #ffcc00; animation: blink 0.9s steps(2) infinite; }
-  @keyframes blink { 50% { opacity: 0; } }
-
-  /* 3 */
-  .scan { stroke: #fff; stroke-width: 1.5; stroke-opacity: 0.9; filter: drop-shadow(0 0 4px #fff); animation: scan 3.2s linear infinite; animation-play-state: paused; }
-  :global(.in) .scan, .icp.now .scan { animation-play-state: running; }
-  @keyframes scan { from { transform: translateY(0); } to { transform: translateY(120px); } }
-  .tag { opacity: 0; animation: pop 0.3s ease forwards; animation-play-state: paused; }
-  :global(.in) .tag, .icp.now .tag { animation-play-state: running; }
-  .tag rect { fill: #ffcc00; } .tag text { font-size: 7.5px; fill: #990000; font-weight: 700; }
-
-  /* 4 */
-  .chip rect { fill: #990000; stroke: #ffcc00; stroke-width: 1.6; } .chip line { stroke: #ffcc00; stroke-width: 1.6; }
+        .chip rect { fill: #990000; stroke: #ffcc00; stroke-width: 1.6; } .chip line { stroke: #ffcc00; stroke-width: 1.6; }
   .chip text { font-size: 10px; fill: #ffcc00; font-weight: 700; }
   .trace { fill: none; stroke: #ffe9a6; stroke-opacity: 0.45; stroke-width: 1; }
   .pulse { fill: #fff; animation: travel 2.8s linear infinite; animation-play-state: paused; }
-  :global(.in) .pulse, .icp.now .pulse { animation-play-state: running; }
+  :global(.in) .pulse { animation-play-state: running; }
   @keyframes travel { 0% { offset-distance: 0%; opacity: 0; } 5% { opacity: 1; } 60% { offset-distance: 100%; opacity: 1; } 62%, 100% { offset-distance: 100%; opacity: 0; } }
 
-  /* 5 */
-  .pipe .st rect { fill: #990000; stroke: #ffe9a6; stroke-opacity: 0.6; stroke-width: 1.2; animation: lit 3.3s ease-in-out infinite; animation-play-state: paused; }
-  :global(.in) .pipe .st rect, .icp.now .pipe .st rect { animation-play-state: running; }
-  .pipe text { font-size: 8.5px; fill: #ffe9a6; letter-spacing: 0.08em; }
-  .wire { stroke: #ffe9a6; stroke-opacity: 0.5; stroke-width: 1; }
-  .pipe .pulse { animation-duration: 3.3s; }
-  @keyframes lit { 0%, 100% { stroke: #ffe9a6; } 8%, 30% { stroke: #ffcc00; stroke-width: 2; } 40% { stroke: #ffe9a6; } }
-
-  @media (prefers-reduced-motion: reduce) {
+    @media (prefers-reduced-motion: reduce) {
     .icp * { animation: none !important; }
-    .draw { stroke-dashoffset: 0; } .det .box, .tag { opacity: 1; } .chat .type { width: 184px; }
+    .draw { stroke-dashoffset: 0; }
   }
 </style>
