@@ -4,6 +4,7 @@
 interface Props { kind: 'parley' | 'shroom' | 'postcards' | 'anchor' }
 const { kind } = Astro.props;
 const PHOTOS = [1, 2, 3, 4, 5, 6];
+const FOCUS: Record<number, string> = { 2: '50% 18%' }; // where to crop portrait shots
 ---
 
 {kind === 'parley' && (
@@ -28,7 +29,7 @@ const PHOTOS = [1, 2, 3, 4, 5, 6];
 
 {kind === 'postcards' && (
   <div class="viz ring-wrap" data-viz="postcards" role="img" aria-label="Draggable 3D ring of six photos from my semester abroad">
-    <div class="ring">{PHOTOS.map((n, i) => <img src={`/images/postcards/${n}.jpg`} alt="" loading="lazy" style={`transform: rotateY(${i * (360 / PHOTOS.length)}deg) translateZ(150px)`} />)}</div>
+    <div class="ring">{PHOTOS.map((n, i) => <img src={`/images/postcards/${n}.jpg`} alt="" loading="lazy" style={`transform: rotateY(${i * (360 / PHOTOS.length)}deg) translateZ(150px); object-position: ${FOCUS[n] ?? '50% 50%'}`} />)}</div>
     <span class="hint">drag to spin</span>
   </div>
 )}
