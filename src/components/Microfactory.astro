@@ -5,9 +5,9 @@
 ---
 
 <figure class="mf" data-mf>
-  <canvas class="mf-canvas" aria-label="Interactive 3D model of the PTDrone Microfactory V6 container; hover to lift the shell and see inside, drag to rotate" role="img"></canvas>
+  <canvas class="mf-canvas" aria-label="Interactive 3D model of the PTDrone Microfactory V6 container; hover to peel the shell away and see inside, drag to rotate" role="img"></canvas>
   <span class="mf-tag"><svg class="mf-mark" viewBox="-0.5 -0.5 101 78.5" aria-hidden="true"><path d="M0.0 -0.07 1.78 1.85 13.31 12.8 49.63 12.72 40.98 20.64 11.02 20.71 11.02 46.3 23.82 59.54 23.89 29.88 37.28 29.81 43.2 30.55 46.15 30.55 52.81 25.22 67.53 12.72 60.95 5.84 54.44 -0.07ZM69.38 15.16 46.6 34.1 38.68 40.09 50.22 40.24 50.3 77.44 64.72 65.68 64.72 29.14 82.99 29.07 99.93 15.24Z" /></svg>microfactory v6 · concept model</span>
-  <span class="mf-hint">hover to open · drag to rotate</span>
+  <span class="mf-hint">hover to peel · drag to rotate</span>
   <span class="mf-load" data-mf-load>loading model…</span>
 </figure>
 
@@ -43,6 +43,7 @@
       const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
       renderer.setPixelRatio(Math.min(2, devicePixelRatio));
       renderer.toneMapping = THREE.ACESFilmicToneMapping;
+      renderer.localClippingEnabled = true;
       const scene = new THREE.Scene();
       const camera = new THREE.PerspectiveCamera(32, 2.6, 0.1, 100);
 
@@ -65,31 +66,38 @@
       pivot.add(model);
       // a lamp inside so the opened container shows lit cells
       const lamp = new THREE.PointLight(0xffffff, 40, size.x * 1.6, 2); lamp.position.set(0, size.y * 0.55, 0); pivot.add(lamp);
-      // shell lift: the container walls + roof rise off the floor on hover so
-      // the cells inside are exposed. Shell = any mesh under a CONTAINER_* node
-      // taller than 1 m (walls, roof, lighting rails); floor plates stay.
-      const shell: { o: any; y0: number }[] = [];
+      // shell sweep: on hover a cut plane sweeps along the container and peels
+      // the outer shell away, exposing the cells; it sweeps back on leave.
+      // Shell = any mesh under a CONTAINER_* node taller than 1 m (walls, roof,
+      // light rails). Only shell materials carry the clipping plane.
+      const plane = new THREE.Plane(new THREE.Vector3(-1, 0, 0), 1e3);
       const bb = new THREE.Box3();
+      let shellCount = 0;
       model.traverse((n: any) => {
         if (!/^CONTAINER_/.test(n.name)) return;
         n.traverse((o: any) => {
           if (!o.isMesh) return;
           bb.setFromObject(o);
-          if (bb.max.y - bb.min.y > 1.0 || bb.min.y > 1.0) shell.push({ o, y0: o.position.y });
+          if (bb.max.y - bb.min.y > 1.0 || bb.min.y > 1.0) {
+            o.material = [o.material].flat().map((m: any) => { const c = m.clone(); c.clippingPlanes = [plane]; c.side = THREE.DoubleSide; return c; });
+            if (o.material.length === 1) o.material = o.material[0];
+            shellCount++;
+          }
         });
       });
-      const LIFT = size.y * 0.75;
-      let hover = false, lift = 0;
+      const half = size.x / 2 + 0.05;
+      let hover = false, sweep = 0;
       root.addEventListener('pointerenter', () => { hover = true; });
       root.addEventListener('pointerleave', () => { hover = false; });
-      function updateLift(dt: number) {
-        const target = hover ? 1 : 0;
-        lift += (target - lift) * Math.min(1, dt * 4);
-        const k = lift < 0.5 ? 2 * lift * lift : 1 - Math.pow(-2 * lift + 2, 2) / 2; // ease in-out
-        for (const { o, y0 } of shell) o.position.y = y0 + k * LIFT;
+      function updateSweep(dt: number) {
+        sweep += ((hover ? 1 : 0) - sweep) * Math.min(1, dt * 3);
+        const k = sweep < 0.5 ? 2 * sweep * sweep : 1 - Math.pow(-2 * sweep + 2, 2) / 2;
+        // keep the cut fixed to the model as it turns: local +x in world space
+        plane.normal.set(-Math.cos(yaw), 0, Math.sin(yaw));
+        plane.constant = half - 2 * half * k; // k=0 keeps all, k=1 removes all
       }
       const R = Math.max(size.x, size.z) * 1.15;
-      camera.position.set(R * 0.9, R * 0.7, R * 0.9);
+      camera.position.set(R * 0.9, R * 0.6, R * 0.9);
       camera.lookAt(0, size.y * 0.35, 0);
       root.classList.add('ready');
 
@@ -112,7 +120,7 @@
         const dt = Math.min(0.05, (now - last) / 1000 || 0); last = now;
         if (!drag) { yaw += vel * dt; vel += ((reduced || hover ? 0 : 0.25) * Math.sign(vel || 1) - vel) * Math.min(1, dt * 1.5); }
         pivot.rotation.y = yaw;
-        updateLift(dt);
+        updateSweep(dt);
         resize(); renderer.render(scene, camera);
         requestAnimationFrame(frame);
       };
