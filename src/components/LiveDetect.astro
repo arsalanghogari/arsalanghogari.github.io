@@ -12,9 +12,8 @@ const NAMES = ['divider', 'gate', 'path', 'red_pipe', 'search_rescue', 'survey_r
     <canvas class="ld-canvas" width="640" height="640" aria-hidden="true"></canvas>
     <span class="ld-tag"><span class="ld-dot"></span>real frames · robosub course</span>
     <span class="ld-hud" id="ld-hud">yolo · onnx int8 · onnxruntime-web</span>
-    <button class="ld-run" id="ld-run" type="button">run the detector in your browser</button>
   </div>
-  <figcaption class="ld-cap"><span id="ld-status">the AUV's own YOLO weights, running on your CPU</span><span class="ld-frame" id="ld-frame"></span></figcaption>
+  <figcaption class="ld-cap"><span id="ld-status">the AUV's own YOLO weights · starts when scrolled into view</span><span class="ld-frame" id="ld-frame"></span></figcaption>
 </figure>
 
 <style>
@@ -26,14 +25,6 @@ const NAMES = ['divider', 'gate', 'path', 'red_pipe', 'search_rescue', 'survey_r
   .ld-tag { top: 8px; left: 10px; display: inline-flex; align-items: center; gap: 6px; }
   .ld-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--good-dot); }
   .ld-hud { right: 10px; bottom: 8px; }
-  .ld-run {
-    position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
-    font-family: var(--font-mono); font-size: 0.74rem; padding: 10px 14px; cursor: pointer;
-    background: var(--accent); color: #fff; border: 1px solid var(--accent);
-    transition: transform 0.18s var(--ease), background 0.18s;
-  }
-  .ld-run:hover { transform: translate(-50%, -50%) translateY(-2px); background: var(--accent-deep); }
-  .ld.live .ld-run { display: none; }
   .ld-cap { display: flex; justify-content: space-between; gap: 12px; padding: 8px 10px; font-family: var(--font-mono); font-size: 0.66rem; color: var(--ink-faint); }
   .ld.live .ld-cap { color: var(--ink-soft); }
 </style>
@@ -50,8 +41,11 @@ const NAMES = ['divider', 'gate', 'path', 'red_pipe', 'search_rescue', 'survey_r
     const accent = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim();
     const SZ = 416, CONF = 0.4, IOU = 0.5;
 
-    document.getElementById('ld-run')!.addEventListener('click', async (e) => {
-      e.preventDefault(); e.stopPropagation();
+    // starts on its own the first time the card scrolls near the viewport
+    let started = false;
+    const starter = new IntersectionObserver(([en]) => { if (en.isIntersecting && !started) { started = true; starter.disconnect(); start(); } }, { rootMargin: '150px' });
+    starter.observe(root);
+    async function start() {
       root.classList.add('live');
       try {
         status.textContent = 'loading runtime…';
@@ -130,6 +124,6 @@ const NAMES = ['divider', 'gate', 'path', 'red_pipe', 'search_rescue', 'survey_r
         status.textContent = 'detector failed to load in this browser';
         console.error(err);
       }
-    });
+    }
   })();
 </script>
