@@ -8,7 +8,7 @@ export interface Role {
   blurb: string;
   tags: string[];
   summary?: string;
-  media?: { src: string; kind: 'shot' | 'photo' | 'logo'; alt: string };
+  media?: { src: string; kind: 'shot' | 'photo' | 'logo'; alt: string; bg?: string };
 }
 
 export const CURRENT_ROLES: Role[] = [
@@ -20,7 +20,7 @@ export const CURRENT_ROLES: Role[] = [
       'Only AI engineer on a cross-functional student team building internal software for a Canadian construction company (details under NDA). Own the AI engineering for automating a core internal workflow, from requirements to delivery.',
     tags: ['AI Engineering', 'LLMs', 'Product'],
     summary: 'sole AI engineer · NDA client',
-    media: { src: '/images/usc-logo.png', kind: 'logo', alt: 'University of Southern California logo' },
+    media: { src: '/images/usc-logo.png', kind: 'logo', alt: 'University of Southern California logo', bg: '#990000' },
   },
   {
     role: 'Software Lead',
