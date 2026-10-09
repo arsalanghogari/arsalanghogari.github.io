@@ -1,0 +1,97 @@
+---
+// PTDrone Microfactory V6, the real GLB from the PTDrone site, rendered live
+// with three.js. Loads only when scrolled into view (1.75 MB Draco GLB),
+// auto-orbits, drag to rotate, stops when off screen.
+---
+
+<figure class="mf" data-mf>
+  <canvas class="mf-canvas" aria-label="Interactive 3D model of the PTDrone Microfactory V6 container; drag to rotate" role="img"></canvas>
+  <span class="mf-tag"><span class="mf-dot"></span>microfactory v6 · concept model</span>
+  <span class="mf-hint">drag to rotate</span>
+  <span class="mf-load" data-mf-load>loading model…</span>
+</figure>
+
+<style>
+  .mf { position: relative; margin: 6px 0 2px; border: 1px solid var(--line); background: var(--paper); aspect-ratio: 2.6 / 1; overflow: hidden; cursor: grab; touch-action: pan-y; }
+  .mf:active { cursor: grabbing; }
+  .mf-canvas { display: block; width: 100%; height: 100%; }
+  .mf-tag { position: absolute; top: 8px; left: 10px; display: inline-flex; align-items: center; gap: 6px; font-family: var(--font-mono); font-size: 0.56rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-faint); }
+  .mf-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--accent); }
+  .mf-hint, .mf-load { position: absolute; right: 10px; bottom: 8px; font-family: var(--font-mono); font-size: 0.56rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-faint); }
+  .mf-load { right: auto; left: 10px; color: var(--accent); }
+  .mf.ready .mf-load { display: none; }
+</style>
+
+<script>
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  document.querySelectorAll<HTMLElement>('[data-mf]').forEach((root) => {
+    const canvas = root.querySelector<HTMLCanvasElement>('canvas')!;
+    let started = false;
+    const io = new IntersectionObserver(([e]) => { if (e.isIntersecting && !started) { started = true; io.disconnect(); boot(); } }, { rootMargin: '200px' });
+    io.observe(root);
+
+    async function boot() {
+      const [THREE, { GLTFLoader }, { DRACOLoader }] = await Promise.all([
+        import('three'),
+        import('three/examples/jsm/loaders/GLTFLoader.js'),
+        import('three/examples/jsm/loaders/DRACOLoader.js'),
+      ]);
+      const css = getComputedStyle(document.documentElement);
+      const tok = (n: string) => css.getPropertyValue(n).trim();
+
+      const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+      renderer.setPixelRatio(Math.min(2, devicePixelRatio));
+      renderer.toneMapping = THREE.ACESFilmicToneMapping;
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(32, 2.6, 0.1, 100);
+
+      scene.add(new THREE.HemisphereLight(0xffffff, 0x9a9a90, 1.6));
+      const key = new THREE.DirectionalLight(0xffffff, 2.2); key.position.set(5, 8, 6); scene.add(key);
+      const fill = new THREE.DirectionalLight(0xffffff, 0.8); fill.position.set(-6, 3, -4); scene.add(fill);
+
+      // ground shadow disc in the site's line color
+      const disc = new THREE.Mesh(new THREE.CircleGeometry(4.6, 48), new THREE.MeshBasicMaterial({ color: tok('--line'), transparent: true, opacity: 0.6 }));
+      disc.rotation.x = -Math.PI / 2; disc.position.y = -0.01; scene.add(disc);
+
+      const pivot = new THREE.Group(); scene.add(pivot);
+      const draco = new DRACOLoader(); draco.setDecoderPath('/draco/');
+      const loader = new GLTFLoader(); loader.setDRACOLoader(draco);
+      const gltf = await loader.loadAsync('/models/microfactory.glb');
+      const model = gltf.scene;
+      const box = new THREE.Box3().setFromObject(model);
+      const size = box.getSize(new THREE.Vector3()), center = box.getCenter(new THREE.Vector3());
+      model.position.sub(center); model.position.y += size.y / 2; // sit on the disc
+      pivot.add(model);
+      const R = Math.max(size.x, size.z) * 1.15;
+      camera.position.set(R * 0.9, R * 0.55, R * 0.9);
+      camera.lookAt(0, size.y * 0.35, 0);
+      root.classList.add('ready');
+
+      // orbit: auto-spin + drag
+      let yaw = 0.6, vel = reduced ? 0 : 0.25, drag: { x: number; yaw: number } | null = null, lastX = 0;
+      root.addEventListener('pointerdown', (e) => { drag = { x: e.clientX, yaw }; lastX = e.clientX; root.setPointerCapture(e.pointerId); });
+      root.addEventListener('pointermove', (e) => { if (!drag) return; vel = (e.clientX - lastX) * 0.15; lastX = e.clientX; yaw = drag.yaw + (e.clientX - drag.x) * 0.008; });
+      const up = () => { drag = null; }; root.addEventListener('pointerup', up); root.addEventListener('pointercancel', up);
+      root.addEventListener('click', (e) => e.preventDefault());
+
+      function resize() {
+        const w = root.clientWidth, h = root.clientHeight;
+        if (canvas.width !== w * renderer.getPixelRatio() || canvas.height !== h * renderer.getPixelRatio()) {
+          renderer.setSize(w, h, false); camera.aspect = w / h; camera.updateProjectionMatrix();
+        }
+      }
+      let on = true, last = 0;
+      const frame = (now: number) => {
+        if (!on) return;
+        const dt = Math.min(0.05, (now - last) / 1000 || 0); last = now;
+        if (!drag) { yaw += vel * dt; vel += ((reduced ? 0 : 0.25) * Math.sign(vel || 1) - vel) * Math.min(1, dt * 1.5); }
+        pivot.rotation.y = yaw;
+        resize(); renderer.render(scene, camera);
+        requestAnimationFrame(frame);
+      };
+      new IntersectionObserver(([e]) => { const was = on; on = e.isIntersecting; if (on && !was) { last = 0; requestAnimationFrame(frame); } }).observe(root);
+      requestAnimationFrame(frame);
+      if (reduced) { on = false; resize(); pivot.rotation.y = yaw; renderer.render(scene, camera); }
+    }
+  });
+</script>

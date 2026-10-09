@@ -1,27 +1,10 @@
 ---
 // Small code-drawn visualizations for the remaining project cards.
 // One component, one `kind` prop, one script that boots whichever exist.
-interface Props { kind: 'ptdrone' | 'parley' | 'shroom' | 'postcards' | 'anchor' }
+interface Props { kind: 'parley' | 'shroom' | 'postcards' | 'anchor' }
 const { kind } = Astro.props;
 const PHOTOS = [1, 2, 3, 4, 5, 6];
-const DRONE_PATH = 'M40,150 L110,60 L210,40 L290,110 L230,165 L120,170 Z';
 ---
-
-{kind === 'ptdrone' && (
-  <svg class="viz" data-viz="ptdrone" viewBox="0 0 520 200" role="img" aria-label="Animated ground control station: a drone flies a waypoint mission while telemetry updates, beside a print-on-demand pipeline">
-    <g class="grid" stroke="var(--line)" stroke-width="0.6">{Array.from({ length: 8 }).map((_, i) => <line x1={20 + i * 40} y1="20" x2={20 + i * 40} y2="180" />)}{Array.from({ length: 5 }).map((_, i) => <line x1="20" y1={20 + i * 40} x2="300" y2={20 + i * 40} />)}</g>
-    <path class="route" d={DRONE_PATH} />
-    {[[40, 150, 'TAKEOFF'], [110, 60, 'WP1'], [210, 40, 'WP2'], [290, 110, 'WP3'], [230, 165, 'WP4'], [120, 170, 'RTL']].map(([x, y, l]) => <g class="wp"><circle cx={x} cy={y} r="3" /><text x={Number(x) + 6} y={Number(y) - 5}>{l}</text></g>)}
-    <g class="drone" style={`offset-path: path('${DRONE_PATH}')`}><path d="M-7,-7 L7,7 M-7,7 L7,-7" /><circle r="2.2" /></g>
-    <g class="tele"><text x="20" y="196"><tspan>ALT </tspan><tspan class="v" data-t="alt">0.0</tspan><tspan>  HDG </tspan><tspan class="v" data-t="hdg">000</tspan><tspan>  BAT </tspan><tspan class="v" data-t="bat">100</tspan>%</text></g>
-    <g class="pipe">
-      {[['parts?', 330], ['chatbot', 378], ['print', 426], ['cassette', 474]].map(([l, x], i) => <g class="st" style={`animation-delay:${i * 1.2}s`}><rect x={Number(x) - 22} y="78" width="44" height="30" /><text x={x} y="97">{l}</text></g>)}
-      {[352, 400, 448].map((x) => <path class="ar" d={`M${x + 2},93 L${x + 4},93`} />)}
-      <text class="cap" x="402" y="140" text-anchor="middle">on-demand manufacturing</text>
-      <text class="cap" x="402" y="154" text-anchor="middle">ptdrone.tech · CSCI 401</text>
-    </g>
-  </svg>
-)}
 
 {kind === 'parley' && (
   <svg class="viz" data-viz="parley" viewBox="0 0 520 200" role="img" aria-label="Animated negotiation: the agent phones three vendors in turn, using each quote as leverage, until the price falls from $2,400 to $2,250">
@@ -61,23 +44,6 @@ const DRONE_PATH = 'M40,150 L110,60 L210,40 L290,110 L230,165 L120,170 Z';
   .cap { fill: var(--ink-faint); font-size: 8.5px; letter-spacing: 0.04em; }
   .v { fill: var(--ink); }
 
-  /* ptdrone */
-  .route { fill: none; stroke: var(--line); stroke-width: 1.2; stroke-dasharray: 4 3; }
-  .wp circle { fill: var(--accent); }
-  .wp text { font-size: 8px; fill: var(--ink-faint); }
-  .drone path { stroke: var(--ink); stroke-width: 1.6; }
-  .drone circle { fill: var(--accent); }
-  .drone { offset-rotate: 0deg; animation: fly 12s linear infinite; animation-play-state: paused; }
-  :global(.in) .drone { animation-play-state: running; }
-  @keyframes fly { to { offset-distance: 100%; } }
-  .pipe rect { fill: var(--panel); stroke: var(--line); }
-  .pipe .st text { text-anchor: middle; font-size: 8.5px; }
-  .pipe .st rect { animation: lit 4.8s infinite; animation-play-state: paused; }
-  :global(.in) .pipe .st rect { animation-play-state: running; }
-  .pipe .st { animation-delay: inherit; }
-  .ar { stroke: var(--line); stroke-width: 1; }
-  @keyframes lit { 0%, 100% { stroke: var(--line); } 5%, 22% { stroke: var(--accent); } 30% { stroke: var(--line); } }
-
   /* parley */
   .lane .nm { fill: var(--ink); font-size: 10px; }
   .lane .quote { fill: var(--ink-soft); font-size: 11px; }
@@ -96,7 +62,7 @@ const DRONE_PATH = 'M40,150 L110,60 L210,40 L290,110 L230,165 L120,170 Z';
   .ring img { position: absolute; left: calc(50% - 50px); top: calc(50% - 36px); width: 100px; height: 72px; object-fit: cover; border: 1px solid var(--line); backface-visibility: hidden; }
   .hint { position: absolute; right: 10px; bottom: 8px; font-family: var(--font-mono); font-size: 0.56rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-faint); }
 
-  @media (prefers-reduced-motion: reduce) { .drone, .pipe .st rect, .lane.live .wave rect { animation: none; } }
+  @media (prefers-reduced-motion: reduce) { .lane.live .wave rect { animation: none; } }
 </style>
 
 <script>
@@ -112,17 +78,6 @@ const DRONE_PATH = 'M40,150 L110,60 L210,40 L290,110 L230,165 L120,170 Z';
     new IntersectionObserver(([e]) => { on = e.isIntersecting; if (on) { last = 0; raf = requestAnimationFrame(step); } else cancelAnimationFrame(raf); }).observe(el);
     if (reduced) { on = false; tick(0, 0); }
   }
-
-  // ---- ptdrone telemetry
-  document.querySelectorAll<SVGSVGElement>('[data-viz="ptdrone"]').forEach((svg) => {
-    const f = (k: string) => svg.querySelector(`[data-t="${k}"]`)!;
-    loop(svg, (t) => {
-      const u = (t % 12) / 12;
-      f('alt').textContent = (u < 0.1 ? u * 300 : u > 0.9 ? (1 - u) * 300 : 30 + Math.sin(t) * 1.5).toFixed(1);
-      f('hdg').textContent = String(Math.round(((Math.sin(t * 0.5) + 1) * 180) % 360)).padStart(3, '0');
-      f('bat').textContent = String(Math.max(60, 100 - Math.round(u * 40)));
-    });
-  });
 
   // ---- parley: sequential calls with leverage
   document.querySelectorAll<SVGSVGElement>('[data-viz="parley"]').forEach((svg) => {
