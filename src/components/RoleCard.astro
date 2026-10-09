@@ -1,5 +1,6 @@
 ---
 import type { Role } from '../data/content';
+import IcpTile from './IcpTile.astro';
 interface Props { role: Role; }
 const { role: r } = Astro.props;
 ---
@@ -20,8 +21,10 @@ const { role: r } = Astro.props;
 
   {r.media && (
     <div class="role-media">
-      {r.media.kind === 'logo' ? (
-        <div class={`logo-tile${r.media.bg ? " fill" : ""}`} style={r.media.bg ? `background:${r.media.bg}` : undefined}><img src={r.media.src} alt={r.media.alt} loading="lazy" />{r.media.pair && <><span class="pair-x" aria-hidden="true">×</span><span class="pair" role="img" aria-label="construction and AI">{r.media.pair}</span></>}</div>
+      {r.media.kind === 'icp' ? (
+        <IcpTile />
+      ) : r.media.kind === 'logo' ? (
+        <div class="logo-tile"><img src={r.media.src} alt={r.media.alt} loading="lazy" /></div>
       ) : (
         <img class={`media-img ${r.media.kind}`} src={r.media.src} alt={r.media.alt} loading="lazy" />
       )}
@@ -70,9 +73,4 @@ const { role: r } = Astro.props;
     padding: 22px;
   }
   .logo-tile img { width: 100%; max-width: 150px; height: auto; display: block; }
-  .logo-tile.fill img { max-width: 240px; }
-  .logo-tile { gap: 14px; }
-  .logo-tile:has(.pair) img { max-width: 160px; }
-  .pair-x { font-family: var(--font-display); font-weight: 600; font-size: 2rem; color: #ffcc00; line-height: 1; }
-  .pair { font-size: 2.6rem; line-height: 1; letter-spacing: 0.15em; }
 </style>

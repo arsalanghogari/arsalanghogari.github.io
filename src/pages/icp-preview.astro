@@ -1,0 +1,36 @@
+---
+// Temporary: side-by-side preview of the five ICP tile variants. Delete after picking.
+import BaseLayout from '../layouts/BaseLayout.astro';
+import IcpTile from '../components/IcpTile.astro';
+const V = [
+  [1, 'Blueprint → digital twin with detections'],
+  [2, 'Chat over the site'],
+  [3, 'Scan line classifies each floor'],
+  [4, 'Circuit to concrete'],
+  [5, 'Workflow pipeline'],
+] as const;
+---
+
+<BaseLayout title="ICP tile variants" footer={false}>
+  <section class="sec"><div class="wrap">
+    <div class="sec-head"><span class="sec-idx">00</span><h2 class="sec-title">ICP tile variants</h2></div>
+    <div class="grid">
+      {V.map(([n, label]) => (
+        <figure class="v">
+          <div class="now"><IcpTile variant={n} /></div>
+          <figcaption><span class="sec-idx">0{n}</span> {label}</figcaption>
+        </figure>
+      ))}
+    </div>
+  </div></section>
+</BaseLayout>
+
+<style>
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 28px; }
+  .v { margin: 0; }
+  .v :global(.icp) { animation: none; }
+  .v :global(.icp .draw), .v :global(.icp .det .box), .v :global(.icp .chat .type), .v :global(.icp .scan), .v :global(.icp .tag), .v :global(.icp .pulse), .v :global(.icp .pipe .st rect) { animation-play-state: running !important; }
+  .v :global(.icp .draw) { animation: draw 1.6s cubic-bezier(0.2, 0.65, 0.3, 1) forwards; }
+  @keyframes draw { to { stroke-dashoffset: 0; } }
+  figcaption { font-family: var(--font-mono); font-size: 0.78rem; color: var(--ink-soft); margin-top: 10px; }
+</style>
