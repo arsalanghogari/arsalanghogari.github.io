@@ -21,9 +21,9 @@ export const SOCIAL = {
 // In-page section anchors used by the header nav + command palette.
 export const NAV = [
   { href: '#about', label: 'about' },
+  { href: '#built', label: 'built' },
   { href: '#experience', label: 'experience' },
   { href: '#volunteering', label: 'volunteering' },
-  { href: '#built', label: 'built' },
   { href: '#education', label: 'education' },
   { href: '#contact', label: 'contact' },
 ];

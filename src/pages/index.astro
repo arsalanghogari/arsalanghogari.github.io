@@ -65,40 +65,10 @@ import {
     </div>
   </section>
 
-  <!-- 03 · CURRENT EXPERIENCES -->
-  <section id="experience" class="sec" data-detect="experience.current" data-conf="0.97">
-    <div class="wrap">
-      <div class="sec-head"><span class="sec-idx">03</span><h2 class="sec-title">Current Experiences</h2></div>
-      <div class="roles">
-        {CURRENT_ROLES.map((r) => <RoleCard role={r} />)}
-      </div>
-    </div>
-  </section>
-
-  <!-- 04 · PAST EXPERIENCES -->
-  <section class="sec" data-detect="experience.past" data-conf="0.94">
-    <div class="wrap">
-      <div class="sec-head"><span class="sec-idx">04</span><h2 class="sec-title">Past Experiences</h2></div>
-      <div class="roles">
-        {PAST_ROLES.map((r) => <RoleCard role={r} />)}
-      </div>
-    </div>
-  </section>
-
-  <!-- 05 · VOLUNTEERING -->
-  <section id="volunteering" class="sec" data-detect="volunteering" data-conf="0.96">
-    <div class="wrap">
-      <div class="sec-head"><span class="sec-idx">05</span><h2 class="sec-title">Volunteering</h2></div>
-      <div class="roles">
-        {VOLUNTEERING.map((r) => <RoleCard role={r} />)}
-      </div>
-    </div>
-  </section>
-
-  <!-- 06 · WHAT I'VE BUILT -->
+  <!-- 03 · WHAT I'VE BUILT -->
   <section id="built" class="sec" data-detect="projects" data-conf="0.95">
     <div class="wrap">
-      <div class="sec-head"><span class="sec-idx">06</span><h2 class="sec-title">What I’ve Built</h2></div>
+      <div class="sec-head"><span class="sec-idx">03</span><h2 class="sec-title">What I’ve Built</h2></div>
 
       <p class="subhead">Technical Projects &amp; Skills</p>
       <div class="grid">
@@ -130,6 +100,36 @@ import {
             <p class="nt-blurb">{n.blurb}</p>
           </div>
         ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- 04 · CURRENT EXPERIENCES -->
+  <section id="experience" class="sec" data-detect="experience.current" data-conf="0.97">
+    <div class="wrap">
+      <div class="sec-head"><span class="sec-idx">04</span><h2 class="sec-title">Current Experiences</h2></div>
+      <div class="roles">
+        {CURRENT_ROLES.map((r) => <RoleCard role={r} />)}
+      </div>
+    </div>
+  </section>
+
+  <!-- 05 · PAST EXPERIENCES -->
+  <section class="sec" data-detect="experience.past" data-conf="0.94">
+    <div class="wrap">
+      <div class="sec-head"><span class="sec-idx">05</span><h2 class="sec-title">Past Experiences</h2></div>
+      <div class="roles">
+        {PAST_ROLES.map((r) => <RoleCard role={r} />)}
+      </div>
+    </div>
+  </section>
+
+  <!-- 06 · VOLUNTEERING -->
+  <section id="volunteering" class="sec" data-detect="volunteering" data-conf="0.96">
+    <div class="wrap">
+      <div class="sec-head"><span class="sec-idx">06</span><h2 class="sec-title">Volunteering</h2></div>
+      <div class="roles">
+        {VOLUNTEERING.map((r) => <RoleCard role={r} />)}
       </div>
     </div>
   </section>
