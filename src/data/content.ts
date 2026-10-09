@@ -20,6 +20,7 @@ export const CURRENT_ROLES: Role[] = [
       'Only AI engineer on a cross-functional student team building internal software for a Canadian construction company (details under NDA). Own the AI engineering for automating a core internal workflow, from requirements to delivery.',
     tags: ['AI Engineering', 'LLMs', 'Product'],
     summary: 'sole AI engineer · NDA client',
+    media: { src: '/images/usc-logo.png', kind: 'logo', alt: 'University of Southern California logo' },
   },
   {
     role: 'Software Lead',
