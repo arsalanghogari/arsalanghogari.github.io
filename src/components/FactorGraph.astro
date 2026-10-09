@@ -1,0 +1,128 @@
+---
+// GTSAM factor graph, drawn from a real optimizer run (src/data/gtsam-run.json,
+// produced by scripts/export-gtsam-run.py against barracuda_estimation).
+// Plays on scroll-in: poses + factors appear along the trajectory, landmarks
+// start at their first-sighting seeds, then slide through each LM iteration.
+import run from '../data/gtsam-run.json';
+
+const SX = (x: number) => 24 + x * 22;
+const SY = (y: number) => 290 - y * 22;
+const SPEC_R = 0.3 * 22; // the 0.3 m acceptance radius, in px
+const last = run.frames[run.frames.length - 1];
+const worst = Math.max(...Object.values(last.error as Record<string, number>));
+const data = {
+  frames: run.frames.map((f) => ({ cost: f.cost, lm: f.landmarks, err: f.error })),
+  edges: run.edges,
+};
+---
+
+<figure class="fg" id="fg">
+  <svg viewBox="0 0 520 300" role="img" aria-label={`GTSAM factor graph: ${run.poses.length} poses, ${run.landmarks.length} landmarks, ${run.edges.length} factors, converged with worst landmark error ${worst.toFixed(2)} m`} xmlns="http://www.w3.org/2000/svg">
+    <!-- 0.3 m spec circles around surveyed truth -->
+    <g class="truth">
+      {run.truth.map((t) => <circle cx={SX(t.xy[0])} cy={SY(t.xy[1])} r={SPEC_R} />)}
+      {run.truth.map((t) => <path d={`M${SX(t.xy[0]) - 4},${SY(t.xy[1])} h8 M${SX(t.xy[0])},${SY(t.xy[1]) - 4} v8`} />)}
+    </g>
+    <!-- factors: pose → landmark -->
+    <g class="edges">
+      {run.edges.map(([pi, lid]) => <line data-p={pi} data-l={lid} x1={SX(run.poses[pi][0])} y1={SY(run.poses[pi][1])} x2={SX(run.landmarks.find((l) => l.id === lid)!.seed[0])} y2={SY(run.landmarks.find((l) => l.id === lid)!.seed[1])} />)}
+    </g>
+    <!-- odometry chain -->
+    <polyline class="odom" points={run.poses.map((p) => `${SX(p[0])},${SY(p[1])}`).join(' ')} />
+    <!-- pose nodes -->
+    <g class="poses">
+      {run.poses.map((p, i) => <rect data-i={i} x={SX(p[0]) - 2.5} y={SY(p[1]) - 2.5} width="5" height="5" />)}
+    </g>
+    <!-- landmark nodes -->
+    <g class="lms">
+      {run.landmarks.map((l) => <g class="lm" data-l={l.id} transform={`translate(${SX(l.seed[0])},${SY(l.seed[1])})`}><circle r="4" /><text x="7" y="3.5">{l.label.replace('_', ' ')}</text><text class="err" x="7" y="14"></text></g>)}
+    </g>
+    <!-- readout -->
+    <g class="hud">
+      <text x="366" y="36" class="h">GTSAM · LM optimizer</text>
+      <text x="366" y="54" class="k">poses <tspan class="v">{run.poses.length}</tspan>  landmarks <tspan class="v">{run.landmarks.length}</tspan></text>
+      <text x="366" y="70" class="k">factors <tspan class="v">{run.edges.length}</tspan></text>
+      <text x="366" y="96" class="k">iter <tspan class="v" id="fg-iter">0</tspan></text>
+      <text x="366" y="112" class="k">graph error <tspan class="v" id="fg-cost">{run.frames[0].cost}</tspan></text>
+      <text x="366" y="128" class="k">worst landmark <tspan class="v" id="fg-worst">–</tspan></text>
+      <text x="366" y="152" class="k dim">spec: all landmarks &lt; 0.30 m</text>
+      <text x="508" y="290" class="k dim" text-anchor="end">real optimizer · synthetic obs</text>
+    </g>
+  </svg>
+  <script type="application/json" id="fg-data" set:html={JSON.stringify(data)} />
+</figure>
+
+<style>
+  .fg { margin: 6px 0 2px; border: 1px solid var(--line); background: var(--paper); cursor: pointer; }
+  svg { display: block; width: 100%; height: auto; }
+  .truth circle { fill: none; stroke: var(--ink); stroke-opacity: 0.25; stroke-dasharray: 2 3; }
+  .truth path { stroke: var(--ink); stroke-opacity: 0.4; }
+  .edges line { stroke: var(--accent); stroke-opacity: 0.35; stroke-width: 0.8; opacity: 0; transition: opacity 0.25s; }
+  .odom { fill: none; stroke: var(--good); stroke-width: 1.2; stroke-dasharray: 3 3; }
+  .poses rect { fill: var(--good); opacity: 0; transition: opacity 0.25s; }
+  .lm { opacity: 0; transition: opacity 0.3s, transform 0.55s cubic-bezier(0.2, 0.65, 0.3, 1); }
+  .lm circle { fill: var(--accent); }
+  .lm text { font-family: var(--font-mono); font-size: 9px; fill: var(--ink-soft); }
+  .lm .err { fill: var(--accent); }
+  .lm.ok .err { fill: var(--good); }
+  .hud text { font-family: var(--font-mono); font-size: 9.5px; fill: var(--ink-faint); letter-spacing: 0.04em; }
+  .hud .h { fill: var(--ink-soft); font-size: 10px; }
+  .hud .v { fill: var(--ink); }
+  .hud .dim { fill: var(--ink-faint); font-size: 8.5px; }
+  .fg.done .edges line, .fg.done .poses rect, .fg.done .lm { opacity: 1; }
+</style>
+
+<script>
+  (() => {
+    const root = document.getElementById('fg')!;
+    const { frames, edges } = JSON.parse(document.getElementById('fg-data')!.textContent || '{}') as
+      { frames: { cost: number; lm: Record<string, [number, number]>; err: Record<string, number> }[]; edges: [number, number][] };
+    const SX = (x: number) => 24 + x * 22, SY = (y: number) => 290 - y * 22;
+    const poses = Array.from(root.querySelectorAll<SVGRectElement>('.poses rect'));
+    const lines = Array.from(root.querySelectorAll<SVGLineElement>('.edges line'));
+    const lms = Array.from(root.querySelectorAll<SVGGElement>('.lm'));
+    const firstPose: Record<string, number> = {};
+    for (const [p, l] of edges) if (!(l in firstPose)) firstPose[l] = p;
+    const $ = (id: string) => document.getElementById(id)!;
+    const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let timers: number[] = [];
+    const at = (ms: number, f: () => void) => timers.push(window.setTimeout(f, ms));
+
+    function applyFrame(k: number) {
+      const f = frames[k];
+      for (const g of lms) {
+        const l = g.dataset.l!; const [x, y] = f.lm[l];
+        g.setAttribute('transform', `translate(${SX(x)},${SY(y)})`);
+        const e = f.err[l]; g.querySelector('.err')!.textContent = `±${e.toFixed(2)} m`;
+        g.classList.toggle('ok', e < 0.3);
+      }
+      for (const ln of lines) { const [x, y] = f.lm[ln.dataset.l!]; ln.setAttribute('x2', String(SX(x))); ln.setAttribute('y2', String(SY(y))); }
+      $('fg-iter').textContent = String(k);
+      $('fg-cost').textContent = f.cost.toFixed(2);
+      $('fg-worst').textContent = `${Math.max(...Object.values(f.err)).toFixed(2)} m`;
+    }
+    function reset() {
+      timers.forEach(clearTimeout); timers = [];
+      root.classList.remove('done');
+      for (const el of [...poses, ...lines, ...lms]) (el as SVGElement).style.opacity = '';
+      applyFrame(0);
+    }
+    function play() {
+      reset();
+      if (reduced) { root.classList.add('done'); applyFrame(frames.length - 1); return; }
+      const STEP = 45;
+      poses.forEach((r, i) => at(i * STEP, () => {
+        r.style.opacity = '1';
+        for (const ln of lines) if (Number(ln.dataset.p) === i) ln.style.opacity = '1';
+        for (const g of lms) if (firstPose[g.dataset.l!] === i) g.style.opacity = '1';
+      }));
+      const t0 = poses.length * STEP + 400;
+      for (let k = 1; k < frames.length; k++) at(t0 + (k - 1) * 700, () => applyFrame(k));
+      at(t0 + (frames.length - 1) * 700, () => root.classList.add('done'));
+    }
+    applyFrame(0);
+    let played = false;
+    new IntersectionObserver(([e]) => { if (e.isIntersecting && !played) { played = true; play(); } }, { threshold: 0.4 }).observe(root);
+    root.addEventListener('click', (e) => { e.preventDefault(); play(); });
+  })();
+</script>

@@ -90,6 +90,7 @@ export interface Project {
   blurb: string;
   tech: string[];
   href: string;
+  viz?: 'gtsam' | 'rag';
 }
 
 export const TECHNICAL_PROJECTS: Project[] = [
@@ -100,6 +101,7 @@ export const TECHNICAL_PROJECTS: Project[] = [
       'Real-time underwater detection and SLAM for the AUV — custom datasets built from ROS bags, YOLO + RT-DETR compiled ONNX → TensorRT for on-vehicle inference (detection mAP 0.40 → 0.90), and GTSAM factor-graph navigation validated to under 0.3 m absolute error on rosbag replay.',
     tech: ['Python', 'ROS 2', 'YOLO', 'RT-DETR', 'TensorRT', 'GTSAM'],
     href: 'https://uscfrl.com',
+    viz: 'gtsam',
   },
   {
     name: 'Ask USG',
@@ -109,6 +111,7 @@ export const TECHNICAL_PROJECTS: Project[] = [
       "Production RAG chatbot for USC's 20,000+ undergraduates — unifies 97 auto-discovered site pages, two multi-tab Google Sheets, and a live Google Calendar on a weekly GitHub Actions schedule. Lifted answer quality 83% → 95% via an eval pipeline built from 1,100 real beta questions, swapped pure vector search for hybrid BM25 + pgvector retrieval, cut time-to-first-token 92% (6.2 s → 0.5 s) with SSE streaming, and extended it into a LangGraph agent with crisis/academic-integrity guardrails and prompt-injection hardening. Campus-wide launch Fall 2026.",
     tech: ['Python', 'Node/Express', 'OpenAI', 'pgvector', 'LangGraph', 'Docker'],
     href: 'https://arsalanghogari.github.io/usc-usg-ai-chatbot/',
+    viz: 'rag',
   },
   {
     name: 'PTDrone',

@@ -2,6 +2,8 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import RoleCard from '../components/RoleCard.astro';
 import MissionScene from '../components/MissionScene.astro';
+import RagPipeline from '../components/RagPipeline.astro';
+import FactorGraph from '../components/FactorGraph.astro';
 import { SITE, SOCIAL } from '../consts';
 import {
   CURRENT_ROLES, PAST_ROLES, VOLUNTEERING, TECHNICAL_PROJECTS, NON_TECHNICAL,
@@ -105,6 +107,8 @@ import {
               {p.status === 'live' && <span class="badge"><span class="dot">●</span> Live</span>}
             </span>
             <span class="psub">{p.subtitle}</span>
+            {p.viz === 'rag' && <RagPipeline />}
+            {p.viz === 'gtsam' && <FactorGraph />}
             <span class="pblurb">{p.blurb}</span>
             <span class="ptech">{p.tech.join(' · ')}</span>
           </a>
