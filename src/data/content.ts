@@ -90,7 +90,7 @@ export interface Project {
   blurb: string;
   tech: string[];
   href: string;
-  viz?: 'gtsam' | 'rag';
+  viz?: 'gtsam' | 'rag' | 'ptdrone' | 'parley' | 'shroom' | 'postcards' | 'anchor';
 }
 
 export const TECHNICAL_PROJECTS: Project[] = [
@@ -121,6 +121,7 @@ export const TECHNICAL_PROJECTS: Project[] = [
       'Lead a five-person CSCI 401 team building, for an outside stakeholder, a drone ground control station, an AI chatbot that answers parts questions and triggers on-demand manufacturing, and a simulated manufacturing cell. Set up the production pipeline: Next.js static export on Render with preview-branch review gating deploys.',
     tech: ['Next.js', 'React', 'TypeScript', 'Render'],
     href: 'https://ptdrone.tech',
+    viz: 'ptdrone',
   },
   {
     name: 'Parley',
@@ -129,6 +130,7 @@ export const TECHNICAL_PROJECTS: Project[] = [
       'Solo build for the ElevenLabs × Hack-Nation Global AI Hackathon: a voice agent that discovers vendors via live Google Places, phones them, negotiates using competing bids as leverage, and books the winner — producing a genuine $2,400 → $2,250 price drop, with in-code honesty tripwires and 41 CI-gated tests.',
     tech: ['Next.js', 'TypeScript', 'ElevenLabs', 'GPT-4o', 'Supabase'],
     href: 'https://github.com/arsalanghogari/the-negotiator',
+    viz: 'parley',
   },
   {
     name: 'Shroom',
@@ -137,6 +139,7 @@ export const TECHNICAL_PROJECTS: Project[] = [
       'An interactive, AI-powered seasoning carousel that pairs an ESP32 microcontroller with a React UI to suggest meals and spice combinations from whatever is on hand.',
     tech: ['React', 'Tailwind', 'GPT', 'ESP32'],
     href: 'https://drive.google.com/file/d/1geMPfQZohkX4E7bFGYwr2OUo8J_A4Rq-/view?usp=sharing',
+    viz: 'shroom',
   },
   {
     name: 'Postcards from Bristol',
@@ -146,6 +149,7 @@ export const TECHNICAL_PROJECTS: Project[] = [
       'A drag-to-spin 3D photo carousel documenting my exchange semester — built as an incoming Bristol ambassador for the USC study-abroad team, with pointer/touch dragging and arrow-key navigation in vanilla JS.',
     tech: ['HTML', 'CSS', 'JavaScript'],
     href: 'https://arsalanghogari.com/postcards-from-bristol/',
+    viz: 'postcards',
   },
   {
     name: 'AnchorNotes',
@@ -154,6 +158,7 @@ export const TECHNICAL_PROJECTS: Project[] = [
       'Selected as a top-2 implementation out of 37 teams for an original note-map visualization — delivered an app 70% faster than peers via Android Profiler-guided optimization, thread offloading, and database indexing.',
     tech: ['Java', 'XML', 'Android Studio'],
     href: 'https://github.com/arsalanghogari/AnchorNotes',
+    viz: 'anchor',
   },
 ];
 

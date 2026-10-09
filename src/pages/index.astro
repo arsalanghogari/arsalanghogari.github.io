@@ -4,6 +4,7 @@ import RoleCard from '../components/RoleCard.astro';
 import MissionScene from '../components/MissionScene.astro';
 import RagPipeline from '../components/RagPipeline.astro';
 import FactorGraph from '../components/FactorGraph.astro';
+import ProjectViz from '../components/ProjectViz.astro';
 import { SITE, SOCIAL } from '../consts';
 import {
   CURRENT_ROLES, PAST_ROLES, VOLUNTEERING, TECHNICAL_PROJECTS, NON_TECHNICAL,
@@ -109,6 +110,7 @@ import {
             <span class="psub">{p.subtitle}</span>
             {p.viz === 'rag' && <RagPipeline />}
             {p.viz === 'gtsam' && <FactorGraph />}
+            {p.viz && p.viz !== 'rag' && p.viz !== 'gtsam' && <ProjectViz kind={p.viz} />}
             <span class="pblurb">{p.blurb}</span>
             <span class="ptech">{p.tech.join(' · ')}</span>
           </a>

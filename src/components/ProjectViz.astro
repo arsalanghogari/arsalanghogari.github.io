@@ -1,0 +1,230 @@
+---
+// Small code-drawn visualizations for the remaining project cards.
+// One component, one `kind` prop, one script that boots whichever exist.
+interface Props { kind: 'ptdrone' | 'parley' | 'shroom' | 'postcards' | 'anchor' }
+const { kind } = Astro.props;
+const PHOTOS = [1, 2, 10, 11, 12, 13];
+const DRONE_PATH = 'M40,150 L110,60 L210,40 L290,110 L230,165 L120,170 Z';
+---
+
+{kind === 'ptdrone' && (
+  <svg class="viz" data-viz="ptdrone" viewBox="0 0 520 200" role="img" aria-label="Animated ground control station: a drone flies a waypoint mission while telemetry updates, beside a print-on-demand pipeline">
+    <g class="grid" stroke="var(--line)" stroke-width="0.6">{Array.from({ length: 8 }).map((_, i) => <line x1={20 + i * 40} y1="20" x2={20 + i * 40} y2="180" />)}{Array.from({ length: 5 }).map((_, i) => <line x1="20" y1={20 + i * 40} x2="300" y2={20 + i * 40} />)}</g>
+    <path class="route" d={DRONE_PATH} />
+    {[[40, 150, 'TAKEOFF'], [110, 60, 'WP1'], [210, 40, 'WP2'], [290, 110, 'WP3'], [230, 165, 'WP4'], [120, 170, 'RTL']].map(([x, y, l]) => <g class="wp"><circle cx={x} cy={y} r="3" /><text x={Number(x) + 6} y={Number(y) - 5}>{l}</text></g>)}
+    <g class="drone" style={`offset-path: path('${DRONE_PATH}')`}><path d="M-7,-7 L7,7 M-7,7 L7,-7" /><circle r="2.2" /></g>
+    <g class="tele"><text x="20" y="196"><tspan>ALT </tspan><tspan class="v" data-t="alt">0.0</tspan><tspan>  HDG </tspan><tspan class="v" data-t="hdg">000</tspan><tspan>  BAT </tspan><tspan class="v" data-t="bat">100</tspan>%</text></g>
+    <g class="pipe">
+      {[['parts?', 330], ['chatbot', 378], ['print', 426], ['cassette', 474]].map(([l, x], i) => <g class="st" style={`animation-delay:${i * 1.2}s`}><rect x={Number(x) - 22} y="78" width="44" height="30" /><text x={x} y="97">{l}</text></g>)}
+      {[352, 400, 448].map((x) => <path class="ar" d={`M${x + 2},93 L${x + 4},93`} />)}
+      <text class="cap" x="402" y="140" text-anchor="middle">on-demand manufacturing</text>
+      <text class="cap" x="402" y="154" text-anchor="middle">ptdrone.tech · CSCI 401</text>
+    </g>
+  </svg>
+)}
+
+{kind === 'parley' && (
+  <svg class="viz" data-viz="parley" viewBox="0 0 520 200" role="img" aria-label="Animated negotiation: the agent phones three vendors in turn, using each quote as leverage, until the price falls from $2,400 to $2,250">
+    {['Vendor A', 'Vendor B', 'Vendor C'].map((v, i) => (
+      <g class="lane" data-lane={i} transform={`translate(0,${34 + i * 44})`}>
+        <text class="nm" x="20" y="5">{v}</text>
+        <g class="wave" transform="translate(140,0)">{Array.from({ length: 14 }).map((_, k) => <rect x={k * 6} y="-2" width="3" height="4" style={`animation-delay:${k * 0.07}s`} />)}</g>
+        <text class="quote" x="330" y="5" text-anchor="end">—</text>
+        <text class="tag" x="345" y="5"></text>
+      </g>
+    ))}
+    <text class="cap" x="20" y="176">leverage: competing bids · honesty tripwires in code</text>
+    <g class="tests" transform="translate(300,166)">{Array.from({ length: 41 }).map((_, i) => <rect x={(i % 21) * 10} y={Math.floor(i / 21) * 10} width="7" height="7" />)}</g>
+    <text class="cap" x="508" y="196" text-anchor="end">41 CI-gated tests</text>
+  </svg>
+)}
+
+{kind === 'shroom' && (
+  <canvas class="viz" data-viz="shroom" width="1040" height="400" role="img" aria-label="Animated seasoning carousel: a ring of spice jars rotates to the jar the AI suggests"></canvas>
+)}
+
+{kind === 'postcards' && (
+  <div class="viz ring-wrap" data-viz="postcards" role="img" aria-label="Draggable 3D ring of six photos from Bristol">
+    <div class="ring">{PHOTOS.map((n, i) => <img src={`/images/postcards/${n}.jpg`} alt="" loading="lazy" style={`transform: rotateY(${i * 60}deg) translateZ(150px)`} />)}</div>
+    <span class="hint">drag to spin</span>
+  </div>
+)}
+
+{kind === 'anchor' && (
+  <canvas class="viz" data-viz="anchor" width="1040" height="400" role="img" aria-label="Animated note map: notes link into a graph, beside a bar comparing app speed, 70 percent faster than peers"></canvas>
+)}
+
+<style>
+  .viz { display: block; width: 100%; height: auto; margin: 6px 0 2px; border: 1px solid var(--line); background: var(--paper); }
+  canvas.viz { aspect-ratio: 2.6 / 1; }
+  text { font-family: var(--font-mono); font-size: 9px; fill: var(--ink-soft); }
+  .cap { fill: var(--ink-faint); font-size: 8.5px; letter-spacing: 0.04em; }
+  .v { fill: var(--ink); }
+
+  /* ptdrone */
+  .route { fill: none; stroke: var(--line); stroke-width: 1.2; stroke-dasharray: 4 3; }
+  .wp circle { fill: var(--accent); }
+  .wp text { font-size: 8px; fill: var(--ink-faint); }
+  .drone path { stroke: var(--ink); stroke-width: 1.6; }
+  .drone circle { fill: var(--accent); }
+  .drone { offset-rotate: 0deg; animation: fly 12s linear infinite; animation-play-state: paused; }
+  :global(.in) .drone { animation-play-state: running; }
+  @keyframes fly { to { offset-distance: 100%; } }
+  .pipe rect { fill: var(--panel); stroke: var(--line); }
+  .pipe .st text { text-anchor: middle; font-size: 8.5px; }
+  .pipe .st rect { animation: lit 4.8s infinite; animation-play-state: paused; }
+  :global(.in) .pipe .st rect { animation-play-state: running; }
+  .pipe .st { animation-delay: inherit; }
+  .ar { stroke: var(--line); stroke-width: 1; }
+  @keyframes lit { 0%, 100% { stroke: var(--line); } 5%, 22% { stroke: var(--accent); } 30% { stroke: var(--line); } }
+
+  /* parley */
+  .lane .nm { fill: var(--ink); font-size: 10px; }
+  .lane .quote { fill: var(--ink-soft); font-size: 11px; }
+  .lane .tag { fill: var(--accent); font-size: 8px; }
+  .lane.won .quote { fill: var(--good); }
+  .wave rect { fill: var(--accent); opacity: 0.25; transform-origin: center; }
+  .lane.live .wave rect { animation: wave 0.6s ease-in-out infinite alternate; opacity: 1; }
+  @keyframes wave { from { transform: scaleY(0.4); } to { transform: scaleY(3); } }
+  .tests rect { fill: var(--line); transition: fill 0.2s; }
+  .tests rect.ok { fill: var(--good-dot); }
+
+  /* postcards */
+  .ring-wrap { position: relative; aspect-ratio: 2.6 / 1; perspective: 600px; overflow: hidden; touch-action: pan-y; cursor: grab; user-select: none; }
+  .ring-wrap:active { cursor: grabbing; }
+  .ring { position: absolute; inset: 0; transform-style: preserve-3d; transform: translateZ(-150px) rotateY(0deg); }
+  .ring img { position: absolute; left: calc(50% - 50px); top: calc(50% - 36px); width: 100px; height: 72px; object-fit: cover; border: 1px solid var(--line); backface-visibility: hidden; }
+  .hint { position: absolute; right: 10px; bottom: 8px; font-family: var(--font-mono); font-size: 0.56rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-faint); }
+
+  @media (prefers-reduced-motion: reduce) { .drone, .pipe .st rect, .lane.live .wave rect { animation: none; } }
+</style>
+
+<script>
+  const css = getComputedStyle(document.documentElement);
+  const tok = (n: string) => css.getPropertyValue(n).trim();
+  const C = { accent: tok('--accent'), good: tok('--good'), line: tok('--line'), ink: tok('--ink'), soft: tok('--ink-soft'), faint: tok('--ink-faint'), panel: tok('--panel') };
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const mono = (px: number) => `${px}px JetBrains Mono, monospace`;
+  // run `tick` only while `el` is on screen
+  function loop(el: Element, tick: (t: number, dt: number) => void) {
+    let on = false, last = 0, raf = 0;
+    const step = (now: number) => { const dt = Math.min(0.05, (now - last) / 1000 || 0); last = now; tick(now / 1000, dt); if (on) raf = requestAnimationFrame(step); };
+    new IntersectionObserver(([e]) => { on = e.isIntersecting; if (on) { last = 0; raf = requestAnimationFrame(step); } else cancelAnimationFrame(raf); }).observe(el);
+    if (reduced) { on = false; tick(0, 0); }
+  }
+
+  // ---- ptdrone telemetry
+  document.querySelectorAll<SVGSVGElement>('[data-viz="ptdrone"]').forEach((svg) => {
+    const f = (k: string) => svg.querySelector(`[data-t="${k}"]`)!;
+    loop(svg, (t) => {
+      const u = (t % 12) / 12;
+      f('alt').textContent = (u < 0.1 ? u * 300 : u > 0.9 ? (1 - u) * 300 : 30 + Math.sin(t) * 1.5).toFixed(1);
+      f('hdg').textContent = String(Math.round(((Math.sin(t * 0.5) + 1) * 180) % 360)).padStart(3, '0');
+      f('bat').textContent = String(Math.max(60, 100 - Math.round(u * 40)));
+    });
+  });
+
+  // ---- parley: sequential calls with leverage
+  document.querySelectorAll<SVGSVGElement>('[data-viz="parley"]').forEach((svg) => {
+    const lanes = Array.from(svg.querySelectorAll<SVGGElement>('.lane'));
+    const tests = Array.from(svg.querySelectorAll<SVGRectElement>('.tests rect'));
+    const quotes = [2400, 2320, 2250];
+    const tags = ['first quote', 'beat A → leverage', 'booked ✓'];
+    loop(svg, (t) => {
+      const T = (t % 11); // 3 calls × 3 s + 2 s hold
+      lanes.forEach((ln, i) => {
+        const s = i * 3, u = (T - s) / 3;
+        const live = u >= 0 && u < 0.7, done = u >= 0.7 || (i < 2 && T >= (i + 1) * 3);
+        ln.classList.toggle('live', live);
+        const q = ln.querySelector('.quote')!, tg = ln.querySelector('.tag')!;
+        if (T < s) { q.textContent = '—'; tg.textContent = ''; ln.classList.remove('won'); return; }
+        const from = i ? quotes[i - 1] : 2600;
+        const v = live ? Math.round(from - (from - quotes[i]) * Math.min(1, u / 0.7)) : quotes[i];
+        q.textContent = `$${v.toLocaleString()}`;
+        tg.textContent = done ? tags[i] : 'on call…';
+        ln.classList.toggle('won', i === 2 && done);
+      });
+      tests.forEach((r, i) => r.classList.toggle('ok', T > 9 + (i / 41) * 1.5 || (T < 9 && T > 2 && i < 0)));
+    });
+  });
+
+  // ---- shroom: carousel ring rotating to the suggested jar
+  document.querySelectorAll<HTMLCanvasElement>('[data-viz="shroom"]').forEach((cv) => {
+    const ctx = cv.getContext('2d')!, W = cv.width, H = cv.height;
+    const JARS = ['cumin', 'paprika', 'oregano', 'turmeric', 'chili', 'thyme', 'garlic', 'pepper'];
+    const PAIR = ['tacos', 'goulash', 'pasta', 'curry', 'ramen', 'roast', 'stir-fry', 'steak'];
+    let target = 0, ang = 0, tPick = 0;
+    loop(cv, (t, dt) => {
+      if (t - tPick > 3.2) { tPick = t; target = (target + 3) % JARS.length; }
+      const want = -target * (Math.PI * 2 / JARS.length);
+      let d = want - ang; d = Math.atan2(Math.sin(d), Math.cos(d)); ang += d * Math.min(1, dt * 4);
+      ctx.clearRect(0, 0, W, H);
+      const cx = W * 0.33, cy = H * 0.52, R = H * 0.34;
+      ctx.strokeStyle = C.line; ctx.lineWidth = 2; ctx.beginPath(); ctx.ellipse(cx, cy, R * 1.35, R * 0.55, 0, 0, Math.PI * 2); ctx.stroke();
+      const order = JARS.map((_, i) => i).sort((a, b) => Math.sin(ang + a * Math.PI * 2 / 8) - Math.sin(ang + b * Math.PI * 2 / 8));
+      for (const i of order) {
+        const a = ang + i * Math.PI * 2 / 8, x = cx + Math.cos(a) * R * 1.35, y = cy + Math.sin(a) * R * 0.55, k = 0.75 + (Math.sin(a) + 1) * 0.2;
+        const hot = i === target && Math.abs(d) < 0.08;
+        ctx.fillStyle = hot ? C.accent : C.panel; ctx.strokeStyle = hot ? C.accent : C.soft; ctx.lineWidth = 2;
+        ctx.beginPath(); ctx.roundRect(x - 14 * k, y - 26 * k, 28 * k, 40 * k, 5); ctx.fill(); ctx.stroke();
+        ctx.fillStyle = C.ink; ctx.fillRect(x - 10 * k, y - 32 * k, 20 * k, 7 * k);
+        if (Math.sin(a) > 0.2) { ctx.fillStyle = hot ? '#fff' : C.soft; ctx.font = mono(13 * k); ctx.textAlign = 'center'; ctx.fillText(JARS[i], x, y + 2 * k); }
+      }
+      ctx.fillStyle = C.soft; ctx.strokeStyle = C.line; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(cx, cy - R * 0.55 - 44); ctx.lineTo(cx, cy - R * 0.55 - 70); ctx.stroke();
+      ctx.font = mono(16); ctx.textAlign = 'left';
+      ctx.fillStyle = C.faint; ctx.fillText('ESP32 · GPT', W * 0.62, 60);
+      ctx.fillStyle = C.ink; ctx.font = mono(26); ctx.fillText(JARS[target], W * 0.62, 118);
+      ctx.fillStyle = C.soft; ctx.font = mono(18); ctx.fillText(`→ ${PAIR[target]}`, W * 0.62, 150);
+      ctx.fillStyle = C.faint; ctx.font = mono(15); ctx.fillText('pairs what\'s on hand', W * 0.62, 190);
+      ctx.fillText('with a meal', W * 0.62, 212);
+    });
+  });
+
+  // ---- postcards: draggable CSS-3D ring
+  document.querySelectorAll<HTMLDivElement>('[data-viz="postcards"]').forEach((wrap) => {
+    const ring = wrap.querySelector<HTMLDivElement>('.ring')!;
+    let rot = 0, vel = reduced ? 0 : 12, drag: { x: number; r: number } | null = null, lastX = 0;
+    wrap.addEventListener('pointerdown', (e) => { drag = { x: e.clientX, r: rot }; lastX = e.clientX; wrap.setPointerCapture(e.pointerId); });
+    wrap.addEventListener('pointermove', (e) => { if (!drag) return; vel = (e.clientX - lastX) * 25; lastX = e.clientX; rot = drag.r + (e.clientX - drag.x) * 0.5; });
+    const up = () => { drag = null; };
+    wrap.addEventListener('pointerup', up); wrap.addEventListener('pointercancel', up);
+    wrap.addEventListener('click', (e) => e.preventDefault());
+    loop(wrap, (_t, dt) => {
+      if (!drag) { rot += vel * dt; vel += (12 * Math.sign(vel || 1) - vel) * Math.min(1, dt * 1.5); }
+      ring.style.transform = `translateZ(-150px) rotateY(${rot}deg)`;
+    });
+  });
+
+  // ---- anchornotes: note map (spring graph) + speed bars
+  document.querySelectorAll<HTMLCanvasElement>('[data-viz="anchor"]').forEach((cv) => {
+    const ctx = cv.getContext('2d')!, W = cv.width, H = cv.height;
+    const N = 12, GW = W * 0.6;
+    const nodes = Array.from({ length: N }, (_, i) => ({ x: GW / 2 + Math.cos(i) * 120, y: H / 2 + Math.sin(i * 1.7) * 100, vx: 0, vy: 0 }));
+    const all: [number, number][] = [];
+    for (let i = 1; i < N; i++) all.push([i, Math.floor(Math.random() * i)]);
+    for (let i = 0; i < 5; i++) all.push([Math.floor(Math.random() * N), Math.floor(Math.random() * N)]);
+    let t0 = -1;
+    loop(cv, (t, dt) => {
+      if (t0 < 0) t0 = t;
+      const u = reduced ? 1e9 : t - t0;
+      const edges = all.slice(0, Math.min(all.length, Math.floor(u / 0.45)));
+      // springs + repulsion + centering
+      for (const a of nodes) for (const b of nodes) if (a !== b) { const dx = a.x - b.x, dy = a.y - b.y, d2 = dx * dx + dy * dy + 40; const f = 2600 / d2; a.vx += dx / Math.sqrt(d2) * f; a.vy += dy / Math.sqrt(d2) * f; }
+      for (const [i, j] of edges) { const a = nodes[i], b = nodes[j]; const dx = b.x - a.x, dy = b.y - a.y, d = Math.hypot(dx, dy) || 1, f = (d - 90) * 0.03; a.vx += dx / d * f; a.vy += dy / d * f; b.vx -= dx / d * f; b.vy -= dy / d * f; }
+      for (const n of nodes) { n.vx += (GW / 2 - n.x) * 0.004; n.vy += (H / 2 - n.y) * 0.004; n.vx *= 0.86; n.vy *= 0.86; n.x += n.vx * dt * 60; n.y += n.vy * dt * 60; }
+      ctx.clearRect(0, 0, W, H);
+      ctx.strokeStyle = C.line; ctx.lineWidth = 2;
+      for (const [i, j] of edges) { ctx.beginPath(); ctx.moveTo(nodes[i].x, nodes[i].y); ctx.lineTo(nodes[j].x, nodes[j].y); ctx.stroke(); }
+      nodes.forEach((n, i) => { const deg = edges.filter(([a, b]) => a === i || b === i).length; ctx.fillStyle = deg ? C.accent : C.panel; ctx.strokeStyle = deg ? C.accent : C.soft; ctx.lineWidth = 2; ctx.beginPath(); ctx.roundRect(n.x - 16, n.y - 11, 32, 22, 3); ctx.fill(); ctx.stroke(); });
+      ctx.fillStyle = C.faint; ctx.font = mono(14); ctx.textAlign = 'left'; ctx.fillText('note map · top 2 of 37 teams', 20, H - 18);
+      // bars
+      const bx = W * 0.66, bw = W * 0.3, k = Math.min(1, u / 2.2);
+      ctx.fillStyle = C.faint; ctx.font = mono(14); ctx.fillText('time to render (relative)', bx, 50);
+      ctx.fillStyle = C.line; ctx.fillRect(bx, 80, bw * k, 34);
+      ctx.fillStyle = C.accent; ctx.fillRect(bx, 140, bw * 0.3 * k, 34);
+      ctx.fillStyle = C.soft; ctx.font = mono(15); ctx.fillText('peers', bx, 72); ctx.fillText('AnchorNotes', bx, 132);
+      ctx.fillStyle = C.ink; ctx.font = mono(22); ctx.fillText('70% faster', bx, 212);
+      ctx.fillStyle = C.faint; ctx.font = mono(13); ctx.fillText('profiler · threads · indexes', bx, 236);
+    });
+  });
+</script>
