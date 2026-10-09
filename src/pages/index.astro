@@ -4,6 +4,7 @@ import RoleCard from '../components/RoleCard.astro';
 import MissionScene from '../components/MissionScene.astro';
 import RagPipeline from '../components/RagPipeline.astro';
 import FactorGraph from '../components/FactorGraph.astro';
+import LiveDetect from '../components/LiveDetect.astro';
 import ProjectViz from '../components/ProjectViz.astro';
 import Microfactory from '../components/Microfactory.astro';
 import { SITE, SOCIAL } from '../consts';
@@ -80,7 +81,7 @@ import {
             </span>
             <span class="psub">{p.subtitle}</span>
             {p.viz === 'rag' && <RagPipeline />}
-            {p.viz === 'gtsam' && <FactorGraph />}
+            {p.viz === 'gtsam' && <><LiveDetect /><FactorGraph /></>}
             {p.viz === 'ptdrone' && <Microfactory />}
             {p.viz && !['rag', 'gtsam', 'ptdrone'].includes(p.viz) && <ProjectViz kind={p.viz} />}
             <span class="pblurb">{p.blurb}</span>
