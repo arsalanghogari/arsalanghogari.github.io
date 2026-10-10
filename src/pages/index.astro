@@ -109,7 +109,7 @@ import {
   <section id="experience" class="sec" data-detect="experience.current" data-conf="0.97">
     <div class="wrap">
       <div class="sec-head"><span class="sec-idx">04</span><h2 class="sec-title">Current Experiences</h2></div>
-      <div class="roles">
+      <div class="roles"><span class="rail" aria-hidden="true"></span>
         {CURRENT_ROLES.map((r) => <RoleCard role={r} />)}
       </div>
     </div>
@@ -119,7 +119,7 @@ import {
   <section id="volunteering" class="sec" data-detect="volunteering" data-conf="0.96">
     <div class="wrap">
       <div class="sec-head"><span class="sec-idx">05</span><h2 class="sec-title">Volunteering</h2></div>
-      <div class="roles">
+      <div class="roles"><span class="rail" aria-hidden="true"></span>
         {VOLUNTEERING.map((r) => <RoleCard role={r} />)}
       </div>
     </div>
@@ -186,7 +186,14 @@ import {
   .about-photo img { width: 100%; height: auto; display: block; border: 1px solid var(--line); }
 
   /* roles (cards rendered by RoleCard.astro) */
-  .roles { display: flex; flex-direction: column; border-top: 1px solid var(--line); }
+  /* timeline rail down the left; fills as you scroll, a node per role lights when reached */
+  .roles { display: flex; flex-direction: column; border-top: 1px solid var(--line); position: relative; padding-left: 28px; }
+  .roles::before { content: ""; position: absolute; left: 7px; top: 0; bottom: 0; width: 2px; background: var(--line); }
+  .roles .rail { position: absolute; left: 7px; top: 0; width: 2px; height: 0; background: var(--accent); transition: height 0.15s linear; }
+  .roles :global(.role) { position: relative; }
+  .roles :global(.role)::before { content: ""; position: absolute; left: -26px; top: 34px; width: 12px; height: 12px; border-radius: 50%; background: var(--paper); border: 2px solid var(--line); transition: border-color 0.3s, background 0.3s, box-shadow 0.3s; }
+  .roles :global(.role.reached)::before { border-color: var(--accent); background: var(--accent); box-shadow: 0 0 0 4px var(--accent-wash); }
+  @media (max-width: 720px) { .roles { padding-left: 22px; } .roles::before, .roles .rail { left: 4px; } .roles :global(.role)::before { left: -23px; width: 10px; height: 10px; } }
 
   /* technical project cards */
   .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
@@ -227,3 +234,20 @@ import {
   }
   .about a:hover { border-bottom-color: var(--accent); }
 </style>
+
+<script>
+  // timeline rail: fill height follows the viewport's reading line (40% down); nodes light as it passes them
+  const lists = Array.from(document.querySelectorAll<HTMLElement>('.roles'));
+  const update = () => {
+    const line = window.innerHeight * 0.4;
+    for (const list of lists) {
+      const r = list.getBoundingClientRect();
+      const fill = Math.max(0, Math.min(r.height, line - r.top));
+      (list.querySelector('.rail') as HTMLElement).style.height = `${fill}px`;
+      list.querySelectorAll<HTMLElement>('.role').forEach((role) => role.classList.toggle('reached', role.getBoundingClientRect().top + 40 <= line));
+    }
+  };
+  let raf = 0;
+  const onScroll = () => { if (!raf) raf = requestAnimationFrame(() => { update(); raf = 0; }); };
+  window.addEventListener('scroll', onScroll, { passive: true }); window.addEventListener('resize', onScroll); update();
+</script>

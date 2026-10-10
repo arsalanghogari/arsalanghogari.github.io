@@ -241,6 +241,24 @@ const MODES = [
     const HULL: [number, number, number] = [96, 108, 128];
     const WOOD: [number, number, number] = [120, 70, 50];
     const SUBZ = 1.1;
+    // thruster wash: short-lived bubbles shed behind the sub, drawn on the floor layer
+    type Bub = { x: number; y: number; z: number; vx: number; vy: number; life: number; r: number };
+    const wash: Bub[] = [];
+    function emitWash(x: number, y: number, th: number, dt: number) {
+      const c = Math.cos(th), s = Math.sin(th);
+      for (let i = 0; i < Math.ceil(dt * 120); i++) {
+        const side = (Math.random() - 0.5) * 0.9, back = -0.75 - Math.random() * 0.2;
+        wash.push({ x: x + back * c - side * s, y: y + back * s + side * c, z: SUBZ - 0.1 + Math.random() * 0.25, vx: -c * (0.9 + Math.random() * 0.6) + (Math.random() - 0.5) * 0.3, vy: -s * (0.9 + Math.random() * 0.6) + (Math.random() - 0.5) * 0.3, life: 1, r: 0.06 + Math.random() * 0.06 });
+      }
+      if (wash.length > 220) wash.splice(0, wash.length - 220);
+    }
+    function drawWash() {
+      for (const b of wash) {
+        const [px, py] = iso([b.x, b.y, b.z]);
+        ctx.beginPath(); ctx.arc(px, py, b.r * S * (2.2 - b.life * 0.8), 0, Math.PI * 2);
+        ctx.fillStyle = alpha(C.accent, 0.32 * b.life); ctx.fill();
+      }
+    }
     const TRASH: [number, number, number] = [150, 120, 90];
     function sub(x: number, y: number, th: number, t: number) {
       const bob = Math.sin(t * 1.7) * 0.06, z = SUBZ + bob;
@@ -322,6 +340,7 @@ const MODES = [
 
       floor();
       if (mode === 'planning') costmap();
+      drawWash();
       if (mode === 'perception') fov(x, y, th);
       if (mode === 'slam') {
         dashed(trail.map(([a, b]) => iso([a, b, 0.03])), alpha(C.good, 0.7), [3, 4], 1.2);
@@ -388,6 +407,7 @@ const MODES = [
         if (held && (dist % total) >= binDist) { held = false; dropT = now / 1000; }
         const [x, y] = smooth(dist);
         trail.push([x, y]); if (trail.length > 420) trail.shift();
+        const [ax2, ay2] = smooth(dist + 0.35); emitWash(x, y, Math.atan2(ay2 - y, ax2 - x), dt);
         // each ~25 sightings advances a landmark one LM iteration; ease toward that iteration's estimate
         for (const p of props) if (seen[p.id]) {
           const k = Math.min(OFF[p.id].length - 1, Math.floor(seen[p.id] / 25)); lmIter[p.id] = k;
@@ -396,6 +416,7 @@ const MODES = [
         jitterT += dt; if (jitterT > 0.3) { jitterT = 0; for (const p of props) confJ[p.id] = (Math.random() - 0.5) * 0.06; }
         if (!pinned) setMode(MODE_OF_TASK[taskOf[segAt(dist).i]]);
       }
+      for (let i = wash.length - 1; i >= 0; i--) { const b = wash[i]; b.x += b.vx * dt; b.y += b.vy * dt; b.z += 0.25 * dt; b.vx *= 0.94; b.vy *= 0.94; b.life -= dt * 1.4; if (b.life <= 0) wash.splice(i, 1); }
       draw(now / 1000);
       if (visible && !reduced) requestAnimationFrame(step); else last = 0;
     }

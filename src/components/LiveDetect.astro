@@ -54,8 +54,17 @@ const NAMES = ['divider', 'gate', 'path', 'red_pipe', 'search_rescue', 'survey_r
 
     // starts on its own the first time the card scrolls near the viewport
     let started = false;
-    const starter = new IntersectionObserver(([en]) => { if (en.isIntersecting && !started) { started = true; starter.disconnect(); start(); } }, { rootMargin: '150px' });
-    starter.observe(root);
+    // ~20 MB of runtime + model: auto-run unless the visitor asked to save data or is on a slow link
+    const conn = (navigator as any).connection;
+    const frugal = !!(conn && (conn.saveData || /(^|-)2g$|^3g$/.test(conn.effectiveType || '')));
+    if (frugal) {
+      status.textContent = 'data-saver detected · tap the frame to run the detector (≈20 MB)';
+      root.style.cursor = 'pointer';
+      root.addEventListener('click', (e) => { e.preventDefault(); if (!started) { started = true; root.style.cursor = ''; start(); } }, { once: true });
+    } else {
+      const starter = new IntersectionObserver(([en]) => { if (en.isIntersecting && !started) { started = true; starter.disconnect(); start(); } }, { rootMargin: '150px' });
+      starter.observe(root);
+    }
     async function start() {
       root.classList.add('live');
       try {
