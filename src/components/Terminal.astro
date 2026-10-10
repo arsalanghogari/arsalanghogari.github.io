@@ -89,6 +89,7 @@ const data = {
   }
   .term-bubble[hidden] { display: none; }
   .term-bubble::after { content: ""; position: absolute; left: 28px; bottom: -8px; width: 14px; height: 14px; background: #14140f; border-right: 1px solid #2b2b22; border-bottom: 1px solid #2b2b22; transform: rotate(45deg); }
+  .term-bubble.side::after { left: auto; right: -8px; bottom: 28px; border-bottom: none; border-top: 1px solid #2b2b22; }
   .tb-head { display: flex; align-items: center; gap: 10px; padding: 7px 10px; border-bottom: 1px solid #2b2b22; font-size: 0.64rem; letter-spacing: 0.08em; text-transform: uppercase; color: #8a877c; }
   .tb-head span:first-child { color: #e7e5dd; }
   .tb-x { margin-left: auto; background: none; border: 0; color: #8a877c; font-size: 1rem; line-height: 1; cursor: pointer; }
@@ -212,9 +213,13 @@ const data = {
     const SX = (x: number) => 40 + x * 46, SY = (y: number) => 410 - y * 30; // 12 m × 12 m → 680 × 440
     const st = { poses: 0, lms: new Set<number>(), iter: -1, done: false };
     function placeBubble() {
-      const r = root.getBoundingClientRect();
-      bub.style.left = `${Math.max(8, r.left)}px`;
-      bub.style.bottom = `${Math.min(window.innerHeight - 8, window.innerHeight - r.top) + 14}px`;
+      // beside the terminal when there's room (fixed to the bottom, so it never moves as the
+      // terminal grows); above it on narrow screens
+      const r = root.getBoundingClientRect(), W = 340, GAP = 14;
+      const side = r.left >= W + GAP + 8;
+      bub.classList.toggle('side', side);
+      if (side) { bub.style.left = `${r.left - W - GAP}px`; bub.style.bottom = '16px'; }
+      else { bub.style.left = `${Math.max(8, r.left)}px`; bub.style.bottom = `${Math.min(window.innerHeight - 8, window.innerHeight - r.top) + GAP}px`; }
     }
     function drawBubble() {
       placeBubble(); // the terminal grows as lines print; keep the bubble above it
