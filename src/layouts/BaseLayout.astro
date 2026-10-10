@@ -40,6 +40,29 @@ const { title, description, image, type, person, footer = true } = Astro.props;
     <DevConsole />
 
     <script>
+      // Heading decode: section titles resolve out of glyph noise on scroll-in.
+      // One interval per heading, cleared the moment it settles; total time is
+      // bounded so long titles don't drag. Skipped under reduced motion.
+      if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        const GLYPHS = '#%&*@$?/\\|<>+=8801ABCDEFGHJKLMNPQRSTUVWXYZ';
+        const noise = () => GLYPHS[Math.floor(Math.random() * GLYPHS.length)];
+        const decode = (el: HTMLElement) => {
+          const final = el.textContent || ''; const n = final.length;
+          const frameMs = Math.min(45, Math.max(16, 1100 / Math.max(1, n * 2)));
+          let tick = 0;
+          const id = setInterval(() => {
+            tick++;
+            el.textContent = Array.from(final, (ch, i) => (ch === ' ' || i < tick / 2 ? ch : noise())).join('');
+            if (tick / 2 >= n) { clearInterval(id); el.textContent = final; }
+          }, frameMs);
+        };
+        const heads = document.querySelectorAll<HTMLElement>('.sec-title, .eyebrow, .subhead');
+        const dio = new IntersectionObserver((entries) => {
+          for (const e of entries) if (e.isIntersecting) { decode(e.target as HTMLElement); dio.unobserve(e.target); }
+        }, { threshold: 0.6 });
+        heads.forEach((h) => dio.observe(h));
+      }
+
       // Progressive scroll-reveal
       const els = document.querySelectorAll('.io-reveal');
       if (els.length) {

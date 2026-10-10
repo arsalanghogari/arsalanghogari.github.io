@@ -2,6 +2,16 @@
 // Isometric 2D-canvas simulation of the Barracuda AUV running a mission.
 // No WebGL, no deps: everything is drawn in code each frame.
 // Three modes mirror the autonomy stack: Perception → SLAM → Planning.
+import run from '../data/gtsam-run.json';
+// Real GTSAM run (src/data/gtsam-run.json): per-iteration landmark offsets from
+// truth, so the SLAM overlay converges with the optimizer's actual numbers.
+// Hero landmark → run landmark id: gate→0, poles→2,3,4, bin→5.
+const LM_MAP: Record<string, number> = { gate: 0, p1: 2, p2: 3, p3: 4, bin: 5 };
+const offsets: Record<string, [number, number][]> = {};
+for (const [hid, lid] of Object.entries(LM_MAP)) {
+  const t = run.truth[run.landmarks.find((l) => l.id === lid)!.truth].xy;
+  offsets[hid] = run.frames.map((f) => { const e = (f.landmarks as Record<string, [number, number]>)[String(lid)]; return [e[0] - t[0], e[1] - t[1]] as [number, number]; });
+}
 // Mission: 01 gate → 02 slalom → 03 bin drop. Overlays follow the task unless pinned.
 const MODES = [
   { id: 'perception', idx: '01', label: 'Perception', caption: 'Detect. YOLO + RT-DETR on-vehicle.' },
@@ -12,6 +22,7 @@ const MODES = [
 
 <figure class="scene" id="scene" data-mode="perception">
   <span class="scene-tag"><span class="scene-dot"></span>illustrative simulation · barracuda auv</span>
+  <script type="application/json" id="scene-run" set:html={JSON.stringify(offsets)} />
   <canvas id="scene-canvas" aria-label="Animated isometric simulation of an autonomous underwater vehicle detecting props, building a map, and planning a path" role="img"></canvas>
   <figcaption class="scene-foot">
     <span class="scene-caption" id="scene-caption">{MODES[0].caption}</span>
@@ -155,8 +166,12 @@ const MODES = [
     let dist = 0, last = 0;
     const trail: P2[] = [];
     const seen: Record<string, number> = {};
+    // landmark estimates = truth + the real optimizer's offset at the current iteration
+    const OFF: Record<string, P2[]> = JSON.parse(document.getElementById('scene-run')!.textContent || '{}');
     const lmEst: Record<string, P2> = {};
-    for (const p of props) lmEst[p.id] = [p.x + 0.45, p.y - 0.35];
+    const lmIter: Record<string, number> = {};
+    const estAt = (p: Prop, k: number): P2 => { const o = OFF[p.id]; const f = o[Math.min(k, o.length - 1)]; return [p.x + f[0], p.y + f[1]]; };
+    for (const p of props) { lmIter[p.id] = 0; lmEst[p.id] = estAt(p, 0); }
     let jitterT = 0; const confJ: Record<string, number> = {};
     // gripper payload: held until the sub is over the bin, then falls in
     let held = true, dropT = -1;
@@ -373,7 +388,11 @@ const MODES = [
         if (held && (dist % total) >= binDist) { held = false; dropT = now / 1000; }
         const [x, y] = smooth(dist);
         trail.push([x, y]); if (trail.length > 420) trail.shift();
-        for (const p of props) if (seen[p.id]) { const e = lmEst[p.id]; e[0] += (p.x + 0.12 - e[0]) * dt * 0.6; e[1] += (p.y - 0.09 - e[1]) * dt * 0.6; }
+        // each ~25 sightings advances a landmark one LM iteration; ease toward that iteration's estimate
+        for (const p of props) if (seen[p.id]) {
+          const k = Math.min(OFF[p.id].length - 1, Math.floor(seen[p.id] / 25)); lmIter[p.id] = k;
+          const [tx, ty] = estAt(p, k); const e = lmEst[p.id]; e[0] += (tx - e[0]) * dt * 2.5; e[1] += (ty - e[1]) * dt * 2.5;
+        }
         jitterT += dt; if (jitterT > 0.3) { jitterT = 0; for (const p of props) confJ[p.id] = (Math.random() - 0.5) * 0.06; }
         if (!pinned) setMode(MODE_OF_TASK[taskOf[segAt(dist).i]]);
       }

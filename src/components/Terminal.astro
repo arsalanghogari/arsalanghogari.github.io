@@ -1,5 +1,6 @@
 ---
 import { SITE, SOCIAL } from '../consts';
+import replayLog from '../data/replay-log.json';
 import {
   CURRENT_ROLES, PAST_ROLES, VOLUNTEERING, TECHNICAL_PROJECTS, TECH_SKILLS, EDUCATION,
 } from '../data/content';
@@ -18,6 +19,7 @@ const data = {
     role: r.role, org: r.org, date: r.date, summary: r.summary,
   })),
   volunteering: VOLUNTEERING.map((r) => ({ role: r.role, org: r.org, date: r.date, summary: r.summary })),
+  replay: replayLog,
   projects: TECHNICAL_PROJECTS.map((p) => ({
     id: p.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''),
     name: p.name, blurb: p.blurb,
@@ -172,6 +174,7 @@ const data = {
     const history: string[] = [];
     let hi = -1;
     let booted = false;
+    let replaying = false;
 
     const esc = (s: string) =>
       s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
@@ -196,6 +199,7 @@ const data = {
           ['contact', 'how to reach me'],
           ['social', 'links'],
           ['resume', 'open résumé'],
+          ['replay', 'replay a SLAM run (real GTSAM output)'],
           ['detect', 'toggle detection mode'],
           ['clear', 'clear the screen'],
         ];
@@ -245,6 +249,16 @@ const data = {
       resume: () => {
         print('<span class="t-dim">opening résumé…</span>');
         window.open(data.resume, '_blank', 'noopener');
+      },
+      replay: () => {
+        if (replaying) { print('<span class="t-dim">already replaying…</span>'); return; }
+        replaying = true;
+        print('<span class="t-dim">replaying mission log · ' + data.replay.length + ' lines · source: scripts/export-gtsam-run.py</span>');
+        data.replay.forEach((line: string, i: number) => setTimeout(() => {
+          const cls = line.startsWith('✓') ? 't-ok' : line.includes('★') || line.startsWith('iter') ? 't-accent' : line.startsWith('──') ? 't-dim' : '';
+          print(`<span class="${cls}">${esc(line)}</span>`);
+          if (i === data.replay.length - 1) replaying = false;
+        }, 70 * i));
       },
       detect: () => { print('<span class="t-ok">detection mode toggled.</span>'); window.dispatchEvent(new CustomEvent('toggle-detection')); },
       clear: () => { out.innerHTML = ''; },
