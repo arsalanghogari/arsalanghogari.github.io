@@ -1,6 +1,6 @@
 ---
 import { SITE, SOCIAL } from '../consts';
-import replayLog from '../data/replay-log.json';
+import run from '../data/gtsam-run.json';
 import {
   CURRENT_ROLES, PAST_ROLES, VOLUNTEERING, TECHNICAL_PROJECTS, TECH_SKILLS, EDUCATION,
 } from '../data/content';
@@ -19,7 +19,20 @@ const data = {
     role: r.role, org: r.org, date: r.date, summary: r.summary,
   })),
   volunteering: VOLUNTEERING.map((r) => ({ role: r.role, org: r.org, date: r.date, summary: r.summary })),
-  replay: replayLog,
+  replay: (() => {
+    // mission log + a visual event per line, generated from the real GTSAM export
+    const first: Record<number, number> = {};
+    for (const [pi, lid] of run.edges as [number, number][]) if (!(lid in first)) first[lid] = pi;
+    const lines: { text: string; ev: Record<string, unknown> }[] = [];
+    run.poses.forEach(([x, y, yaw], i) => {
+      lines.push({ text: `t=${(i * 0.5).toFixed(1).padStart(5)}s  pose  x=${x.toFixed(2)}  y=${y.toFixed(2)}  ψ=${String(Math.round((yaw * 180) / Math.PI)).padStart(4)}°`, ev: { k: 'pose', i } });
+      for (const l of run.landmarks) if (first[l.id] === i) lines.push({ text: `t=${(i * 0.5).toFixed(1).padStart(5)}s  ★ new landmark L${l.id} (${l.label})  seeded at (${l.seed[0].toFixed(2)}, ${l.seed[1].toFixed(2)})`, ev: { k: 'lm', id: l.id } });
+    });
+    lines.push({ text: '── optimize (GTSAM, Levenberg–Marquardt) ──', ev: { k: 'sep' } });
+    run.frames.forEach((f) => lines.push({ text: `iter ${f.iter}  graph error ${f.cost.toFixed(3).padStart(8)}  worst landmark ±${Math.max(...Object.values(f.error as Record<string, number>)).toFixed(2)} m`, ev: { k: 'iter', n: f.iter } }));
+    lines.push({ text: `✓ ${run.landmarks.length} landmarks under 0.30 m · ${run.edges.length} factors · ${run.poses.length} poses`, ev: { k: 'done' } });
+    return { lines, run: { poses: run.poses, landmarks: run.landmarks, truth: run.truth, frames: run.frames.map((f) => f.landmarks), edges: run.edges } };
+  })(),
   projects: TECHNICAL_PROJECTS.map((p) => ({
     id: p.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''),
     name: p.name, blurb: p.blurb,
@@ -27,6 +40,10 @@ const data = {
 };
 ---
 
+<div class="term-bubble" id="term-bubble" hidden role="img" aria-label="Map of the SLAM replay: trajectory, landmark sightings, and optimizer convergence">
+  <div class="tb-head"><span>slam replay</span><span id="tb-stat"></span><button class="tb-x" type="button" aria-label="Close replay map">×</button></div>
+  <canvas id="tb-canvas" width="680" height="440"></canvas>
+</div>
 <div class="term" id="term" hidden>
   <div class="term-bar">
     <div class="term-dots">
@@ -65,6 +82,18 @@ const data = {
     font-family: var(--font-mono);
   }
   .term[hidden] { display: none; }
+  .term-bubble {
+    position: fixed; z-index: 71; width: 340px;
+    background: #14140f; border: 1px solid #2b2b22; box-shadow: 0 16px 50px -16px rgba(0, 0, 0, 0.6);
+    font-family: var(--font-mono);
+  }
+  .term-bubble[hidden] { display: none; }
+  .term-bubble::after { content: ""; position: absolute; left: 28px; bottom: -8px; width: 14px; height: 14px; background: #14140f; border-right: 1px solid #2b2b22; border-bottom: 1px solid #2b2b22; transform: rotate(45deg); }
+  .tb-head { display: flex; align-items: center; gap: 10px; padding: 7px 10px; border-bottom: 1px solid #2b2b22; font-size: 0.64rem; letter-spacing: 0.08em; text-transform: uppercase; color: #8a877c; }
+  .tb-head span:first-child { color: #e7e5dd; }
+  .tb-x { margin-left: auto; background: none; border: 0; color: #8a877c; font-size: 1rem; line-height: 1; cursor: pointer; }
+  .tb-x:hover { color: #e7e5dd; }
+  #tb-canvas { display: block; width: 100%; height: auto; }
   .term-bar {
     display: flex;
     align-items: center;
@@ -176,6 +205,56 @@ const data = {
     let booted = false;
     let replaying = false;
 
+    // ---- replay map (the "bubble"): a top-down view that follows the log
+    const bub = document.getElementById('term-bubble')!, bstat = document.getElementById('tb-stat')!;
+    const bcv = document.getElementById('tb-canvas') as HTMLCanvasElement, bctx = bcv.getContext('2d')!;
+    const R = data.replay.run;
+    const SX = (x: number) => 40 + x * 46, SY = (y: number) => 410 - y * 30; // 12 m × 12 m → 680 × 440
+    const st = { poses: 0, lms: new Set<number>(), iter: -1, done: false };
+    function placeBubble() {
+      const r = root.getBoundingClientRect();
+      bub.style.left = `${Math.max(8, r.left)}px`;
+      bub.style.bottom = `${Math.min(window.innerHeight - 8, window.innerHeight - r.top) + 14}px`;
+    }
+    function drawBubble() {
+      placeBubble(); // the terminal grows as lines print; keep the bubble above it
+      const c = bctx; c.clearRect(0, 0, bcv.width, bcv.height);
+      c.font = '13px JetBrains Mono, monospace';
+      c.strokeStyle = '#2b2b22'; c.lineWidth = 1;
+      for (let g = 0; g <= 12; g += 2) { c.beginPath(); c.moveTo(SX(g), SY(0)); c.lineTo(SX(g), SY(12)); c.stroke(); c.beginPath(); c.moveTo(SX(0), SY(g)); c.lineTo(SX(12), SY(g)); c.stroke(); }
+      // truth + 0.3 m spec circles
+      for (const t of R.truth) { const [x, y] = t.xy; c.strokeStyle = 'rgba(231,229,221,0.35)'; c.setLineDash([3, 4]); c.beginPath(); c.ellipse(SX(x), SY(y), 0.3 * 46, 0.3 * 30, 0, 0, Math.PI * 2); c.stroke(); c.setLineDash([]); c.beginPath(); c.moveTo(SX(x) - 4, SY(y)); c.lineTo(SX(x) + 4, SY(y)); c.moveTo(SX(x), SY(y) - 4); c.lineTo(SX(x), SY(y) + 4); c.stroke(); }
+      // trajectory so far
+      c.strokeStyle = '#4caa5a'; c.lineWidth = 1.5; c.setLineDash([4, 4]); c.beginPath();
+      for (let i = 0; i < st.poses; i++) { const [x, y] = R.poses[i]; i ? c.lineTo(SX(x), SY(y)) : c.moveTo(SX(x), SY(y)); }
+      c.stroke(); c.setLineDash([]);
+      // landmarks at seed (iter -1) or at the current iteration's estimate; factors from recent poses
+      const frame = st.iter >= 0 ? R.frames[Math.min(st.iter, R.frames.length - 1)] : null;
+      for (const l of R.landmarks) {
+        if (!st.lms.has(l.id)) continue;
+        const [x, y] = frame ? frame[String(l.id)] : l.seed;
+        c.strokeStyle = 'rgba(255,138,85,0.45)'; c.lineWidth = 1;
+        for (const [pi, lid] of R.edges) if (lid === l.id && pi < st.poses && pi >= st.poses - 8) { c.beginPath(); c.moveTo(SX(R.poses[pi][0]), SY(R.poses[pi][1])); c.lineTo(SX(x), SY(y)); c.stroke(); }
+        const t = R.truth[l.truth].xy, err = Math.hypot(x - t[0], y - t[1]);
+        c.fillStyle = st.done || (frame && err < 0.3) ? '#4caa5a' : '#ff8a55'; c.beginPath(); c.arc(SX(x), SY(y), 5, 0, Math.PI * 2); c.fill();
+        c.fillStyle = '#e7e5dd'; c.fillText(`${l.label.replace('_', ' ')} ±${err.toFixed(2)}`, SX(x) + 9, SY(y) + 4);
+      }
+      // current pose
+      if (st.poses) { const [x, y, yaw] = R.poses[st.poses - 1]; c.fillStyle = '#e7e5dd'; c.save(); c.translate(SX(x), SY(y)); c.rotate(-yaw); c.beginPath(); c.moveTo(10, 0); c.lineTo(-6, 5); c.lineTo(-6, -5); c.closePath(); c.fill(); c.restore(); }
+      bstat.textContent = st.done ? 'converged ✓' : st.iter >= 0 ? `optimizing · iter ${st.iter}` : `pose ${st.poses}/${R.poses.length} · ${st.lms.size} landmarks`;
+    }
+    function applyEvent(ev: any) {
+      if (ev.k === 'pose') st.poses = ev.i + 1;
+      else if (ev.k === 'lm') st.lms.add(ev.id);
+      else if (ev.k === 'iter') st.iter = ev.n;
+      else if (ev.k === 'done') st.done = true;
+      drawBubble();
+    }
+    function openBubble() { st.poses = 0; st.lms.clear(); st.iter = -1; st.done = false; bub.hidden = false; placeBubble(); drawBubble(); }
+    function closeBubble() { bub.hidden = true; }
+    bub.querySelector('.tb-x')!.addEventListener('click', closeBubble);
+    window.addEventListener('resize', () => { if (!bub.hidden) placeBubble(); });
+
     const esc = (s: string) =>
       s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
     const print = (html: string, cls = 't-row') => {
@@ -253,12 +332,15 @@ const data = {
       replay: () => {
         if (replaying) { print('<span class="t-dim">already replaying…</span>'); return; }
         replaying = true;
-        print('<span class="t-dim">replaying mission log · ' + data.replay.length + ' lines · source: scripts/export-gtsam-run.py</span>');
-        data.replay.forEach((line: string, i: number) => setTimeout(() => {
-          const cls = line.startsWith('✓') ? 't-ok' : line.includes('★') || line.startsWith('iter') ? 't-accent' : line.startsWith('──') ? 't-dim' : '';
-          print(`<span class="${cls}">${esc(line)}</span>`);
-          if (i === data.replay.length - 1) replaying = false;
-        }, 70 * i));
+        openBubble();
+        const L = data.replay.lines as { text: string; ev: any }[];
+        print('<span class="t-dim">replaying mission log · ' + L.length + ' lines · source: scripts/export-gtsam-run.py · map above ↑</span>');
+        L.forEach(({ text, ev }, i) => setTimeout(() => {
+          const cls = ev.k === 'done' ? 't-ok' : ev.k === 'lm' || ev.k === 'iter' ? 't-accent' : ev.k === 'sep' ? 't-dim' : '';
+          print(`<span class="${cls}">${esc(text)}</span>`);
+          applyEvent(ev);
+          if (i === L.length - 1) replaying = false;
+        }, ev.k === 'iter' || ev.k === 'done' ? 70 * i + 500 : 70 * i));
       },
       detect: () => { print('<span class="t-ok">detection mode toggled.</span>'); window.dispatchEvent(new CustomEvent('toggle-detection')); },
       clear: () => { out.innerHTML = ''; },
@@ -293,7 +375,7 @@ const data = {
       boot();
       requestAnimationFrame(() => input.focus());
     }
-    function close() { root.hidden = true; }
+    function close() { root.hidden = true; closeBubble(); }
     function toggle() { root.hidden ? open() : close(); }
 
     input.addEventListener('keydown', (e) => {
@@ -306,10 +388,12 @@ const data = {
     root.querySelector('[data-min]')?.addEventListener('click', () => {
       root.classList.remove('max');
       root.classList.toggle('min');
+      if (!bub.hidden) requestAnimationFrame(placeBubble);
     });
     root.querySelector('[data-max]')?.addEventListener('click', () => {
       root.classList.remove('min');
       root.classList.toggle('max');
+      if (!bub.hidden) requestAnimationFrame(placeBubble);
       input.focus();
     });
     window.addEventListener('open-terminal', toggle);
