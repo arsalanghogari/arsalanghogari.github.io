@@ -2,7 +2,7 @@
 import { SITE, SOCIAL } from '../consts';
 import run from '../data/gtsam-run.json';
 import {
-  CURRENT_ROLES, PAST_ROLES, VOLUNTEERING, TECHNICAL_PROJECTS, TECH_SKILLS, EDUCATION,
+  CURRENT_ROLES, PAST_ROLES, TECHNICAL_PROJECTS, TECH_SKILLS, EDUCATION,
 } from '../data/content';
 
 // Compact dataset handed to the client terminal as JSON.
@@ -18,7 +18,6 @@ const data = {
   experience: [...CURRENT_ROLES, ...PAST_ROLES].map((r) => ({
     role: r.role, org: r.org, date: r.date, summary: r.summary,
   })),
-  volunteering: VOLUNTEERING.map((r) => ({ role: r.role, org: r.org, date: r.date, summary: r.summary })),
   replay: (() => {
     // mission log + a visual event per line, generated from the real GTSAM export
     const first: Record<number, number> = {};
@@ -274,8 +273,7 @@ const data = {
       help: () => {
         const rows: [string, string][] = [
           ['about', 'who I am'],
-          ['experience', 'roles, current + past'],
-          ['volunteering', 'suicide prevention + outreach'],
+          ['experience', 'roles'],
           ['ls', 'list projects'],
           ['cat &lt;id&gt;', 'read a project (e.g. cat ask-usg)'],
           ['skills', 'tech stack'],
@@ -298,13 +296,6 @@ const data = {
       experience: () => print(
         '<div class="t-list">' +
         data.experience
-          .map((e: any) => `<div class="t-item"><span class="t-role-line"><span class="t-accent">${esc(e.role)}</span>${e.summary ? `<span class="t-dim">${esc(e.summary)}</span>` : ''}</span><span class="t-dim">${esc(e.org)}</span><span class="t-dim t-date">${esc(e.date)}</span></div>`)
-          .join('') +
-        '</div>'
-      ),
-      volunteering: () => print(
-        '<div class="t-list">' +
-        data.volunteering
           .map((e: any) => `<div class="t-item"><span class="t-role-line"><span class="t-accent">${esc(e.role)}</span>${e.summary ? `<span class="t-dim">${esc(e.summary)}</span>` : ''}</span><span class="t-dim">${esc(e.org)}</span><span class="t-dim t-date">${esc(e.date)}</span></div>`)
           .join('') +
         '</div>'

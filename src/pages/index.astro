@@ -9,7 +9,7 @@ import ProjectViz from '../components/ProjectViz.astro';
 import Microfactory from '../components/Microfactory.astro';
 import { SITE, SOCIAL } from '../consts';
 import {
-  CURRENT_ROLES, VOLUNTEERING, TECHNICAL_PROJECTS, NON_TECHNICAL,
+  CURRENT_ROLES, TECHNICAL_PROJECTS,
   TECH_SKILLS, EDUCATION,
 } from '../data/content';
 ---
@@ -29,7 +29,7 @@ import {
           <h1 class="display hero-title reveal">
             Building <span class="accent">AI products</span>, autonomous <span class="accent">robots</span>, and software that <span class="accent">scales</span>.
           </h1>
-          <p class="hero-tags reveal">AI &nbsp;•&nbsp; Robotics &nbsp;•&nbsp; Product &nbsp;•&nbsp; Leadership</p>
+          <p class="hero-tags reveal">Perception &nbsp;•&nbsp; SLAM &nbsp;•&nbsp; RAG &nbsp;•&nbsp; Systems</p>
           <div class="links reveal">
             <a class="btn primary" href="#built">View Work</a>
             <a class="btn" href={SOCIAL.resume} target="_blank" rel="noopener">Résumé ↗</a>
@@ -51,15 +51,12 @@ import {
       </div>
       <div class="prose about">
         <p>
-          I'm studying Computer Science / Business Administration at USC's Viterbi and Marshall
-          schools, specializing in AI Applications. I build perception systems for robots, AI tools
-          that actually ship, and web platforms used by thousands of students.
+          CS + Business at USC, specializing in AI applications. I build perception and autonomy for robots,
+          retrieval systems that ship to thousands of users, and the tooling around them.
         </p>
         <p>
-          Mostly I like the part where a research-y idea turns into something people actually use —
-          whether that's a robot that can see or a chatbot that answers a student's question at 2am.
-          I'm back in LA after completing a <a href="https://arsalanghogari.com/postcards-from-bristol/" target="_blank" rel="noopener">study abroad semester</a> at the University of Bristol, and
-          on the hunt for my next big project.
+          Currently: software lead on an autonomous sub, AI engineer on an industry capstone, and owner of a
+          platform used by 20,000+ students. Looking for new-grad SWE roles, May 2027.
         </p>
       </div>
       </div>
@@ -71,7 +68,7 @@ import {
     <div class="wrap">
       <div class="sec-head"><span class="sec-idx">03</span><h2 class="sec-title">What I’ve Built</h2></div>
 
-      <p class="subhead">Technical Projects &amp; Skills</p>
+      <p class="subhead">Projects</p>
       <div class="grid">
         {TECHNICAL_PROJECTS.map((p) => (
           <a class="card io-reveal" href={p.href} target="_blank" rel="noopener">
@@ -93,13 +90,6 @@ import {
         {TECH_SKILLS.map((s) => <span class="chip">{s}</span>)}
       </div>
 
-      <p class="subhead nt-head">Non-Technical Projects &amp; Skills</p>
-      <div class="nt-grid">
-        {NON_TECHNICAL.map((n) => (
-          <div class="nt-card io-reveal">
-            <div class="nt-name">{n.name}</div>
-            <p class="nt-blurb">{n.blurb}</p>
-          </div>
         ))}
       </div>
     </div>
@@ -108,27 +98,17 @@ import {
   <!-- 04 · CURRENT EXPERIENCES -->
   <section id="experience" class="sec" data-detect="experience.current" data-conf="0.97">
     <div class="wrap">
-      <div class="sec-head"><span class="sec-idx">04</span><h2 class="sec-title">Current Experiences</h2></div>
+      <div class="sec-head"><span class="sec-idx">04</span><h2 class="sec-title">Experience</h2></div>
       <div class="roles"><span class="rail" aria-hidden="true"></span>
         {CURRENT_ROLES.map((r) => <RoleCard role={r} />)}
       </div>
     </div>
   </section>
 
-  <!-- 05 · VOLUNTEERING -->
-  <section id="volunteering" class="sec" data-detect="volunteering" data-conf="0.96">
-    <div class="wrap">
-      <div class="sec-head"><span class="sec-idx">05</span><h2 class="sec-title">Volunteering</h2></div>
-      <div class="roles"><span class="rail" aria-hidden="true"></span>
-        {VOLUNTEERING.map((r) => <RoleCard role={r} />)}
-      </div>
-    </div>
-  </section>
-
-  <!-- 06 · EDUCATION -->
+  <!-- 05 · EDUCATION -->
   <section id="education" class="sec" data-detect="education" data-conf="0.94">
     <div class="wrap">
-      <div class="sec-head"><span class="sec-idx">06</span><h2 class="sec-title">Education</h2></div>
+      <div class="sec-head"><span class="sec-idx">05</span><h2 class="sec-title">Education</h2></div>
       <div class="edu io-reveal">
         <div class="edu-main">
           <h3 class="edu-school">{EDUCATION.school}</h3>
@@ -210,12 +190,6 @@ import {
   .badge .dot { color: var(--good-dot); }
   .skills-block { margin-top: 18px; }
 
-  /* non-technical */
-  .nt-head { margin-top: 44px; }
-  .nt-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); }
-  .nt-card { background: var(--paper); padding: 22px; }
-  .nt-name { font-family: var(--font-display); font-weight: 600; font-size: 1.1rem; letter-spacing: -0.01em; }
-  .nt-blurb { margin: 8px 0 0; color: var(--ink-soft); font-size: 0.95rem; }
 
   /* education */
   .edu { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-start; gap: 24px; }
