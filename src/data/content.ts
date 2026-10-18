@@ -18,7 +18,7 @@ export const CURRENT_ROLES: Role[] = [
     orgHref: 'https://ptdrone.tech',
     date: 'Aug 2026 — Present',
     blurb:
-      "Lead a five-person team building for an outside stakeholder: scope and ship the public site, the drone ground-control station, and the on-demand manufacturing flow. Modeled the Microfactory in Blender (the one you can peel open below) and run the Next.js + Render pipeline with preview-branch gating.",
+      "Lead a five-person team building for an outside stakeholder: scope and ship the public site, the drone ground-control station, and the on-demand manufacturing flow. Modeled the Microfactory in Blender (the one you can peel open above) and run the Next.js + Render pipeline with preview-branch gating.",
     tags: ['Next.js', 'TypeScript', 'Blender', 'Render', 'Leadership'],
     summary: 'team of 5 · stakeholder-facing · ptdrone.tech',
     media: { src: '/images/ptdrone-site.jpg', kind: 'shot', alt: 'PTDrone website (ptdrone.tech) homepage' },
