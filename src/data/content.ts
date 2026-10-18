@@ -8,10 +8,21 @@ export interface Role {
   blurb: string;
   tags: string[];
   summary?: string;
-  media?: { src: string; kind: 'shot' | 'photo' | 'logo' | 'icp'; alt: string };
+  media?: { src: string; kind: 'shot' | 'photo' | 'logo' | 'icp'; alt: string; embed?: boolean };
 }
 
 export const CURRENT_ROLES: Role[] = [
+  {
+    role: 'Software Lead',
+    org: 'PTDrone (CSCI 401 Capstone)',
+    orgHref: 'https://ptdrone.tech',
+    date: 'Aug 2026 — Present',
+    blurb:
+      "Lead a five-person team building for an outside stakeholder: scope and ship the public site, the drone ground-control station, and the on-demand manufacturing flow. Modeled the Microfactory in Blender (the one you can peel open below) and run the Next.js + Render pipeline with preview-branch gating.",
+    tags: ['Next.js', 'TypeScript', 'Blender', 'Render', 'Leadership'],
+    summary: 'team of 5 · stakeholder-facing · ptdrone.tech',
+    media: { src: '/images/ptdrone-site.jpg', kind: 'shot', alt: 'PTDrone website (ptdrone.tech) homepage' },
+  },
   {
     role: 'AI Engineer',
     org: 'USC Industry Collaboration Program',
@@ -43,6 +54,17 @@ export const CURRENT_ROLES: Role[] = [
     tags: ['JavaScript', 'WordPress', 'Leadership'],
     summary: '20,000+ students · $352K made searchable',
     media: { src: '/images/usg-site.jpg', kind: 'shot', alt: 'USG website (usg.usc.edu) homepage' },
+  },
+  {
+    role: 'Web Lead & Peer Mentor',
+    org: 'C.E.N.T.R.I.C. · USC MESA University Program',
+    orgHref: 'https://mesa-u.usc.edu/',
+    date: 'Aug 2025 — Present',
+    blurb:
+      "Redesigned the program's website end to end — new information architecture, eligibility check, enrollment flow, and resource pages — and mentor first-generation and transfer students in the inaugural cohort.",
+    tags: ['Web Design', 'WordPress', 'Mentorship'],
+    summary: 'full site redesign · mesa-u.usc.edu',
+    media: { src: '/images/mesa-site.jpg', kind: 'shot', alt: 'USC MESA University Program website homepage, redesigned', embed: false },
   },
 ];
 

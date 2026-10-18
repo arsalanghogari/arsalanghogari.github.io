@@ -26,7 +26,7 @@ const { role: r } = Astro.props;
         <IcpTile />
       ) : r.media.kind === 'logo' ? (
         <div class="logo-tile"><img src={r.media.src} alt={r.media.alt} loading="lazy" /></div>
-      ) : r.media.kind === 'shot' && r.orgHref ? (
+      ) : r.media.kind === 'shot' && r.orgHref && r.media.embed !== false ? (
         <div class="live-frame" data-live>
           <div class="lf-bar"><span></span><span></span><span></span><span class="lf-url">{r.orgHref.replace(/^https?:\/\//, '')}</span><span class="lf-tag">live · scroll inside</span></div>
           <div class="lf-view">
