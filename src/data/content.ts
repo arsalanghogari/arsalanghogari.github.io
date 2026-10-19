@@ -79,16 +79,25 @@ export interface Project {
   blurb: string;
   tech: string[];
   href: string;
-  viz?: 'gtsam' | 'rag' | 'ptdrone' | 'parley' | 'shroom' | 'postcards' | 'anchor';
+  viz?: 'detect' | 'gtsam' | 'rag' | 'ptdrone' | 'parley' | 'shroom' | 'postcards' | 'anchor';
 }
 
 export const TECHNICAL_PROJECTS: Project[] = [
   {
-    name: 'RoboSub Autonomy Stack',
-    subtitle: 'Autonomous Underwater Vehicle',
+    name: 'RoboSub Perception',
+    subtitle: 'On-Vehicle Object Detection',
     blurb:
-      "On-vehicle detection (YOLO + RT-DETR → ONNX → TensorRT, mAP 0.40 → 0.90) and GTSAM factor-graph SLAM validated under 0.3 m on rosbag replay. The detector below is the real one, running in your browser.",
-    tech: ['Python', 'ROS 2', 'YOLO', 'RT-DETR', 'TensorRT', 'GTSAM'],
+      "Custom dataset built from ROS bags; YOLO + RT-DETR trained and compiled ONNX → TensorRT (FP16/INT8) for real-time inference on the Jetson. Detection mAP 0.40 → 0.90. The model above is the real one, running in your browser.",
+    tech: ['Python', 'PyTorch', 'YOLO', 'RT-DETR', 'ONNX', 'TensorRT'],
+    href: 'https://uscfrl.com',
+    viz: 'detect',
+  },
+  {
+    name: 'RoboSub Localization',
+    subtitle: 'GTSAM Factor-Graph SLAM',
+    blurb:
+      "Stereo (ZED) landmarks, IMU, DVL, and depth fused in a GTSAM factor graph that drives costmap navigation. Validated on rosbag replay against surveyed prop placement: every landmark under 0.3 m absolute error. The graph above is a real optimizer run through the estimator's own code.",
+    tech: ['C++', 'Python', 'ROS 2', 'GTSAM', 'Eigen'],
     href: 'https://uscfrl.com',
     viz: 'gtsam',
   },

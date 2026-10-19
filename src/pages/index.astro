@@ -78,9 +78,10 @@ import {
             </span>
             <span class="psub">{p.subtitle}</span>
             {p.viz === 'rag' && <RagPipeline />}
-            {p.viz === 'gtsam' && <><LiveDetect /><FactorGraph /></>}
+            {p.viz === 'detect' && <LiveDetect />}
+            {p.viz === 'gtsam' && <FactorGraph />}
             {p.viz === 'ptdrone' && <Microfactory />}
-            {p.viz && !['rag', 'gtsam', 'ptdrone'].includes(p.viz) && <ProjectViz kind={p.viz} />}
+            {p.viz && !['rag', 'gtsam', 'detect', 'ptdrone'].includes(p.viz) && <ProjectViz kind={p.viz} />}
             <span class="pblurb">{p.blurb}</span>
             <span class="ptech">{p.tech.join(' · ')}</span>
           </a>
