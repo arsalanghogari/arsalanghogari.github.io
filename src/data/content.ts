@@ -8,7 +8,7 @@ export interface Role {
   blurb: string;
   tags: string[];
   summary?: string;
-  media?: { src: string; kind: 'shot' | 'photo' | 'logo' | 'icp'; alt: string; embed?: boolean };
+  media?: { src: string; kind: 'shot' | 'scrollshot' | 'photo' | 'logo' | 'icp'; alt: string; embed?: boolean };
 }
 
 export const CURRENT_ROLES: Role[] = [
@@ -64,7 +64,7 @@ export const CURRENT_ROLES: Role[] = [
       "Redesigned the program's website end to end — new information architecture, eligibility check, enrollment flow, and resource pages — and mentor first-generation and transfer students in the inaugural cohort.",
     tags: ['Web Design', 'WordPress', 'Mentorship'],
     summary: 'full site redesign · mesa-u.usc.edu',
-    media: { src: '/images/mesa-site.jpg', kind: 'shot', alt: 'USC MESA University Program website homepage, redesigned', embed: false },
+    media: { src: '/images/mesa-site.jpg', kind: 'scrollshot', alt: 'Full-page capture of the redesigned USC MESA University Program site' },
   },
 ];
 
