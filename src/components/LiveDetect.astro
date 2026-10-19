@@ -10,7 +10,6 @@ const NAMES = ['divider', 'gate', 'path', 'red_pipe', 'search_rescue', 'survey_r
   <div class="ld-stage">
     <img class="ld-img" src="/images/detect/01.jpg" width="640" height="640" alt="Underwater pool frame from the AUV's camera" loading="lazy" />
     <canvas class="ld-canvas" width="640" height="640" aria-hidden="true"></canvas>
-    <span class="ld-tag">real frames · robosub course</span>
     <span class="ld-live" id="ld-live"><span class="ld-dot"></span><span id="ld-live-text">loading model…</span></span>
     <span class="ld-hud" id="ld-hud">yolo · onnx int8 · onnxruntime-web</span>
     <span class="ld-bar" aria-hidden="true"></span>
@@ -31,8 +30,7 @@ const NAMES = ['divider', 'gate', 'path', 'red_pipe', 'search_rescue', 'survey_r
   @keyframes blink { 50% { opacity: 0.2; } }
   @keyframes sweep { from { transform: scaleX(0); } to { transform: scaleX(1); } }
   @media (prefers-reduced-motion: reduce) { .ld-dot, .ld.busy .ld-bar { animation: none; } .ld.busy .ld-bar { transform: scaleX(1); } }
-  .ld-tag, .ld-hud { position: absolute; font-family: var(--font-mono); font-size: 0.56rem; letter-spacing: 0.12em; text-transform: uppercase; color: #fff; opacity: 0.85; text-shadow: 0 1px 2px rgba(0,0,0,0.6); }
-  .ld-tag { top: 8px; left: 10px; display: inline-flex; align-items: center; gap: 6px; }
+  .ld-hud { position: absolute; font-family: var(--font-mono); font-size: 0.56rem; letter-spacing: 0.12em; text-transform: uppercase; color: #fff; opacity: 0.85; text-shadow: 0 1px 2px rgba(0,0,0,0.6); }
   .ld-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--good-dot); }
   .ld-hud { right: 10px; bottom: 8px; }
   .ld-cap { display: flex; justify-content: space-between; gap: 12px; padding: 8px 10px; font-family: var(--font-mono); font-size: 0.66rem; color: var(--ink-faint); }
