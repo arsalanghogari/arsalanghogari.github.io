@@ -133,7 +133,7 @@ const NAMES = ['divider', 'gate', 'path', 'red_pipe', 'search_rescue', 'survey_r
           const { keep, ms } = await detect(im);
           draw(keep);
           root.classList.add('running'); liveText.textContent = 'live · inference in your browser';
-          status.textContent = `${keep.length} detection${keep.length === 1 ? '' : 's'} · ${ms.toFixed(0)} ms on your CPU (${cores} cores, 1 thread) · no server`;
+          status.textContent = `${keep.length} detection${keep.length === 1 ? '' : 's'} · ${ms.toFixed(0)} ms on your CPU (${cores} cores, 1 thread)`;
           frameEl.textContent = `frame ${i + 1}/${N}`;
           hud.textContent = `yolo · onnx int8 · wasm · ${ms.toFixed(0)} ms`;
           i = (i + 1) % N;
